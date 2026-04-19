@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Outer circle background -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,54 m-44,0 a44,44 0 1,0 88,0 a44,44 0 1,0 -88,0" />
+
+    <!-- Leaf shape -->
+    <path
+        android:fillColor="#388E3C"
+        android:pathData="
+            M54,24
+            C54,24 30,36 30,56
+            C30,68 40,76 54,78
+            C68,76 78,68 78,56
+            C78,36 54,24 54,24 Z" />
+
+    <!-- Leaf vein -->
+    <path
+        android:strokeColor="#C8E6C9"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,28 L54,76" />
+
+    <!-- Stem -->
+    <path
+        android:strokeColor="#388E3C"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,78 C54,82 50,86 46,86" />
+</vector>

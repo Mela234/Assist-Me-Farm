@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="green_900">#1B5E20</color>
+    <color name="green_800">#2E7D32</color>
+    <color name="green_700">#388E3C</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="green_100">#C8E6C9</color>
+    <color name="green_50">#E8F5E9</color>
+    <color name="white">#FFFFFF</color>
+    <color name="off_white">#F9FBF9</color>
+    <color name="soil_brown">#795548</color>
+    <color name="error_red">#D32F2F</color>
+</resources>

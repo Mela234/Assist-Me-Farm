@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="error_red">#D32F2F</color>
+    <color name="green_100">#C8E6C9</color>
+    <color name="green_50">#E8F5E9</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="green_700">#388E3C</color>
+    <color name="green_800">#2E7D32</color>
+    <color name="green_900">#1B5E20</color>
+    <color name="off_white">#F9FBF9</color>
+    <color name="soil_brown">#795548</color>
+    <color name="white">#FFFFFF</color>
+    <string name="action_analyse_soil">Analyse Soil Data Only</string>
+    <string name="action_scan_crop">Scan Crop</string>
+    <string name="action_soil_sensor">Soil Sensor</string>
+    <string name="app_description">On-device crop disease diagnosis powered by Gemma 4</string>
+    <string name="app_name">CropDoc</string>
+    <string name="camera_analyse">Analyse Crop</string>
+    <string name="camera_analyse_with_soil">Analyse Crop + Soil</string>
+    <string name="camera_analysing">Gemma 4 is analysing your crop…</string>
+    <string name="camera_capture">Capture</string>
+    <string name="camera_retake">Retake</string>
+    <string name="camera_title">Crop Scanner</string>
+    <string name="cd_app_logo">CropDoc logo</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_crop_image">Captured crop photo</string>
+    <string name="cd_history">History</string>
+    <string name="history_empty">No analyses yet</string>
+    <string name="history_empty_sub">Scan a crop to get started</string>
+    <string name="history_title">Analysis History</string>
+    <string name="home_greeting">Good day, Farmer</string>
+    <string name="home_subtitle">All analysis runs privately on your phone</string>
+    <string name="model_error">Model failed to load</string>
+    <string name="model_loading">Loading Gemma 4 AI model…</string>
+    <string name="model_ready">AI model ready • Gemma 4 E4B</string>
+    <string name="model_retry">Retry</string>
+    <string name="permission_bluetooth_rationale">Bluetooth access is needed to connect to your soil sensor.</string>
+    <string name="permission_camera_rationale">Camera access is needed to photograph crops for disease analysis.</string>
+    <string name="sensor_disconnect">Disconnect Sensor</string>
+    <string name="sensor_nearby">Nearby Sensors</string>
+    <string name="sensor_scan">Scan for Soil Sensor</string>
+    <string name="sensor_stop">Stop Scan</string>
+    <string name="sensor_title">Soil Sensor</string>
+    <style name="Theme.CropDoc" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/green_700</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+</resources>
