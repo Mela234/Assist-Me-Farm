@@ -10,195 +10,195 @@
 10
 11    <!-- Bluetooth -->
 12    <uses-permission
-12-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:5:5-94
+12-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:5:5-94
 13        android:name="android.permission.BLUETOOTH"
-13-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:5:22-65
+13-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:5:22-65
 14        android:maxSdkVersion="30" />
-14-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:5:66-92
+14-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:5:66-92
 15    <uses-permission
-15-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:6:5-100
+15-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:6:5-100
 16        android:name="android.permission.BLUETOOTH_ADMIN"
-16-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:6:22-71
+16-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:6:22-71
 17        android:maxSdkVersion="30" />
-17-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:6:72-98
+17-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:6:72-98
 18    <uses-permission
-18-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:7:5-120
+18-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:7:5-120
 19        android:name="android.permission.BLUETOOTH_SCAN"
-19-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:7:22-70
+19-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:7:22-70
 20        android:usesPermissionFlags="neverForLocation" />
-20-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:7:71-117
+20-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:7:71-117
 21    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-21-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:8:5-76
-21-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:8:22-73
+21-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:8:5-76
+21-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:8:22-73
 22    <!-- Camera -->
 23    <uses-permission android:name="android.permission.CAMERA" />
-23-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:10:5-65
-23-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:10:22-62
+23-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:10:5-65
+23-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:10:22-62
 24    <!-- Storage (for saving captured images) -->
 25    <uses-permission
-25-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:12:5-106
+25-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:12:5-106
 26        android:name="android.permission.READ_EXTERNAL_STORAGE"
-26-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:12:22-77
+26-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:12:22-77
 27        android:maxSdkVersion="32" />
-27-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:12:78-104
+27-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:12:78-104
 28    <uses-permission
-28-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:13:5-107
+28-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:13:5-107
 29        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-29-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:13:22-78
+29-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:13:22-78
 30        android:maxSdkVersion="29" />
-30-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:13:79-105
+30-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:13:79-105
 31
 32    <uses-feature
-32-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:15:5-83
+32-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:15:5-83
 33        android:name="android.hardware.camera"
-33-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:15:19-57
+33-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:15:19-57
 34        android:required="true" />
-34-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:15:58-81
+34-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:15:58-81
 35    <uses-feature
-35-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:16:5-90
+35-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:16:5-90
 36        android:name="android.hardware.bluetooth_le"
-36-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:16:19-63
+36-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:16:19-63
 37        android:required="false" />
-37-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:16:64-88
+37-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:16:64-88
 38
 39    <permission
-39-->[androidx.core:core:1.15.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:22:5-24:47
+39-->[androidx.core:core:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:22:5-24:47
 40        android:name="com.cropdoc.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-40-->[androidx.core:core:1.15.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:23:9-81
+40-->[androidx.core:core:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:23:9-81
 41        android:protectionLevel="signature" />
-41-->[androidx.core:core:1.15.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:24:9-44
+41-->[androidx.core:core:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:24:9-44
 42
 43    <uses-permission android:name="com.cropdoc.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-43-->[androidx.core:core:1.15.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:26:5-97
-43-->[androidx.core:core:1.15.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:26:22-94
+43-->[androidx.core:core:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:26:5-97
+43-->[androidx.core:core:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:26:22-94
 44
 45    <application
-45-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:18:5-37:19
+45-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:18:5-37:19
 46        android:allowBackup="true"
-46-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:19:9-35
+46-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:19:9-35
 47        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-47-->[androidx.core:core:1.15.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:28:18-86
+47-->[androidx.core:core:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/592b18b5d8af1bc27647222471822d51/transformed/core-1.15.0/AndroidManifest.xml:28:18-86
 48        android:debuggable="true"
 49        android:extractNativeLibs="false"
 50        android:icon="@mipmap/ic_launcher"
-50-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:20:9-43
+50-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:20:9-43
 51        android:label="@string/app_name"
-51-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:21:9-41
+51-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:21:9-41
 52        android:largeHeap="true"
-52-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:25:9-33
+52-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:25:9-33
 53        android:roundIcon="@mipmap/ic_launcher_round"
-53-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:22:9-54
+53-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:22:9-54
 54        android:supportsRtl="true"
-54-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:23:9-35
+54-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:23:9-35
 55        android:testOnly="true"
 56        android:theme="@style/Theme.CropDoc" >
-56-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:24:9-45
+56-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:24:9-45
 57        <activity
-57-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:27:9-35:20
+57-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:27:9-35:20
 58            android:name="com.cropdoc.app.MainActivity"
-58-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:28:13-41
+58-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:28:13-41
 59            android:exported="true"
-59-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:29:13-36
+59-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:29:13-36
 60            android:theme="@style/Theme.CropDoc" >
-60-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:30:13-49
+60-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:30:13-49
 61            <intent-filter>
-61-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:31:13-34:29
+61-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:31:13-34:29
 62                <action android:name="android.intent.action.MAIN" />
-62-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:32:17-69
-62-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:32:25-66
+62-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:32:17-69
+62-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:32:25-66
 63
 64                <category android:name="android.intent.category.LAUNCHER" />
-64-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:33:17-77
-64-->/Users/melatamde/Desktop/CropDoc/app/src/main/AndroidManifest.xml:33:27-74
+64-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:33:17-77
+64-->/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:33:27-74
 65            </intent-filter>
 66        </activity>
 67
 68        <service
-68-->[androidx.camera:camera-camera2:1.4.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:24:9-33:19
+68-->[androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:24:9-33:19
 69            android:name="androidx.camera.core.impl.MetadataHolderService"
-69-->[androidx.camera:camera-camera2:1.4.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:25:13-75
+69-->[androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:25:13-75
 70            android:enabled="false"
-70-->[androidx.camera:camera-camera2:1.4.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:26:13-36
+70-->[androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:26:13-36
 71            android:exported="false" >
-71-->[androidx.camera:camera-camera2:1.4.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:27:13-37
+71-->[androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:27:13-37
 72            <meta-data
-72-->[androidx.camera:camera-camera2:1.4.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:30:13-32:89
+72-->[androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:30:13-32:89
 73                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
-73-->[androidx.camera:camera-camera2:1.4.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:31:17-103
+73-->[androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:31:17-103
 74                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
-74-->[androidx.camera:camera-camera2:1.4.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:32:17-86
+74-->[androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/687bd94fd4e93e3feb20351c582f0e3e/transformed/camera-camera2-1.4.1/AndroidManifest.xml:32:17-86
 75        </service>
 76
 77        <provider
-77-->[androidx.emoji2:emoji2:1.3.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+77-->[androidx.emoji2:emoji2:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
 78            android:name="androidx.startup.InitializationProvider"
-78-->[androidx.emoji2:emoji2:1.3.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+78-->[androidx.emoji2:emoji2:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
 79            android:authorities="com.cropdoc.app.androidx-startup"
-79-->[androidx.emoji2:emoji2:1.3.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+79-->[androidx.emoji2:emoji2:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
 80            android:exported="false" >
-80-->[androidx.emoji2:emoji2:1.3.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+80-->[androidx.emoji2:emoji2:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
 81            <meta-data
-81-->[androidx.emoji2:emoji2:1.3.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+81-->[androidx.emoji2:emoji2:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
 82                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-82-->[androidx.emoji2:emoji2:1.3.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+82-->[androidx.emoji2:emoji2:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
 83                android:value="androidx.startup" />
-83-->[androidx.emoji2:emoji2:1.3.0] /Users/melatamde/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+83-->[androidx.emoji2:emoji2:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/df75d5ac6aa5da8d27277dc4a67f6d9f/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
 84            <meta-data
-84-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/melatamde/.gradle/caches/9.0.0/transforms/05816ccf89054e6fcba71e801e51233f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:29:13-31:52
+84-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/05816ccf89054e6fcba71e801e51233f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:29:13-31:52
 85                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-85-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/melatamde/.gradle/caches/9.0.0/transforms/05816ccf89054e6fcba71e801e51233f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:30:17-78
+85-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/05816ccf89054e6fcba71e801e51233f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:30:17-78
 86                android:value="androidx.startup" />
-86-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/melatamde/.gradle/caches/9.0.0/transforms/05816ccf89054e6fcba71e801e51233f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:31:17-49
+86-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/05816ccf89054e6fcba71e801e51233f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:31:17-49
 87            <meta-data
-87-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+87-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
 88                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-88-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+88-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
 89                android:value="androidx.startup" />
-89-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+89-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
 90        </provider>
 91
 92        <activity
-92-->[androidx.compose.ui:ui-tooling-android:1.7.6] /Users/melatamde/.gradle/caches/9.0.0/transforms/8431dd8131b6b5e3b3ec51ae2188f169/transformed/ui-tooling-release/AndroidManifest.xml:23:9-25:39
+92-->[androidx.compose.ui:ui-tooling-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/8431dd8131b6b5e3b3ec51ae2188f169/transformed/ui-tooling-release/AndroidManifest.xml:23:9-25:39
 93            android:name="androidx.compose.ui.tooling.PreviewActivity"
-93-->[androidx.compose.ui:ui-tooling-android:1.7.6] /Users/melatamde/.gradle/caches/9.0.0/transforms/8431dd8131b6b5e3b3ec51ae2188f169/transformed/ui-tooling-release/AndroidManifest.xml:24:13-71
+93-->[androidx.compose.ui:ui-tooling-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/8431dd8131b6b5e3b3ec51ae2188f169/transformed/ui-tooling-release/AndroidManifest.xml:24:13-71
 94            android:exported="true" />
-94-->[androidx.compose.ui:ui-tooling-android:1.7.6] /Users/melatamde/.gradle/caches/9.0.0/transforms/8431dd8131b6b5e3b3ec51ae2188f169/transformed/ui-tooling-release/AndroidManifest.xml:25:13-36
+94-->[androidx.compose.ui:ui-tooling-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/8431dd8131b6b5e3b3ec51ae2188f169/transformed/ui-tooling-release/AndroidManifest.xml:25:13-36
 95
 96        <receiver
-96-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+96-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
 97            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-97-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+97-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
 98            android:directBootAware="false"
-98-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+98-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
 99            android:enabled="true"
-99-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+99-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
 100            android:exported="true"
-100-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+100-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
 101            android:permission="android.permission.DUMP" >
-101-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+101-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
 102            <intent-filter>
-102-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+102-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
 103                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-103-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
-103-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+103-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+103-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
 104            </intent-filter>
 105            <intent-filter>
-105-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+105-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
 106                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-106-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
-106-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+106-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+106-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
 107            </intent-filter>
 108            <intent-filter>
-108-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+108-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
 109                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-109-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
-109-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+109-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+109-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
 110            </intent-filter>
 111            <intent-filter>
-111-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+111-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
 112                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-112-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
-112-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/melatamde/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+112-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+112-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/0a363c76f7f9d25093cc6ca69bb74045/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
 113            </intent-filter>
 114        </receiver>
 115    </application>

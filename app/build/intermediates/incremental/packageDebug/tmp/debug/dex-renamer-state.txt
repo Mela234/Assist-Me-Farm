@@ -1,13 +1,13 @@
-#Sun Apr 19 07:49:16 PDT 2026
-base.0=/Users/melatamde/Desktop/CropDoc/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
-base.1=/Users/melatamde/Desktop/CropDoc/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
-base.2=/Users/melatamde/Desktop/CropDoc/app/build/intermediates/dex/debug/mergeProjectDexDebug/10/classes.dex
-base.3=/Users/melatamde/Desktop/CropDoc/app/build/intermediates/dex/debug/mergeProjectDexDebug/11/classes.dex
-base.4=/Users/melatamde/Desktop/CropDoc/app/build/intermediates/dex/debug/mergeProjectDexDebug/12/classes.dex
-base.5=/Users/melatamde/Desktop/CropDoc/app/build/intermediates/dex/debug/mergeProjectDexDebug/13/classes.dex
-base.6=/Users/melatamde/Desktop/CropDoc/app/build/intermediates/dex/debug/mergeProjectDexDebug/15/classes.dex
-base.7=/Users/melatamde/Desktop/CropDoc/app/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex
-base.8=/Users/melatamde/Desktop/CropDoc/app/build/intermediates/dex/debug/mergeExtDexDebug/classes3.dex
+#Sun Apr 19 18:50:19 PDT 2026
+base.0=/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
+base.1=/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
+base.2=/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/dex/debug/mergeProjectDexDebug/10/classes.dex
+base.3=/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/dex/debug/mergeProjectDexDebug/11/classes.dex
+base.4=/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/dex/debug/mergeProjectDexDebug/12/classes.dex
+base.5=/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/dex/debug/mergeProjectDexDebug/13/classes.dex
+base.6=/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/dex/debug/mergeProjectDexDebug/15/classes.dex
+base.7=/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex
+base.8=/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/dex/debug/mergeExtDexDebug/classes3.dex
 path.0=classes.dex
 path.1=0/classes.dex
 path.2=10/classes.dex
