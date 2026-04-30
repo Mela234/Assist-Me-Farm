@@ -25,7 +25,8 @@ sealed class BleState {
 data class BleDevice(
     val name: String,
     val address: String,
-    val rssi: Int
+    val rssi: Int,
+    val isCropDocSensor: Boolean = false
 )
 
 // ── AI Analysis ──────────────────────────────────────────────────────────────
@@ -56,6 +57,7 @@ data class AnalysisResult(
     val immediateActions: List<String>,
     val timestamp: Long = System.currentTimeMillis()
 )
+
 
 // ── AI Engine state ───────────────────────────────────────────────────────────
 

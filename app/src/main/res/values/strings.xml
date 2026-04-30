@@ -8,11 +8,21 @@
     <string name="permission_bluetooth_rationale">Bluetooth access is needed to connect to your soil sensor.</string>
 
     <!-- Home -->
-    <string name="home_greeting">Good day, Farmer</string>
+    <string name="home_greeting">Good day, Farmer 🌱</string>
     <string name="home_subtitle">All analysis runs privately on your phone</string>
+    <string name="home_what_to_do">What would you like to do?</string>
     <string name="action_scan_crop">Scan Crop</string>
+    <string name="action_scan_crop_subtitle">Take a photo to diagnose disease</string>
     <string name="action_soil_sensor">Soil Sensor</string>
+    <string name="action_soil_sensor_subtitle">Connect &amp; view soil data</string>
     <string name="action_analyse_soil">Analyse Soil Data Only</string>
+
+    <!-- Tips -->
+    <string name="tip_1">💡 Take photos in good natural light for best results</string>
+    <string name="tip_2">📏 Get close enough to see leaf detail clearly</string>
+    <string name="tip_3">🔄 Re-analyse after applying treatments to track progress</string>
+    <string name="tip_4">🌡️ Soil readings update automatically when sensor is connected</string>
+    <string name="tips_title">Tips</string>
 
     <!-- Camera -->
     <string name="camera_title">Crop Scanner</string>
@@ -21,13 +31,60 @@
     <string name="camera_analyse">Analyse Crop</string>
     <string name="camera_analyse_with_soil">Analyse Crop + Soil</string>
     <string name="camera_analysing">Gemma 4 is analysing your crop…</string>
+    <string name="camera_not_available">Camera not available</string>
+    <string name="camera_use_gallery">Use the gallery button below to pick an image</string>
+    <string name="camera_gallery_only">Gallery\nonly</string>
+    <string name="camera_gallery_or_camera">Gallery\nor camera</string>
+    <string name="include_soil_data">Include soil sensor data</string>
+    <string name="analysis_complete">Analysis Complete</string>
+    <string name="issues_found">%1$d issue(s) found • %2$d soil recommendation(s)</string>
+    <string name="diseases_issues">Diseases / Issues</string>
+    <string name="immediate_actions">Immediate Actions</string>
+    <string name="soil_recommendations">Soil Recommendations</string>
+    <string name="full_ai_analysis">Full AI Analysis</string>
+    <string name="retry_analysis">Retry Analysis</string>
+    <string name="affected">Affected: %1$s</string>
+    <string name="current_to_target">Current: %1$s → Target: %2$s</string>
 
     <!-- Sensor -->
     <string name="sensor_title">Soil Sensor</string>
     <string name="sensor_scan">Scan for Soil Sensor</string>
-    <string name="sensor_stop">Stop Scan</string>
+    <string name="sensor_stop">Stop</string>
     <string name="sensor_disconnect">Disconnect Sensor</string>
     <string name="sensor_nearby">Nearby Sensors</string>
+    <string name="sensor_no_connected">No sensor connected</string>
+    <string name="sensor_scanning">Scanning for sensors…</string>
+    <string name="sensor_connecting">Connecting to %1$s…</string>
+    <string name="sensor_mock_title">Mock Soil Sensor</string>
+    <string name="sensor_mock_subtitle">Development mode — no hardware needed</string>
+    <string name="sensor_mock_simulating">📡 Simulating live readings</string>
+    <string name="sensor_mock_warning">⚠ Readings simulate a low-moisture, acidic soil profile so the AI has something meaningful to analyse.</string>
+    <string name="sensor_explain_readings">Explain these readings</string>
+    <string name="sensor_getting_summary">Getting summary…</string>
+    <string name="sensor_summary_title">What this means for your crops</string>
+    <string name="sensor_dismiss">Dismiss</string>
+    <string name="sensor_setup_title">Sensor Setup</string>
+    <string name="sensor_setup_1">Build sensor with ESP32 + NPK/pH/moisture probes</string>
+    <string name="sensor_setup_2">Flash firmware with Service UUID: 12345678-1234-5678-1234-56789abcdef0</string>
+    <string name="sensor_setup_3">Data characteristic UUID: …abcdef1 (24-byte float payload)</string>
+    <string name="sensor_setup_4">Power on sensor and press Scan above</string>
+    <string name="sensor_setup_5">Tap your sensor name to connect</string>
+
+    <!-- Soil readings -->
+    <string name="soil_readings_title">Soil Readings</string>
+    <string name="soil_moisture">Moisture</string>
+    <string name="soil_ph">pH</string>
+    <string name="soil_temp">Temp</string>
+    <string name="soil_nitrogen">Nitrogen</string>
+    <string name="soil_phosphorus">Phosphorus</string>
+    <string name="soil_potassium">Potassium</string>
+    <string name="health_score">Health Score</string>
+
+    <!-- Severity -->
+    <string name="severity_low">Low</string>
+    <string name="severity_medium">Medium</string>
+    <string name="severity_high">High</string>
+    <string name="severity_critical">Critical</string>
 
     <!-- History -->
     <string name="history_title">Analysis History</string>
@@ -39,6 +96,17 @@
     <string name="model_ready">AI model ready • Gemma 4 E4B</string>
     <string name="model_error">Model failed to load</string>
     <string name="model_retry">Retry</string>
+
+    <!-- BLE -->
+    <string name="ble_no_sensor">No sensor connected</string>
+    <string name="ble_connecting">Connecting…</string>
+    <string name="ble_scanning">Scanning for sensors…</string>
+
+    <!-- Language -->
+    <string name="language_select">Select Language</string>
+    <string name="language_english">English</string>
+    <string name="language_shona">Shona</string>
+    <string name="language_amharic">Amharic</string>
 
     <!-- Content descriptions -->
     <string name="cd_back">Back</string>

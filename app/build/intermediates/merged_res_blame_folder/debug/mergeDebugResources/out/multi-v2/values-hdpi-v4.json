@@ -4,7 +4,7 @@
             "outputFile": "com.cropdoc.app-mergeDebugResources-75:/values-hdpi-v4/values-hdpi-v4.xml",
             "map": [
                 {
-                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/4670fdb0cbb80e91002cc679aa749b57/transformed/appcompat-1.6.1/res/values-hdpi-v4/values-hdpi-v4.xml",
+                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/d256d2cbc20786db58543efe5796a5ba/transformed/appcompat-1.6.1/res/values-hdpi-v4/values-hdpi-v4.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

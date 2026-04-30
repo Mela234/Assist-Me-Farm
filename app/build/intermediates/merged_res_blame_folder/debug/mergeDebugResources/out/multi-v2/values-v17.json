@@ -4,7 +4,7 @@
             "outputFile": "com.cropdoc.app-mergeDebugResources-75:/values-v17/values-v17.xml",
             "map": [
                 {
-                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/4670fdb0cbb80e91002cc679aa749b57/transformed/appcompat-1.6.1/res/values-v17/values-v17.xml",
+                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/d256d2cbc20786db58543efe5796a5ba/transformed/appcompat-1.6.1/res/values-v17/values-v17.xml",
                     "from": {
                         "startLines": "2,5,9,12,15,18,22,25,29,33,37,40,43,46,50,53,57",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

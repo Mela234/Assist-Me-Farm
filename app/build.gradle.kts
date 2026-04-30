@@ -35,8 +35,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
     }
 
     buildFeatures {
@@ -47,6 +49,10 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+
+    aaptOptions {
+        noCompress("litertlm")
     }
 }
 
@@ -62,7 +68,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
-    // Material Components (needed for the window theme)
     implementation(libs.material)
     // CameraX
     implementation(libs.androidx.camera.core)
@@ -75,6 +80,8 @@ dependencies {
     implementation(libs.coil.compose)
     // Preferences
     implementation(libs.androidx.datastore.preferences)
+    // Gemma 4 LiteRT
+    implementation("com.google.ai.edge.litertlm:litertlm-android:latest.release")
 
     debugImplementation(libs.androidx.ui.tooling)
 }
