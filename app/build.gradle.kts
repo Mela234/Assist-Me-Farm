@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -69,19 +70,21 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.material)
-    // CameraX
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
-    // Coroutines
     implementation(libs.kotlinx.coroutines.android)
-    // Image loading
     implementation(libs.coil.compose)
-    // Preferences
     implementation(libs.androidx.datastore.preferences)
-    // Gemma 4 LiteRT
     implementation("com.google.ai.edge.litertlm:litertlm-android:latest.release")
-
     debugImplementation(libs.androidx.ui.tooling)
+    implementation("androidx.room:room-runtime:2.7.1")
+    implementation("androidx.room:room-ktx:2.7.1")
+    ksp("androidx.room:room-compiler:2.7.1")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+}
+
+ksp {
+    arg("room.generateKotlin", "true")
 }

@@ -2,16 +2,18 @@ package com.cropdoc.app.data.model
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import com.cropdoc.app.data.agent.CropDocToolSet
 import com.google.ai.edge.litertlm.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 
@@ -19,8 +21,8 @@ class CropDocAiEngine(private val context: Context) {
 
     companion object {
         private const val TAG = "CropDocAI"
-        private const val MODEL_ASSET = "gemma-4-E4B-it.litertlm"
-        private const val USE_DEMO_MODE = true
+        private const val MODEL_ASSET = "gemma-4-E2B-it.litertlm"
+        private const val USE_DEMO_MODE = false
     }
 
     private val _modelState = MutableStateFlow<ModelState>(ModelState.NotLoaded)
@@ -36,38 +38,28 @@ class CropDocAiEngine(private val context: Context) {
             _modelState.value = ModelState.Loading
 
             if (USE_DEMO_MODE) {
-                Log.d(TAG, "Demo mode — skipping real model load")
                 kotlinx.coroutines.delay(2_000)
                 _modelState.value = ModelState.Ready
                 return@withContext
             }
 
-            val modelFile = File(
-                Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS
-                ),
-                MODEL_ASSET
-            )
-
+            // Copy model to app cache if not already there
+            val modelFile = File(context.filesDir, MODEL_ASSET)
             if (!modelFile.exists()) {
                 _modelState.value = ModelState.Error(
-                    "Model not found. Place $MODEL_ASSET in your Downloads folder."
+                    "Model not found. Push model file to app storage."
                 )
                 return@withContext
             }
 
-            Log.d(TAG, "Loading model from ${modelFile.absolutePath}")
             val engineConfig = EngineConfig(
                 modelPath = modelFile.absolutePath,
-                backend = Backend.GPU(),
+                backend = Backend.CPU()
             )
             engine = Engine(engineConfig).also { it.initialize() }
-
-            Log.d(TAG, "Engine ready")
             _modelState.value = ModelState.Ready
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialise engine", e)
             _modelState.value = ModelState.Error(e.message ?: "Unknown error")
         }
     }
@@ -203,6 +195,314 @@ class CropDocAiEngine(private val context: Context) {
         }
     }
 
+    // ── Chat ──────────────────────────────────────────────────────────────────
+
+    suspend fun chat(
+        userMessage: String,
+        imageUri: Uri?,
+        audioFile: File? = null,      // ← new
+        soilReading: SoilReading?,
+        weatherData: com.cropdoc.app.data.model.WeatherData?,
+        zone: com.cropdoc.app.data.model.FarmZone?,
+        crop: com.cropdoc.app.data.model.Crop? = null,
+        history: List<com.cropdoc.app.data.model.ChatMessage>,
+        context: Context,
+        onToken: (String) -> Unit
+    ): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            if (USE_DEMO_MODE) {
+                return@withContext Result.success(
+                    buildDemoChatResponse(
+                        userMessage, soilReading, weatherData, zone
+                    ).also { response ->
+                        response.split(" ").forEachIndexed { i, word ->
+                            onToken(if (i == 0) word else " $word")
+                            kotlinx.coroutines.delay(25)
+                        }
+                    }
+                )
+            }
+
+            val eng = engine ?: return@withContext Result.failure(
+                IllegalStateException("Engine not initialised")
+            )
+
+            val systemPrompt = buildChatSystemPrompt(soilReading, weatherData, zone, crop)
+            val conversationConfig = ConversationConfig(
+                systemInstruction = Contents.of(systemPrompt),
+                tools = listOf(tool(CropDocToolSet(context))),
+                automaticToolCalling = true
+            )
+
+            var fullResponse = ""
+            eng.createConversation(conversationConfig).use { conversation ->
+
+                history.dropLast(1).forEach { msg ->
+                    if (msg.role == "USER") {
+                        conversation.sendMessageAsync(msg.content).collect {}
+                    }
+                }
+
+                // Build message with whatever inputs are available
+                val finalMessage = when {
+                    imageUri != null && audioFile != null -> {
+                        val imageFile = File(context.cacheDir, "chat_image.jpg")
+                        context.contentResolver.openInputStream(imageUri)?.use { input ->
+                            FileOutputStream(imageFile).use { output -> input.copyTo(output) }
+                        }
+                        Message.of(
+                            Content.ImageFile(imageFile.absolutePath),
+                            Content.AudioFile(audioFile.absolutePath),  // ← audio + image
+                            Content.Text(userMessage)
+                        )
+                    }
+                    audioFile != null -> {
+                        Message.of(
+                            Content.AudioFile(audioFile.absolutePath),  // ← audio only
+                            Content.Text(userMessage)
+                        )
+                    }
+                    imageUri != null -> {
+                        val imageFile = File(context.cacheDir, "chat_image.jpg")
+                        context.contentResolver.openInputStream(imageUri)?.use { input ->
+                            FileOutputStream(imageFile).use { output -> input.copyTo(output) }
+                        }
+                        Message.of(
+                            Content.ImageFile(imageFile.absolutePath),
+                            Content.Text(userMessage)
+                        )
+                    }
+                    else -> {
+                        Message.of(Content.Text(userMessage))
+                    }
+                }
+
+                conversation.sendMessageAsync(finalMessage).collect { token ->
+                    val text = token.toString()
+                    fullResponse += text
+                    onToken(text)
+                }
+            }
+
+            Result.success(fullResponse)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Chat failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun runAgentCheck(
+        prompt: String,
+        onAlert: (String) -> Unit
+    ) = withContext(Dispatchers.IO) {
+        if (USE_DEMO_MODE) {
+            // Demo mode — simulate some alerts
+            val demoAlerts = listOf(
+                "Soil moisture is critically low at 22% — irrigate Zone A today",
+                "High humidity (78%) with warm temperatures — monitor for fungal disease on maize",
+                "Nitrogen levels below optimal — consider applying urea before next watering"
+            )
+            demoAlerts.forEach { onAlert(it) }
+            return@withContext
+        }
+
+        try {
+            val eng = engine ?: return@withContext
+
+            val conversationConfig = ConversationConfig(
+                systemInstruction = Contents.of("You are a farm monitoring agent. Respond only with a JSON array of alert strings.")
+            )
+
+            var fullResponse = ""
+            eng.createConversation(conversationConfig).use { conversation ->
+                conversation.sendMessageAsync(prompt).collect { token ->
+                    fullResponse += token.toString()
+                }
+            }
+
+            // Parse JSON array of alerts
+            val cleaned = fullResponse.replace("```json", "").replace("```", "").trim()
+            val jsonArray = org.json.JSONArray(cleaned)
+            for (i in 0 until jsonArray.length()) {
+                onAlert(jsonArray.getString(i))
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Agent check failed", e)
+        }
+    }
+
+    // ── Chat system prompt ────────────────────────────────────────────────────
+
+    private fun buildChatSystemPrompt(
+        soilReading: SoilReading?,
+        weatherData: com.cropdoc.app.data.model.WeatherData?,
+        zone: com.cropdoc.app.data.model.FarmZone?,
+        crop: com.cropdoc.app.data.model.Crop? = null
+    ): String {
+        return buildString {
+            appendLine(languageInstruction())
+            appendLine()
+            appendLine("""
+            You are CropDoc, a friendly and knowledgeable farming assistant 
+            helping smallholder farmers in Africa. You have deep expertise in 
+            agronomy, crop diseases, soil health, and sustainable farming practices.
+            Give practical, actionable advice using simple language.
+            Be conversational and warm — you are talking to a farmer in the field.
+        """.trimIndent())
+
+            soilReading?.let {
+                appendLine()
+                appendLine("Current soil readings from the sensor:")
+                appendLine("- Moisture: ${it.moisture.fmt(0)}%")
+                appendLine("- pH: ${it.ph.fmt(1)}")
+                appendLine("- Nitrogen: ${it.nitrogen.fmt(0)} mg/kg")
+                appendLine("- Phosphorus: ${it.phosphorus.fmt(0)} mg/kg")
+                appendLine("- Potassium: ${it.potassium.fmt(0)} mg/kg")
+                appendLine("- Temperature: ${it.temperature.fmt(1)}°C")
+            }
+
+            weatherData?.let {
+                appendLine()
+                appendLine("Current weather at ${it.location}:")
+                appendLine("- Temperature: ${it.temperature}°C")
+                appendLine("- Humidity: ${it.humidity}%")
+                appendLine("- Expected rainfall: ${it.rainfall}mm")
+                appendLine("- Wind speed: ${it.windSpeed} km/h")
+                appendLine("- Forecast: ${it.forecast}")
+            }
+
+            zone?.let {
+                appendLine()
+                appendLine("The farmer is asking about farm zone: ${it.name}")
+            }
+
+            crop?.let {
+                val daysPlanted = ((System.currentTimeMillis() - it.plantedDate) / (1000 * 60 * 60 * 24)).toInt()
+                val daysToHarvest = (it.expectedHarvestDays - daysPlanted).coerceAtLeast(0)
+                appendLine()
+                appendLine("Crop in this zone:")
+                appendLine("- Crop: ${it.name}")
+                appendLine("- Days since planting: $daysPlanted days")
+                appendLine("- Expected harvest: ${it.expectedHarvestDays} days total")
+                appendLine("- Days to harvest: $daysToHarvest days")
+                if (it.notes.isNotBlank()) appendLine("- Notes: ${it.notes}")
+            }
+        }
+    }
+
+    // ── Demo chat response ────────────────────────────────────────────────────
+
+    private fun buildDemoChatResponse(
+        userMessage: String,
+        soilReading: SoilReading?,
+        weatherData: com.cropdoc.app.data.model.WeatherData?,
+        zone: com.cropdoc.app.data.model.FarmZone?
+    ): String {
+        val lower = userMessage.lowercase()
+
+        return when {
+            lower.contains("water") || lower.contains("irrigat") || lower.contains("moisture") -> {
+                val moisture = soilReading?.moisture
+                if (moisture != null && moisture < 30f) {
+                    "Your soil moisture is critically low at ${moisture.fmt(0)}%. " +
+                            "You should irrigate immediately — aim for at least 25mm of water. " +
+                            "Early morning irrigation is best to reduce evaporation. " +
+                            "After irrigating, recheck readings in 2 hours."
+                } else if (moisture != null) {
+                    "Your soil moisture is at ${moisture.fmt(0)}%, which is " +
+                            if (moisture in 30f..70f) "within the healthy range. No irrigation needed right now. " +
+                                    "Check again tomorrow morning."
+                            else "slightly high. Ensure good drainage to prevent root rot."
+                } else {
+                    "Without soil readings I can't give you a precise answer. " +
+                            "As a general rule, most crops need irrigation when the top 5cm of soil feels dry to the touch."
+                }
+            }
+
+            lower.contains("fertiliz") || lower.contains("nitrogen") || lower.contains("npk") -> {
+                val n = soilReading?.nitrogen
+                if (n != null && n < 25f) {
+                    "Your nitrogen level is low at ${n.fmt(0)} mg/kg — the ideal range is 40-80 mg/kg. " +
+                            "Apply urea (46-0-0) at 50 kg per hectare. " +
+                            "Split the application — half now, half in 3 weeks. " +
+                            "Water lightly after applying to help absorption."
+                } else {
+                    "Your nitrogen levels look adequate. Focus on maintaining organic matter " +
+                            "by incorporating crop residues after harvest. " +
+                            "Consider a balanced NPK fertilizer at planting for your next crop."
+                }
+            }
+
+            lower.contains("ph") || lower.contains("acid") || lower.contains("lime") -> {
+                val ph = soilReading?.ph
+                if (ph != null && ph < 5.5f) {
+                    "Your soil pH is ${ph.fmt(1)}, which is too acidic for most crops. " +
+                            "Apply agricultural lime at 2 tonnes per hectare. " +
+                            "Mix it into the top 15cm of soil if possible. " +
+                            "Wait 2-4 weeks before planting to let the pH stabilize."
+                } else if (ph != null && ph > 7.5f) {
+                    "Your soil pH is ${ph.fmt(1)}, slightly alkaline. " +
+                            "Apply sulfur at 200 kg per hectare to bring it down. " +
+                            "Acidifying fertilizers like ammonium sulfate also help over time."
+                } else {
+                    "Your soil pH is in the ideal range for most crops (6.0-7.0). " +
+                            "Keep monitoring and maintain with balanced fertilization."
+                }
+            }
+
+            lower.contains("weather") || lower.contains("rain") || lower.contains("forecast") -> {
+                weatherData?.let {
+                    "Current weather at ${it.location}: ${it.temperature}°C, ${it.humidity}% humidity. " +
+                            "Forecast: ${it.forecast}. " +
+                            if (it.rainfall > 5f) "Rain expected — hold off on irrigation today. "
+                            else "No significant rain expected — check soil moisture and irrigate if needed."
+                } ?: "Weather data not available yet. Enable weather updates in settings to get forecasts for your area."
+            }
+
+            lower.contains("harvest") || lower.contains("ready") || lower.contains("when") -> {
+                zone?.let {
+                    "For your ${it.name} zone, check your crop details for the expected harvest date. " +
+                            "Signs your crop is ready: for maize — husks are dry and brown, kernels are hard. " +
+                            "For tomatoes — uniform red color, slight give when pressed gently."
+                } ?: "To get harvest timing advice, open a specific farm zone and chat from there. " +
+                "I can then give you advice based on your planting date and crop type."
+            }
+
+            lower.contains("disease") || lower.contains("pest") || lower.contains("sick") || lower.contains("leaves") -> {
+                "I can help diagnose crop diseases! " +
+                        "For the most accurate diagnosis, take a photo of the affected area and include it in your message. " +
+                        "Common signs to look for: yellowing leaves (nutrient deficiency or disease), " +
+                        "white powder on leaves (powdery mildew), brown spots (fungal infection), " +
+                        "holes in leaves (pest damage)."
+            }
+
+            lower.contains("rotate") || lower.contains("rotation") -> {
+                "Crop rotation is important for soil health. A good rotation for your region: " +
+                        "Year 1: Maize (heavy feeder) → Year 2: Legumes like beans or groundnuts (nitrogen fixers) → " +
+                        "Year 3: Vegetables or sorghum. " +
+                        "This breaks pest cycles and naturally replenishes nitrogen."
+            }
+
+            else -> {
+                buildString {
+                    append("I'm here to help with your farm! ")
+                    soilReading?.let {
+                        append("Looking at your current soil readings — ")
+                        if (it.moisture < 30f) append("your soil needs water urgently. ")
+                        if (it.ph < 5.5f) append("your pH is too acidic. ")
+                        if (it.nitrogen < 25f) append("nitrogen is low. ")
+                        if (it.moisture >= 30f && it.ph in 5.5f..7.5f && it.nitrogen >= 25f) {
+                            append("everything looks fairly healthy! ")
+                        }
+                    }
+                    append("You can ask me about watering, fertilizers, crop diseases, harvest timing, or anything else about your farm.")
+                }
+            }
+        }
+    }
+
     // ── Prompts ───────────────────────────────────────────────────────────────
 
     private val SYSTEM_PROMPT = """
@@ -225,7 +525,7 @@ class CropDocAiEngine(private val context: Context) {
         } ?: "No soil data available."
 
         return """
-            ${'$'}{languageInstruction()}
+            ${languageInstruction()}
             Analyse this crop image and respond ONLY with this exact JSON structure:
             {
               "healthScore": 75,
@@ -265,7 +565,7 @@ class CropDocAiEngine(private val context: Context) {
 
     private fun buildSoilOnlyPrompt(soilReading: SoilReading): String {
         return """
-            ${'$'}{languageInstruction()}
+            ${languageInstruction()}
             Analyse these soil readings and respond ONLY with this exact JSON structure:
             {
               "healthScore": 55,
@@ -308,17 +608,14 @@ class CropDocAiEngine(private val context: Context) {
         soilReading: SoilReading?
     ): AnalysisResult {
         return try {
-            // Strip any markdown code fences Gemma might add despite instructions
             val cleaned = response
                 .replace("```json", "")
                 .replace("```", "")
                 .trim()
 
             val json = JSONObject(cleaned)
-
             val healthScore = json.optInt("healthScore", estimateHealthScore(soilReading))
 
-            // Parse diseases
             val diseases = mutableListOf<DiseaseDetection>()
             val diseasesArray = json.optJSONArray("diseases") ?: JSONArray()
             for (i in 0 until diseasesArray.length()) {
@@ -334,14 +631,12 @@ class CropDocAiEngine(private val context: Context) {
                 )
             }
 
-            // Parse immediate actions
             val actions = mutableListOf<String>()
             val actionsArray = json.optJSONArray("immediateActions") ?: JSONArray()
             for (i in 0 until actionsArray.length()) {
                 actions.add(actionsArray.getString(i))
             }
 
-            // Parse soil recommendations
             val soilRecs = mutableListOf<SoilRecommendation>()
             val recsArray = json.optJSONArray("soilRecommendations") ?: JSONArray()
             for (i in 0 until recsArray.length()) {
@@ -357,21 +652,18 @@ class CropDocAiEngine(private val context: Context) {
                 )
             }
 
-            val summary = json.optString("summary", response)
-
             AnalysisResult(
                 diseases = diseases,
                 soilRecommendations = soilRecs,
                 overallHealthScore = healthScore.coerceIn(0, 100),
-                summary = summary,
+                summary = json.optString("summary", response),
                 immediateActions = actions.ifEmpty {
                     listOf("Follow the recommendations above")
                 }
             )
 
         } catch (e: Exception) {
-            // JSON parsing failed — fall back to rule-based result
-            Log.w(TAG, "JSON parse failed, using fallback. Response was: $response", e)
+            Log.w(TAG, "JSON parse failed, using fallback", e)
             AnalysisResult(
                 diseases = emptyList(),
                 soilRecommendations = buildSoilRecommendations(soilReading),
@@ -570,12 +862,6 @@ TREATMENT:
 
     private fun Float.fmt(decimals: Int) = "%.${decimals}f".format(this)
 
-    fun release() {
-        engine?.close()
-        engine = null
-        _modelState.value = ModelState.NotLoaded
-    }
-
     fun setLanguage(code: String) {
         currentLanguage = code
     }
@@ -584,5 +870,11 @@ TREATMENT:
         "sn" -> "Respond in Shona (chiShona). Use simple farming language a Zimbabwean farmer would understand."
         "am" -> "Respond in Amharic (አማርኛ). Use simple farming language an Ethiopian farmer would understand."
         else -> "Respond in English."
+    }
+
+    fun release() {
+        engine?.close()
+        engine = null
+        _modelState.value = ModelState.NotLoaded
     }
 }

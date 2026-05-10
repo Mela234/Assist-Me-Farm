@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.cropdoc.app-mergeDebugResources-75:/values-w600dp-land-v13/values-w600dp-land-v13.xml",
+            "outputFile": "com.cropdoc.app-mergeDebugResources-82:/values-w600dp-land-v13/values-w600dp-land-v13.xml",
             "map": [
                 {
-                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/517c0a375dce6a0c887d4b10579b6167/transformed/material-1.12.0/res/values-w600dp-land-v13/values-w600dp-land-v13.xml",
+                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/cb1f2f64be93fbb8f83c68bd1338a581/transformed/material-1.12.0/res/values-w600dp-land-v13/values-w600dp-land-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

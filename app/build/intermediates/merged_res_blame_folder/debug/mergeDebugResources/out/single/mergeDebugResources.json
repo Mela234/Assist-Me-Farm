@@ -1,66 +1,66 @@
 [
     {
-        "merged": "com.cropdoc.app-debug-77:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.cropdoc.app-main-79:/drawable/ic_launcher_foreground.xml"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-hdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-mdpi_ic_launcher_round.webp.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-mdpi/ic_launcher_round.webp"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-mdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "com.cropdoc.app-debug-84:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.cropdoc.app-main-86:/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-xxhdpi_ic_launcher.webp.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-xxhdpi/ic_launcher.webp"
+        "merged": "com.cropdoc.app-debug-84:/drawable_ic_splash_leaf.xml.flat",
+        "source": "com.cropdoc.app-main-86:/drawable/ic_splash_leaf.xml"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-mdpi_ic_launcher.webp.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-mdpi/ic_launcher.webp"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-xxxhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/drawable_ic_splash_leaf.xml.flat",
-        "source": "com.cropdoc.app-main-79:/drawable/ic_splash_leaf.xml"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-hdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-xxhdpi/ic_launcher_round.webp"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-xxxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-xhdpi_ic_launcher.webp.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-xhdpi/ic_launcher.webp"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-xhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/drawable-v24_ic_launcher.xml.flat",
-        "source": "com.cropdoc.app-main-79:/drawable-v24/ic_launcher.xml"
+        "merged": "com.cropdoc.app-debug-84:/drawable-v24_ic_launcher.xml.flat",
+        "source": "com.cropdoc.app-main-86:/drawable-v24/ic_launcher.xml"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-xxxhdpi_ic_launcher.webp.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-xxxhdpi/ic_launcher.webp"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-xhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-xhdpi_ic_launcher_round.webp.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-xhdpi/ic_launcher_round.webp"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-hdpi_ic_launcher.webp.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-hdpi/ic_launcher.webp"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-mdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.cropdoc.app-main-79:/drawable/ic_launcher_background.xml"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-xxhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-hdpi_ic_launcher_round.webp.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-hdpi/ic_launcher_round.webp"
+        "merged": "com.cropdoc.app-debug-84:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.cropdoc.app-main-86:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-xxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-77:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.cropdoc.app-main-79:/mipmap-xxxhdpi/ic_launcher_round.webp"
+        "merged": "com.cropdoc.app-debug-84:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.cropdoc.app-main-86:/mipmap-anydpi-v26/ic_launcher_round.xml"
     }
 ]

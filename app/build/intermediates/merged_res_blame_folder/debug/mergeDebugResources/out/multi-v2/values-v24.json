@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.cropdoc.app-mergeDebugResources-75:/values-v24/values-v24.xml",
+            "outputFile": "com.cropdoc.app-mergeDebugResources-82:/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/517c0a375dce6a0c887d4b10579b6167/transformed/material-1.12.0/res/values-v24/values-v24.xml",
+                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/cb1f2f64be93fbb8f83c68bd1338a581/transformed/material-1.12.0/res/values-v24/values-v24.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,9,12,15",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/d256d2cbc20786db58543efe5796a5ba/transformed/appcompat-1.6.1/res/values-v24/values-v24.xml",
+                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/8c1d0e8075bcaa5abd12a4c12ac7e7d5/transformed/appcompat-1.6.1/res/values-v24/values-v24.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
