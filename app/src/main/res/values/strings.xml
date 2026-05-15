@@ -8,11 +8,21 @@
     <string name="permission_bluetooth_rationale">Bluetooth access is needed to connect to your soil sensor.</string>
 
     <!-- Home -->
-    <string name="home_greeting">Good day, Farmer</string>
+    <string name="home_greeting">Good day, Farmer 🌱</string>
     <string name="home_subtitle">All analysis runs privately on your phone</string>
+    <string name="home_what_to_do">What would you like to do?</string>
     <string name="action_scan_crop">Scan Crop</string>
+    <string name="action_scan_crop_subtitle">Take a photo to diagnose disease</string>
     <string name="action_soil_sensor">Soil Sensor</string>
+    <string name="action_soil_sensor_subtitle">Connect &amp; view soil data</string>
     <string name="action_analyse_soil">Analyse Soil Data Only</string>
+
+    <!-- Tips -->
+    <string name="tip_1">💡 Take photos in good natural light for best results</string>
+    <string name="tip_2">📏 Get close enough to see leaf detail clearly</string>
+    <string name="tip_3">🔄 Re-analyse after applying treatments to track progress</string>
+    <string name="tip_4">🌡️ Soil readings update automatically when sensor is connected</string>
+    <string name="tips_title">Tips</string>
 
     <!-- Camera -->
     <string name="camera_title">Crop Scanner</string>
@@ -21,13 +31,60 @@
     <string name="camera_analyse">Analyse Crop</string>
     <string name="camera_analyse_with_soil">Analyse Crop + Soil</string>
     <string name="camera_analysing">Gemma 4 is analysing your crop…</string>
+    <string name="camera_not_available">Camera not available</string>
+    <string name="camera_use_gallery">Use the gallery button below to pick an image</string>
+    <string name="camera_gallery_only">Gallery\nonly</string>
+    <string name="camera_gallery_or_camera">Gallery\nor camera</string>
+    <string name="include_soil_data">Include soil sensor data</string>
+    <string name="analysis_complete">Analysis Complete</string>
+    <string name="issues_found">%1$d issue(s) found • %2$d soil recommendation(s)</string>
+    <string name="diseases_issues">Diseases / Issues</string>
+    <string name="immediate_actions">Immediate Actions</string>
+    <string name="soil_recommendations">Soil Recommendations</string>
+    <string name="full_ai_analysis">Full AI Analysis</string>
+    <string name="retry_analysis">Retry Analysis</string>
+    <string name="affected">Affected: %1$s</string>
+    <string name="current_to_target">Current: %1$s → Target: %2$s</string>
 
     <!-- Sensor -->
     <string name="sensor_title">Soil Sensor</string>
     <string name="sensor_scan">Scan for Soil Sensor</string>
-    <string name="sensor_stop">Stop Scan</string>
+    <string name="sensor_stop">Stop</string>
     <string name="sensor_disconnect">Disconnect Sensor</string>
     <string name="sensor_nearby">Nearby Sensors</string>
+    <string name="sensor_no_connected">No sensor connected</string>
+    <string name="sensor_scanning">Scanning for sensors…</string>
+    <string name="sensor_connecting">Connecting to %1$s…</string>
+    <string name="sensor_mock_title">Mock Soil Sensor</string>
+    <string name="sensor_mock_subtitle">Development mode — no hardware needed</string>
+    <string name="sensor_mock_simulating">📡 Simulating live readings</string>
+    <string name="sensor_mock_warning">⚠ Readings simulate a low-moisture, acidic soil profile so the AI has something meaningful to analyse.</string>
+    <string name="sensor_explain_readings">Explain these readings</string>
+    <string name="sensor_getting_summary">Getting summary…</string>
+    <string name="sensor_summary_title">What this means for your crops</string>
+    <string name="sensor_dismiss">Dismiss</string>
+    <string name="sensor_setup_title">Sensor Setup</string>
+    <string name="sensor_setup_1">Build sensor with ESP32 + NPK/pH/moisture probes</string>
+    <string name="sensor_setup_2">Flash firmware with Service UUID: 12345678-1234-5678-1234-56789abcdef0</string>
+    <string name="sensor_setup_3">Data characteristic UUID: …abcdef1 (24-byte float payload)</string>
+    <string name="sensor_setup_4">Power on sensor and press Scan above</string>
+    <string name="sensor_setup_5">Tap your sensor name to connect</string>
+
+    <!-- Soil readings -->
+    <string name="soil_readings_title">Soil Readings</string>
+    <string name="soil_moisture">Moisture</string>
+    <string name="soil_ph">pH</string>
+    <string name="soil_temp">Temp</string>
+    <string name="soil_nitrogen">Nitrogen</string>
+    <string name="soil_phosphorus">Phosphorus</string>
+    <string name="soil_potassium">Potassium</string>
+    <string name="health_score">Health Score</string>
+
+    <!-- Severity -->
+    <string name="severity_low">Low</string>
+    <string name="severity_medium">Medium</string>
+    <string name="severity_high">High</string>
+    <string name="severity_critical">Critical</string>
 
     <!-- History -->
     <string name="history_title">Analysis History</string>
@@ -40,9 +97,98 @@
     <string name="model_error">Model failed to load</string>
     <string name="model_retry">Retry</string>
 
+    <!-- BLE -->
+    <string name="ble_no_sensor">No sensor connected</string>
+    <string name="ble_connecting">Connecting…</string>
+    <string name="ble_scanning">Scanning for sensors…</string>
+
+    <!-- Language -->
+    <string name="language_select">Select Language</string>
+    <string name="language_english">English</string>
+    <string name="language_shona">Shona</string>
+    <string name="language_amharic">Amharic</string>
+
     <!-- Content descriptions -->
     <string name="cd_back">Back</string>
     <string name="cd_history">History</string>
     <string name="cd_crop_image">Captured crop photo</string>
     <string name="cd_app_logo">CropDoc logo</string>
+
+    <!-- Weather -->
+    <string name="weather_title">Weather Updates</string>
+    <string name="weather_enable">Enable Weather Updates</string>
+    <string name="weather_enable_subtitle">Get forecasts sent to your phone for better farming advice</string>
+    <string name="weather_waiting">Waiting for weather update…</string>
+    <string name="weather_opted_in">You are receiving weather updates</string>
+    <string name="weather_update_details">Update Details</string>
+    <string name="weather_stop">Stop Weather Updates</string>
+    <string name="weather_stop_confirm_title">Stop Weather Updates?</string>
+    <string name="weather_stop_confirm_body">You will no longer receive weather SMS updates. You can re-enable at any time.</string>
+    <string name="weather_phone_label">Phone Number</string>
+    <string name="weather_phone_hint">+263771234567</string>
+    <string name="weather_location_label">Your Location</string>
+    <string name="weather_location_hint">e.g. Harare, Masvingo, Bulawayo</string>
+    <string name="weather_how_it_works">How it works</string>
+    <string name="weather_step_1">Enter your phone number and nearest town</string>
+    <string name="weather_step_2">We send weather updates to your number periodically</string>
+    <string name="weather_step_3">CropDoc reads the SMS and updates your weather data</string>
+    <string name="weather_step_4">Gemma uses weather data to give better farming advice</string>
+    <string name="weather_step_5">Works offline — weather is cached after each update</string>
+    <string name="weather_stat_temp">Temp</string>
+    <string name="weather_stat_humidity">Humidity</string>
+    <string name="weather_stat_rain">Rain</string>
+    <string name="weather_stat_wind">Wind</string>
+
+    <!-- Chat -->
+    <string name="chat_title">Farm Assistant</string>
+    <string name="chat_powered_by">Powered by Gemma 4 • On-device</string>
+    <string name="chat_input_hint">Ask about your farm…</string>
+    <string name="chat_empty_title">Ask me anything about\nyour farm</string>
+    <string name="chat_zone_title">Ask me anything about\n%1$s</string>
+    <string name="chat_empty_subtitle">I know your soil readings, weather\nand crop history</string>
+    <string name="chat_thinking">Gemma is thinking…</string>
+    <string name="chat_clear">Clear chat</string>
+    <string name="chat_suggestion_1">How is my soil health?</string>
+    <string name="chat_suggestion_2">When should I irrigate?</string>
+    <string name="chat_suggestion_3">What should I plant next?</string>
+    <string name="chat_suggestion_4">How do I improve my yield?</string>
+    <string name="chat_zone_suggestion_1">How is my crop doing?</string>
+    <string name="chat_zone_suggestion_2">When should I water?</string>
+    <string name="chat_zone_suggestion_3">What fertilizer do I need?</string>
+    <string name="chat_zone_suggestion_4">When can I harvest?</string>
+    <string name="chat_button_title">Chat with Farm Assistant</string>
+    <string name="chat_button_subtitle">Ask Gemma 4 anything about your farm</string>
+
+    <!-- Farm Map -->
+    <string name="farm_map_title">Farm Map</string>
+    <string name="farm_map_empty_title">Your farm map is empty</string>
+    <string name="farm_map_empty_subtitle">Tap the + button to add your first zone</string>
+    <string name="farm_map_add_first">Add First Zone</string>
+    <string name="farm_map_legend">%1$d zone(s) • Tap zone to view • Long press canvas to add</string>
+    <string name="farm_map_add_zone">Add Farm Zone</string>
+    <string name="farm_map_zone_name_label">Zone Name</string>
+    <string name="farm_map_zone_name_hint">e.g. North Field, Maize Plot</string>
+    <string name="farm_map_zone_color">Zone Color</string>
+    <string name="farm_map_no_crops">No crops assigned yet</string>
+    <string name="farm_map_add_crop">Add Crop</string>
+    <string name="farm_map_add_another_crop">Add Another Crop</string>
+    <string name="farm_map_no_readings">No readings recorded for this zone yet. Set this as the active sensor zone to start collecting data.</string>
+    <string name="farm_map_last_updated">Last updated: %1$s</string>
+    <string name="farm_map_set_active_sensor">Set as Active Sensor Zone</string>
+    <string name="farm_map_chat_about_zone">Chat About This Zone</string>
+    <string name="farm_map_delete_zone">Delete Zone</string>
+    <string name="farm_map_delete_confirm_title">Delete %1$s?</string>
+    <string name="farm_map_delete_confirm_body">This will delete the zone and all its crop and soil history. This cannot be undone.</string>
+    <string name="farm_map_active_sensor_zone">📡 Active sensor zone</string>
+    <string name="farm_map_crops_title">Crops</string>
+    <string name="farm_map_soil_title">Latest Soil Reading</string>
+    <string name="farm_map_days_to_harvest">%1$d days to harvest</string>
+    <string name="farm_map_ready_to_harvest">Ready to harvest!</string>
+    <string name="farm_map_day_progress">Day %1$d of %2$d</string>
+    <string name="farm_map_add_crop_title">Add Crop</string>
+    <string name="farm_map_crop_name_label">Crop Name</string>
+    <string name="farm_map_crop_name_hint">e.g. Maize</string>
+    <string name="farm_map_harvest_days_label">Days to Harvest</string>
+    <string name="farm_map_notes_label">Notes (optional)</string>
+    <string name="farm_map_quick_select">Quick select:</string>
 </resources>

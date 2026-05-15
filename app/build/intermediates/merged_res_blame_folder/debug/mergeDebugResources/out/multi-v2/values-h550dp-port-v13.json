@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.cropdoc.app-mergeDebugResources-75:/values-h550dp-port-v13/values-h550dp-port-v13.xml",
+            "outputFile": "com.cropdoc.app-mergeDebugResources-84:/values-h550dp-port-v13/values-h550dp-port-v13.xml",
             "map": [
                 {
-                    "source": "/Users/melatamde/.gradle/caches/9.0.0/transforms/646c216369413da7934d42644609e0b1/transformed/material-1.12.0/res/values-h550dp-port-v13/values-h550dp-port-v13.xml",
+                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/cb1f2f64be93fbb8f83c68bd1338a581/transformed/material-1.12.0/res/values-h550dp-port-v13/values-h550dp-port-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

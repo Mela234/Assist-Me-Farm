@@ -28,11 +28,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
+import com.cropdoc.app.R
 import com.cropdoc.app.data.model.AnalysisState
 import com.cropdoc.app.data.model.ModelState
 import com.cropdoc.app.ui.components.*
@@ -57,8 +59,8 @@ fun CameraScreen(
     var imageCapture by remember { mutableStateOf<ImageCapture?>(null) }
     var showCamera by remember { mutableStateOf(capturedUri == null) }
     var cameraError by remember { mutableStateOf(false) }
+    var includeSoilData by remember { mutableStateOf(true) }
 
-    // Gallery / file picker — works on emulator and real device
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
@@ -71,14 +73,22 @@ fun CameraScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Crop Scanner", fontWeight = FontWeight.SemiBold) },
+                title = {
+                    Text(
+                        stringResource(R.string.camera_title),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = {
                         viewModel.resetAnalysis()
                         viewModel.clearImage()
                         onNavigateBack()
                     }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            stringResource(R.string.cd_back)
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -92,8 +102,11 @@ fun CameraScreen(
                             viewModel.clearImage()
                             showCamera = true
                         }) {
-                            Icon(Icons.Default.Refresh, "Retake",
-                                tint = MaterialTheme.colorScheme.onPrimary)
+                            Icon(
+                                Icons.Default.Refresh,
+                                stringResource(R.string.camera_retake),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
                         }
                     }
                 }
@@ -106,9 +119,7 @@ fun CameraScreen(
                 .padding(innerPadding)
         ) {
             if (showCamera && capturedUri == null) {
-                // ── Camera preview (or error state on emulator) ───────────────
                 if (cameraError) {
-                    // Emulator fallback — no real camera available
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -127,12 +138,12 @@ fun CameraScreen(
                                 tint = MaterialTheme.colorScheme.outline
                             )
                             Text(
-                                "Camera not available",
+                                stringResource(R.string.camera_not_available),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                "Use the gallery button below to pick an image",
+                                stringResource(R.string.camera_use_gallery),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -148,14 +159,12 @@ fun CameraScreen(
                     )
                 }
 
-                // ── Bottom control bar — shutter + gallery ────────────────────
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.95f))
                         .padding(vertical = 20.dp, horizontal = 32.dp)
                 ) {
-                    // Gallery picker — left side
                     IconButton(
                         onClick = { galleryLauncher.launch("image/*") },
                         modifier = Modifier
@@ -171,11 +180,9 @@ fun CameraScreen(
                         )
                     }
 
-                    // Shutter — centre
                     IconButton(
                         onClick = {
                             if (cameraError) {
-                                // If no camera, open gallery instead
                                 galleryLauncher.launch("image/*")
                             } else {
                                 captureImage(
@@ -196,41 +203,40 @@ fun CameraScreen(
                     ) {
                         Icon(
                             if (cameraError) Icons.Default.PhotoLibrary else Icons.Default.CameraAlt,
-                            contentDescription = "Capture",
+                            contentDescription = stringResource(R.string.camera_capture),
                             tint = Color.White,
                             modifier = Modifier.size(36.dp)
                         )
                     }
 
-                    // Label — right side hint
                     Column(
                         modifier = Modifier.align(Alignment.CenterEnd),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            if (cameraError) "Gallery\nonly" else "Gallery\nor camera",
+                            if (cameraError) stringResource(R.string.camera_gallery_only)
+                            else stringResource(R.string.camera_gallery_or_camera),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White.copy(alpha = 0.7f)
                         )
                     }
                 }
             } else {
-                // ── Image + analysis ──────────────────────────────────────────
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    // Captured image
                     capturedUri?.let { uri ->
                         AsyncImage(
                             model = uri,
-                            contentDescription = "Captured crop",
+                            contentDescription = stringResource(R.string.cd_crop_image),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
                                 .height(260.dp)
-                                .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+                                .clip(RoundedCornerShape(20.dp))
                         )
                     }
 
@@ -238,28 +244,92 @@ fun CameraScreen(
                         modifier = Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Soil reading if available
-                        soilReading?.let { SoilReadingPanel(it) }
-
-                        // Analyse button / state
                         when (analysisState) {
                             AnalysisState.Idle -> {
-                                Button(
-                                    onClick = { viewModel.analyseCapture() },
-                                    enabled = modelState is ModelState.Ready,
-                                    modifier = Modifier.fillMaxWidth().height(52.dp),
-                                    shape = RoundedCornerShape(14.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.primary
-                                    )
-                                ) {
-                                    Icon(Icons.Default.Search, null)
-                                    Spacer(Modifier.width(8.dp))
-                                    Text(
-                                        if (soilReading != null) "Analyse Crop + Soil"
-                                        else "Analyse Crop",
-                                        style = MaterialTheme.typography.titleSmall
-                                    )
+                                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+
+                                    // Soil opt-in toggle
+                                    if (soilReading != null) {
+                                        Card(
+                                            shape = RoundedCornerShape(14.dp),
+                                            colors = CardDefaults.cardColors(
+                                                containerColor = if (includeSoilData)
+                                                    Color(0xFFE8F5E9)
+                                                else
+                                                    MaterialTheme.colorScheme.surfaceVariant
+                                            ),
+                                            border = if (includeSoilData)
+                                                androidx.compose.foundation.BorderStroke(
+                                                    1.5.dp, Color(0xFF43A047)
+                                                )
+                                            else null
+                                        ) {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(14.dp),
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                            ) {
+                                                Icon(
+                                                    Icons.Default.Sensors,
+                                                    null,
+                                                    tint = if (includeSoilData) Color(0xFF2E7D32)
+                                                    else MaterialTheme.colorScheme.onSurfaceVariant,
+                                                    modifier = Modifier.size(20.dp)
+                                                )
+                                                Column(Modifier.weight(1f)) {
+                                                    Text(
+                                                        stringResource(R.string.include_soil_data),
+                                                        style = MaterialTheme.typography.titleSmall,
+                                                        fontWeight = FontWeight.SemiBold,
+                                                        color = if (includeSoilData) Color(0xFF1B5E20)
+                                                        else MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                    Text(
+                                                        "Moisture ${soilReading!!.moisture.toInt()}% • pH ${
+                                                            "%.1f".format(soilReading!!.ph)} • N ${
+                                                            soilReading!!.nitrogen.toInt()} mg/kg",
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = if (includeSoilData) Color(0xFF388E3C)
+                                                        else MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                }
+                                                Switch(
+                                                    checked = includeSoilData,
+                                                    onCheckedChange = { includeSoilData = it },
+                                                    colors = SwitchDefaults.colors(
+                                                        checkedThumbColor = Color.White,
+                                                        checkedTrackColor = Color(0xFF43A047)
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    Button(
+                                        onClick = { viewModel.analyseCapture(includeSoil = includeSoilData) },
+                                        enabled = modelState is ModelState.Ready,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(52.dp),
+                                        shape = RoundedCornerShape(14.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = MaterialTheme.colorScheme.primary
+                                        )
+                                    ) {
+                                        Icon(Icons.Default.Search, null)
+                                        Spacer(Modifier.width(8.dp))
+                                        Text(
+                                            when {
+                                                soilReading != null && includeSoilData ->
+                                                    stringResource(R.string.camera_analyse_with_soil)
+                                                else ->
+                                                    stringResource(R.string.camera_analyse)
+                                            },
+                                            style = MaterialTheme.typography.titleSmall
+                                        )
+                                    }
                                 }
                             }
 
@@ -276,9 +346,14 @@ fun CameraScreen(
                                 val message = (analysisState as AnalysisState.Error).message
                                 Card(
                                     shape = RoundedCornerShape(14.dp),
-                                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = Color(0xFFFFEBEE)
+                                    )
                                 ) {
-                                    Row(Modifier.padding(14.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    Row(
+                                        Modifier.padding(14.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
                                         Icon(Icons.Default.Error, null, tint = Color(0xFFD32F2F))
                                         Text(message, color = Color(0xFFD32F2F))
                                     }
@@ -286,7 +361,9 @@ fun CameraScreen(
                                 Button(
                                     onClick = { viewModel.analyseCapture() },
                                     modifier = Modifier.fillMaxWidth()
-                                ) { Text("Retry Analysis") }
+                                ) {
+                                    Text(stringResource(R.string.retry_analysis))
+                                }
                             }
                         }
                     }
@@ -311,7 +388,7 @@ private fun AnalysingCard(streamingText: String) {
             ) {
                 CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
                 Text(
-                    "Gemma 4 is analysing your crop…",
+                    stringResource(R.string.camera_analysing),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -319,7 +396,9 @@ private fun AnalysingCard(streamingText: String) {
             }
             if (streamingText.isNotEmpty()) {
                 Spacer(Modifier.height(12.dp))
-                HorizontalDivider(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                )
                 Spacer(Modifier.height(12.dp))
                 Text(
                     text = streamingText,
@@ -334,10 +413,11 @@ private fun AnalysingCard(streamingText: String) {
 @Composable
 private fun AnalysisResultCard(result: com.cropdoc.app.data.model.AnalysisResult) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        // Health score + summary header
         Card(
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             Row(
@@ -348,12 +428,16 @@ private fun AnalysisResultCard(result: com.cropdoc.app.data.model.AnalysisResult
                 HealthScoreGauge(result.overallHealthScore)
                 Column(Modifier.weight(1f)) {
                     Text(
-                        "Analysis Complete",
+                        stringResource(R.string.analysis_complete),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        "${result.diseases.size} issue(s) found • ${result.soilRecommendations.size} soil recommendation(s)",
+                        stringResource(
+                            R.string.issues_found,
+                            result.diseases.size,
+                            result.soilRecommendations.size
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -361,13 +445,17 @@ private fun AnalysisResultCard(result: com.cropdoc.app.data.model.AnalysisResult
             }
         }
 
-        // Diseases detected
         if (result.diseases.isNotEmpty()) {
-            SectionHeader("Diseases / Issues", Icons.Default.BugReport)
+            SectionHeader(
+                stringResource(R.string.diseases_issues),
+                Icons.Default.BugReport
+            )
             result.diseases.forEach { disease ->
                 Card(
                     shape = RoundedCornerShape(14.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                 ) {
                     Row(
@@ -382,7 +470,7 @@ private fun AnalysisResultCard(result: com.cropdoc.app.data.model.AnalysisResult
                                 fontWeight = FontWeight.SemiBold
                             )
                             Text(
-                                "Affected: ${disease.affectedArea}",
+                                stringResource(R.string.affected, disease.affectedArea),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -393,28 +481,37 @@ private fun AnalysisResultCard(result: com.cropdoc.app.data.model.AnalysisResult
             }
         }
 
-        // Immediate actions
         if (result.immediateActions.isNotEmpty()) {
-            SectionHeader("Immediate Actions", Icons.Default.Warning)
+            SectionHeader(
+                stringResource(R.string.immediate_actions),
+                Icons.Default.Warning
+            )
             result.immediateActions.forEach { action ->
                 Row(
                     modifier = Modifier.padding(vertical = 2.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text("→", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                    Text(
+                        "→",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
                     Text(action, style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }
 
-        // Soil recommendations
         if (result.soilRecommendations.isNotEmpty()) {
-            SectionHeader("Soil Recommendations", Icons.Default.Science)
+            SectionHeader(
+                stringResource(R.string.soil_recommendations),
+                Icons.Default.Science
+            )
             result.soilRecommendations.forEach { rec ->
                 Card(
                     shape = RoundedCornerShape(14.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.5f)
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                            .copy(alpha = 0.5f)
                     )
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
@@ -432,7 +529,11 @@ private fun AnalysisResultCard(result: com.cropdoc.app.data.model.AnalysisResult
                         }
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            "Current: ${rec.currentValue} → Target: ${rec.targetRange}",
+                            stringResource(
+                                R.string.current_to_target,
+                                rec.currentValue,
+                                rec.targetRange
+                            ),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -446,11 +547,15 @@ private fun AnalysisResultCard(result: com.cropdoc.app.data.model.AnalysisResult
             }
         }
 
-        // Full AI response
-        SectionHeader("Full AI Analysis", Icons.Default.Article)
+        SectionHeader(
+            stringResource(R.string.full_ai_analysis),
+            Icons.Default.Article
+        )
         Card(
             shape = RoundedCornerShape(14.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
         ) {
             Text(
                 text = result.summary,
@@ -462,8 +567,6 @@ private fun AnalysisResultCard(result: com.cropdoc.app.data.model.AnalysisResult
         Spacer(Modifier.height(16.dp))
     }
 }
-
-// ── CameraX composable ────────────────────────────────────────────────────────
 
 @Composable
 private fun CameraPreview(
@@ -499,7 +602,6 @@ private fun CameraPreview(
                     capture
                 )
             } catch (e: Exception) {
-                // No camera available (emulator, or permission denied)
                 e.printStackTrace()
                 onCameraError()
             }

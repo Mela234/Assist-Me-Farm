@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,10 +17,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.cropdoc.app.R
 import com.cropdoc.app.data.model.BleState
 import com.cropdoc.app.data.model.SeverityLevel
 import com.cropdoc.app.data.model.SoilReading
@@ -60,7 +60,7 @@ fun HealthScoreGauge(score: Int, modifier: Modifier = Modifier) {
                 strokeCap = StrokeCap.Round,
             )
             Text(
-                text = "${score}",
+                text = "$score",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = color
@@ -68,7 +68,7 @@ fun HealthScoreGauge(score: Int, modifier: Modifier = Modifier) {
         }
         Spacer(Modifier.height(4.dp))
         Text(
-            text = "Health Score",
+            text = stringResource(R.string.health_score),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -79,18 +79,18 @@ fun HealthScoreGauge(score: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun SeverityChip(severity: SeverityLevel) {
-    val (label, containerColor, contentColor) = when (severity) {
-        SeverityLevel.LOW      -> Triple("Low",      Color(0xFFE8F5E9), Color(0xFF2E7D32))
-        SeverityLevel.MEDIUM   -> Triple("Medium",   Color(0xFFFFF8E1), Color(0xFFF57C00))
-        SeverityLevel.HIGH     -> Triple("High",     Color(0xFFFFF3E0), Color(0xFFE65100))
-        SeverityLevel.CRITICAL -> Triple("Critical", Color(0xFFFFEBEE), Color(0xFFB71C1C))
+    val (labelRes, containerColor, contentColor) = when (severity) {
+        SeverityLevel.LOW      -> Triple(R.string.severity_low,      Color(0xFFE8F5E9), Color(0xFF2E7D32))
+        SeverityLevel.MEDIUM   -> Triple(R.string.severity_medium,   Color(0xFFFFF8E1), Color(0xFFF57C00))
+        SeverityLevel.HIGH     -> Triple(R.string.severity_high,     Color(0xFFFFF3E0), Color(0xFFE65100))
+        SeverityLevel.CRITICAL -> Triple(R.string.severity_critical, Color(0xFFFFEBEE), Color(0xFFB71C1C))
     }
     Surface(
         shape = RoundedCornerShape(12.dp),
         color = containerColor
     ) {
         Text(
-            text = label,
+            text = stringResource(labelRes),
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.SemiBold,
@@ -165,11 +165,31 @@ fun SoilMetricCard(
 @Composable
 fun BleBanner(bleState: BleState, modifier: Modifier = Modifier) {
     val (icon, text, color) = when (bleState) {
-        is BleState.Connected    -> Triple(Icons.Default.Bluetooth, "Sensor: ${bleState.deviceName}", Color(0xFF43A047))
-        is BleState.Connecting   -> Triple(Icons.Default.BluetoothSearching, "Connecting…", Color(0xFFFFA000))
-        is BleState.Scanning     -> Triple(Icons.Default.BluetoothSearching, "Scanning for sensors…", Color(0xFF1976D2))
-        is BleState.Error        -> Triple(Icons.Default.BluetoothDisabled, bleState.message, Color(0xFFD32F2F))
-        BleState.Disconnected    -> Triple(Icons.Default.BluetoothDisabled, "No sensor connected", Color(0xFF757575))
+        is BleState.Connected  -> Triple(
+            Icons.Default.Bluetooth,
+            "Sensor: ${bleState.deviceName}",
+            Color(0xFF43A047)
+        )
+        is BleState.Connecting -> Triple(
+            Icons.Default.BluetoothSearching,
+            stringResource(R.string.ble_connecting),
+            Color(0xFFFFA000)
+        )
+        is BleState.Scanning   -> Triple(
+            Icons.Default.BluetoothSearching,
+            stringResource(R.string.ble_scanning),
+            Color(0xFF1976D2)
+        )
+        is BleState.Error      -> Triple(
+            Icons.Default.BluetoothDisabled,
+            bleState.message,
+            Color(0xFFD32F2F)
+        )
+        BleState.Disconnected  -> Triple(
+            Icons.Default.BluetoothDisabled,
+            stringResource(R.string.ble_no_sensor),
+            Color(0xFF757575)
+        )
     }
 
     Surface(
@@ -183,8 +203,17 @@ fun BleBanner(bleState: BleState, modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Icon(imageVector = icon, contentDescription = null, tint = color, modifier = Modifier.size(18.dp))
-            Text(text = text, style = MaterialTheme.typography.labelMedium, color = color)
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(18.dp)
+            )
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelMedium,
+                color = color
+            )
         }
     }
 }
@@ -202,7 +231,7 @@ fun SoilReadingPanel(reading: SoilReading, modifier: Modifier = Modifier) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                "Soil Readings",
+                stringResource(R.string.soil_readings_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -216,19 +245,22 @@ fun SoilReadingPanel(reading: SoilReading, modifier: Modifier = Modifier) {
                 val warnAmber = Color(0xFFF57C00)
 
                 SoilMetricCard(
-                    "Moisture", "%.0f".format(reading.moisture), "%",
+                    stringResource(R.string.soil_moisture),
+                    "%.0f".format(reading.moisture), "%",
                     Icons.Default.WaterDrop,
                     if (reading.moisture in 30f..70f) soilGreen else warnAmber,
                     Modifier.weight(1f)
                 )
                 SoilMetricCard(
-                    "pH", "%.1f".format(reading.ph), "pH",
+                    stringResource(R.string.soil_ph),
+                    "%.1f".format(reading.ph), "pH",
                     Icons.Default.Science,
                     if (reading.ph in 5.5f..7.5f) soilGreen else warnAmber,
                     Modifier.weight(1f)
                 )
                 SoilMetricCard(
-                    "Temp", "%.1f".format(reading.temperature), "°C",
+                    stringResource(R.string.soil_temp),
+                    "%.1f".format(reading.temperature), "°C",
                     Icons.Default.Thermostat,
                     if (reading.temperature in 15f..35f) soilGreen else warnAmber,
                     Modifier.weight(1f)
@@ -243,19 +275,22 @@ fun SoilReadingPanel(reading: SoilReading, modifier: Modifier = Modifier) {
                 val warnAmber = Color(0xFFF57C00)
 
                 SoilMetricCard(
-                    "Nitrogen", "%.0f".format(reading.nitrogen), "mg/kg",
+                    stringResource(R.string.soil_nitrogen),
+                    "%.0f".format(reading.nitrogen), "mg/kg",
                     Icons.Default.Grass,
                     if (reading.nitrogen >= 40f) soilGreen else warnAmber,
                     Modifier.weight(1f)
                 )
                 SoilMetricCard(
-                    "Phosphorus", "%.0f".format(reading.phosphorus), "mg/kg",
+                    stringResource(R.string.soil_phosphorus),
+                    "%.0f".format(reading.phosphorus), "mg/kg",
                     Icons.Default.EnergySavingsLeaf,
                     if (reading.phosphorus >= 20f) soilGreen else warnAmber,
                     Modifier.weight(1f)
                 )
                 SoilMetricCard(
-                    "Potassium", "%.0f".format(reading.potassium), "mg/kg",
+                    stringResource(R.string.soil_potassium),
+                    "%.0f".format(reading.potassium), "mg/kg",
                     Icons.Default.Spa,
                     if (reading.potassium >= 100f) soilGreen else warnAmber,
                     Modifier.weight(1f)
