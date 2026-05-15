@@ -35,7 +35,7 @@ public class ChatDao_Impl(
     this.__db = __db
     this.__insertAdapterOfChatMessage = object : EntityInsertAdapter<ChatMessage>() {
       protected override fun createQuery(): String =
-          "INSERT OR REPLACE INTO `chat_messages` (`id`,`role`,`content`,`attachedImageUri`,`zoneId`,`contextSnapshot`,`timestamp`) VALUES (nullif(?, 0),?,?,?,?,?,?)"
+          "INSERT OR REPLACE INTO `chat_messages` (`id`,`role`,`content`,`attachedImageUri`,`audioPath`,`zoneId`,`contextSnapshot`,`timestamp`) VALUES (nullif(?, 0),?,?,?,?,?,?,?)"
 
       protected override fun bind(statement: SQLiteStatement, entity: ChatMessage) {
         statement.bindLong(1, entity.id)
@@ -47,14 +47,20 @@ public class ChatDao_Impl(
         } else {
           statement.bindText(4, _tmpAttachedImageUri)
         }
-        val _tmpZoneId: Long? = entity.zoneId
-        if (_tmpZoneId == null) {
+        val _tmpAudioPath: String? = entity.audioPath
+        if (_tmpAudioPath == null) {
           statement.bindNull(5)
         } else {
-          statement.bindLong(5, _tmpZoneId)
+          statement.bindText(5, _tmpAudioPath)
         }
-        statement.bindText(6, entity.contextSnapshot)
-        statement.bindLong(7, entity.timestamp)
+        val _tmpZoneId: Long? = entity.zoneId
+        if (_tmpZoneId == null) {
+          statement.bindNull(6)
+        } else {
+          statement.bindLong(6, _tmpZoneId)
+        }
+        statement.bindText(7, entity.contextSnapshot)
+        statement.bindLong(8, entity.timestamp)
       }
     }
     this.__deleteAdapterOfChatMessage = object : EntityDeleteOrUpdateAdapter<ChatMessage>() {
@@ -85,6 +91,7 @@ public class ChatDao_Impl(
         val _columnIndexOfRole: Int = getColumnIndexOrThrow(_stmt, "role")
         val _columnIndexOfContent: Int = getColumnIndexOrThrow(_stmt, "content")
         val _columnIndexOfAttachedImageUri: Int = getColumnIndexOrThrow(_stmt, "attachedImageUri")
+        val _columnIndexOfAudioPath: Int = getColumnIndexOrThrow(_stmt, "audioPath")
         val _columnIndexOfZoneId: Int = getColumnIndexOrThrow(_stmt, "zoneId")
         val _columnIndexOfContextSnapshot: Int = getColumnIndexOrThrow(_stmt, "contextSnapshot")
         val _columnIndexOfTimestamp: Int = getColumnIndexOrThrow(_stmt, "timestamp")
@@ -103,6 +110,12 @@ public class ChatDao_Impl(
           } else {
             _tmpAttachedImageUri = _stmt.getText(_columnIndexOfAttachedImageUri)
           }
+          val _tmpAudioPath: String?
+          if (_stmt.isNull(_columnIndexOfAudioPath)) {
+            _tmpAudioPath = null
+          } else {
+            _tmpAudioPath = _stmt.getText(_columnIndexOfAudioPath)
+          }
           val _tmpZoneId: Long?
           if (_stmt.isNull(_columnIndexOfZoneId)) {
             _tmpZoneId = null
@@ -114,7 +127,7 @@ public class ChatDao_Impl(
           val _tmpTimestamp: Long
           _tmpTimestamp = _stmt.getLong(_columnIndexOfTimestamp)
           _item =
-              ChatMessage(_tmpId,_tmpRole,_tmpContent,_tmpAttachedImageUri,_tmpZoneId,_tmpContextSnapshot,_tmpTimestamp)
+              ChatMessage(_tmpId,_tmpRole,_tmpContent,_tmpAttachedImageUri,_tmpAudioPath,_tmpZoneId,_tmpContextSnapshot,_tmpTimestamp)
           _result.add(_item)
         }
         _result
@@ -135,6 +148,7 @@ public class ChatDao_Impl(
         val _columnIndexOfRole: Int = getColumnIndexOrThrow(_stmt, "role")
         val _columnIndexOfContent: Int = getColumnIndexOrThrow(_stmt, "content")
         val _columnIndexOfAttachedImageUri: Int = getColumnIndexOrThrow(_stmt, "attachedImageUri")
+        val _columnIndexOfAudioPath: Int = getColumnIndexOrThrow(_stmt, "audioPath")
         val _columnIndexOfZoneId: Int = getColumnIndexOrThrow(_stmt, "zoneId")
         val _columnIndexOfContextSnapshot: Int = getColumnIndexOrThrow(_stmt, "contextSnapshot")
         val _columnIndexOfTimestamp: Int = getColumnIndexOrThrow(_stmt, "timestamp")
@@ -153,6 +167,12 @@ public class ChatDao_Impl(
           } else {
             _tmpAttachedImageUri = _stmt.getText(_columnIndexOfAttachedImageUri)
           }
+          val _tmpAudioPath: String?
+          if (_stmt.isNull(_columnIndexOfAudioPath)) {
+            _tmpAudioPath = null
+          } else {
+            _tmpAudioPath = _stmt.getText(_columnIndexOfAudioPath)
+          }
           val _tmpZoneId: Long?
           if (_stmt.isNull(_columnIndexOfZoneId)) {
             _tmpZoneId = null
@@ -164,7 +184,7 @@ public class ChatDao_Impl(
           val _tmpTimestamp: Long
           _tmpTimestamp = _stmt.getLong(_columnIndexOfTimestamp)
           _item =
-              ChatMessage(_tmpId,_tmpRole,_tmpContent,_tmpAttachedImageUri,_tmpZoneId,_tmpContextSnapshot,_tmpTimestamp)
+              ChatMessage(_tmpId,_tmpRole,_tmpContent,_tmpAttachedImageUri,_tmpAudioPath,_tmpZoneId,_tmpContextSnapshot,_tmpTimestamp)
           _result.add(_item)
         }
         _result
@@ -205,6 +225,7 @@ public class ChatDao_Impl(
         val _columnIndexOfRole: Int = getColumnIndexOrThrow(_stmt, "role")
         val _columnIndexOfContent: Int = getColumnIndexOrThrow(_stmt, "content")
         val _columnIndexOfAttachedImageUri: Int = getColumnIndexOrThrow(_stmt, "attachedImageUri")
+        val _columnIndexOfAudioPath: Int = getColumnIndexOrThrow(_stmt, "audioPath")
         val _columnIndexOfZoneId: Int = getColumnIndexOrThrow(_stmt, "zoneId")
         val _columnIndexOfContextSnapshot: Int = getColumnIndexOrThrow(_stmt, "contextSnapshot")
         val _columnIndexOfTimestamp: Int = getColumnIndexOrThrow(_stmt, "timestamp")
@@ -223,6 +244,12 @@ public class ChatDao_Impl(
           } else {
             _tmpAttachedImageUri = _stmt.getText(_columnIndexOfAttachedImageUri)
           }
+          val _tmpAudioPath: String?
+          if (_stmt.isNull(_columnIndexOfAudioPath)) {
+            _tmpAudioPath = null
+          } else {
+            _tmpAudioPath = _stmt.getText(_columnIndexOfAudioPath)
+          }
           val _tmpZoneId: Long?
           if (_stmt.isNull(_columnIndexOfZoneId)) {
             _tmpZoneId = null
@@ -234,7 +261,7 @@ public class ChatDao_Impl(
           val _tmpTimestamp: Long
           _tmpTimestamp = _stmt.getLong(_columnIndexOfTimestamp)
           _item =
-              ChatMessage(_tmpId,_tmpRole,_tmpContent,_tmpAttachedImageUri,_tmpZoneId,_tmpContextSnapshot,_tmpTimestamp)
+              ChatMessage(_tmpId,_tmpRole,_tmpContent,_tmpAttachedImageUri,_tmpAudioPath,_tmpZoneId,_tmpContextSnapshot,_tmpTimestamp)
           _result.add(_item)
         }
         _result

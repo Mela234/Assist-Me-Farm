@@ -1,33 +1,40 @@
 package com.cropdoc.app.viewmodel
 
+import android.Manifest
 import android.app.Application
+import android.content.pm.PackageManager
+import android.media.AudioFormat
+import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.net.Uri
-import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.cropdoc.app.CropDocApplication
 import com.cropdoc.app.data.model.ChatMessage
-import com.cropdoc.app.data.model.CropDocAiEngine
 import com.cropdoc.app.data.model.FarmZone
 import com.cropdoc.app.data.model.SoilReading
 import com.cropdoc.app.data.model.WeatherData
 import com.cropdoc.app.data.model.ModelState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
+import java.io.FileOutputStream
+import java.io.RandomAccessFile
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     private val chatRepository = CropDocApplication.instance.chatRepository
     private val farmRepository = CropDocApplication.instance.farmRepository
     private val weatherRepository = CropDocApplication.instance.weatherRepository
-
     private val aiEngine = CropDocApplication.instance.aiEngine
 
     // ── Chat state ────────────────────────────────────────────────────────────
@@ -61,21 +68,23 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private val _audioFile = MutableStateFlow<File?>(null)
     val audioFile: StateFlow<File?> = _audioFile.asStateFlow()
 
-    private var mediaRecorder: MediaRecorder? = null
-    private var recordingTimerJob: Job? = null
-    private var currentAudioPath: String? = null
+    // WAV recording constants
+    private val SAMPLE_RATE    = 16000
+    private val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
+    private val AUDIO_FORMAT   = AudioFormat.ENCODING_PCM_16BIT
 
-    // Current context
+    private var audioRecord: AudioRecord? = null
+    private var recordingJob: Job? = null
+    private var recordingTimerJob: Job? = null
+    private var currentWavFile: File? = null
+
     private var currentSoilReading: SoilReading? = null
     private var currentWeather: WeatherData? = null
 
     init {
         viewModelScope.launch { aiEngine.initialize() }
-
         viewModelScope.launch {
-            weatherRepository.latestWeather.collect { weather ->
-                currentWeather = weather
-            }
+            weatherRepository.latestWeather.collect { weather -> currentWeather = weather }
         }
     }
 
@@ -100,13 +109,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private fun loadMessages(zoneId: Long?) {
         viewModelScope.launch {
             if (zoneId == null) {
-                chatRepository.getGeneralChat().collect { msgs ->
-                    _messages.value = msgs
-                }
+                chatRepository.getGeneralChat().collect { msgs -> _messages.value = msgs }
             } else {
-                chatRepository.getChatForZone(zoneId).collect { msgs ->
-                    _messages.value = msgs
-                }
+                chatRepository.getChatForZone(zoneId).collect { msgs -> _messages.value = msgs }
             }
         }
     }
@@ -114,43 +119,82 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     // ── Image attachment ──────────────────────────────────────────────────────
 
     fun attachImage(uri: Uri) {
-        _attachedImageUri.value = uri
+        viewModelScope.launch {
+            val permanentUri = withContext(Dispatchers.IO) { copyUriToInternal(uri) }
+            _attachedImageUri.value = permanentUri ?: uri
+        }
     }
 
-    fun clearAttachment() {
-        _attachedImageUri.value = null
+    private fun copyUriToInternal(uri: Uri): Uri? {
+        return try {
+            val context = getApplication<Application>()
+            val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+            val file = File(context.filesDir, "img_${System.currentTimeMillis()}.jpg")
+            file.outputStream().use { inputStream.copyTo(it) }
+            Uri.fromFile(file)
+        } catch (e: Exception) { null }
     }
 
-    // ── Audio recording ───────────────────────────────────────────────────────
+    fun clearAttachment() { _attachedImageUri.value = null }
+
+    // ── Audio recording (WAV via AudioRecord) ─────────────────────────────────
 
     fun startRecording() {
         if (_isRecording.value) return
 
-        try {
-            val audioDir = getApplication<Application>().cacheDir
-            val file = File(audioDir, "chat_audio_${System.currentTimeMillis()}.m4a")
-            currentAudioPath = file.absolutePath
+        val context = getApplication<Application>()
 
-            mediaRecorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                MediaRecorder(getApplication())
-            } else {
-                @Suppress("DEPRECATION")
-                MediaRecorder()
-            }.apply {
-                setAudioSource(MediaRecorder.AudioSource.MIC)
-                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                setAudioSamplingRate(16000)
-                setAudioEncodingBitRate(128000)
-                setOutputFile(file.absolutePath)
-                prepare()
-                start()
-            }
+        // Explicit permission check — satisfies lint and guards against revoked permission
+        if (context.checkSelfPermission(Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED) {
+            _isRecording.value = false
+            return
+        }
+
+        val bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT)
+            .coerceAtLeast(8192)
+
+        try {
+            val wavFile = File(context.filesDir, "audio_${System.currentTimeMillis()}.wav")
+            currentWavFile = wavFile
+
+            audioRecord = AudioRecord(
+                MediaRecorder.AudioSource.MIC,
+                SAMPLE_RATE,
+                CHANNEL_CONFIG,
+                AUDIO_FORMAT,
+                bufferSize
+            ).also { it.startRecording() }
 
             _isRecording.value = true
             _recordingSeconds.value = 0
 
-            // Timer — auto stop at 30 seconds
+            // Capture PCM on IO thread and stream to file
+            recordingJob = viewModelScope.launch(Dispatchers.IO) {
+                val fos = FileOutputStream(wavFile)
+
+                // Placeholder 44-byte WAV header — filled in correctly after recording stops
+                fos.write(ByteArray(44))
+
+                val buffer = ByteArray(bufferSize)
+                var totalPcmBytes = 0L
+
+                while (_isRecording.value) {
+                    val read = audioRecord?.read(buffer, 0, buffer.size) ?: break
+                    if (read > 0) {
+                        fos.write(buffer, 0, read)
+                        totalPcmBytes += read
+                    }
+                }
+
+                fos.flush()
+                fos.close()
+
+                // Rewrite correct header now that we know total data size
+                writeWavHeader(wavFile, totalPcmBytes)
+            }
+
+            // Auto-stop timer at 30 s
             recordingTimerJob = viewModelScope.launch {
                 while (_recordingSeconds.value < 30) {
                     delay(1000)
@@ -161,33 +205,29 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         } catch (e: Exception) {
             _isRecording.value = false
-            mediaRecorder?.release()
-            mediaRecorder = null
+            audioRecord?.release()
+            audioRecord = null
         }
     }
 
     fun stopRecording() {
         if (!_isRecording.value) return
 
+        _isRecording.value = false   // signals the recordingJob loop to exit
         recordingTimerJob?.cancel()
 
-        try {
-            mediaRecorder?.apply {
-                stop()
-                release()
-            }
-        } catch (e: Exception) {
-            // ignore stop errors
-        }
+        try { audioRecord?.stop() } catch (_: Exception) {}
+        audioRecord?.release()
+        audioRecord = null
 
-        mediaRecorder = null
-        _isRecording.value = false
-
-        currentAudioPath?.let { path ->
-            val file = File(path)
-            if (file.exists() && file.length() > 0) {
+        // Wait for IO job to finish writing before exposing the file
+        viewModelScope.launch {
+            recordingJob?.join()
+            val file = currentWavFile
+            if (file != null && file.exists() && file.length() > 44) {
                 _audioFile.value = file
             }
+            currentWavFile = null
         }
     }
 
@@ -195,7 +235,39 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         _audioFile.value?.delete()
         _audioFile.value = null
         _recordingSeconds.value = 0
-        currentAudioPath = null
+        currentWavFile = null
+    }
+
+    /**
+     * Writes a standard 16-bit mono PCM WAV header at the beginning of [file].
+     * [pcmDataBytes] is the number of raw PCM bytes that follow the 44-byte header.
+     */
+    private fun writeWavHeader(file: File, pcmDataBytes: Long) {
+        val channels      = 1
+        val bitsPerSample = 16
+        val byteRate      = SAMPLE_RATE * channels * bitsPerSample / 8
+        val blockAlign    = channels * bitsPerSample / 8
+
+        val header = ByteBuffer.allocate(44).order(ByteOrder.LITTLE_ENDIAN).apply {
+            put("RIFF".toByteArray())
+            putInt((36 + pcmDataBytes).toInt())   // RIFF chunk size
+            put("WAVE".toByteArray())
+            put("fmt ".toByteArray())
+            putInt(16)                             // fmt chunk size
+            putShort(1)                            // PCM format
+            putShort(channels.toShort())
+            putInt(SAMPLE_RATE)
+            putInt(byteRate)
+            putShort(blockAlign.toShort())
+            putShort(bitsPerSample.toShort())
+            put("data".toByteArray())
+            putInt(pcmDataBytes.toInt())           // data chunk size
+        }.array()
+
+        RandomAccessFile(file, "rw").use { raf ->
+            raf.seek(0)
+            raf.write(header)
+        }
     }
 
     // ── Sending messages ──────────────────────────────────────────────────────
@@ -204,7 +276,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         if (text.isBlank() && _attachedImageUri.value == null && _audioFile.value == null) return
         if (_isTyping.value) return
 
-        // Wait for engine to be ready
         if (aiEngine.modelState.value !is ModelState.Ready) {
             viewModelScope.launch {
                 chatRepository.sendMessage(
@@ -219,7 +290,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         val imageUri = _attachedImageUri.value
-        val audio = _audioFile.value
+        val audio    = _audioFile.value
         _attachedImageUri.value = null
         _audioFile.value = null
 
@@ -228,6 +299,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 role = "USER",
                 content = text.ifBlank { "🎤 Voice message" },
                 attachedImageUri = imageUri?.toString(),
+                audioPath = audio?.absolutePath,
                 zoneId = _currentZoneId.value,
                 contextSnapshot = buildContextSnapshot()
             )
@@ -237,10 +309,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             _streamingText.value = ""
 
             val recentHistory = chatRepository.getRecentMessages(_currentZoneId.value, 10)
-
-            val crop = _currentZone.value?.let {
-                farmRepository.getLatestCropForZone(it.id)
-            }
+            val crop = _currentZone.value?.let { farmRepository.getLatestCropForZone(it.id) }
 
             val result = aiEngine.chat(
                 userMessage = text.ifBlank { "Please respond to my voice message" },
@@ -265,7 +334,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                             contextSnapshot = buildContextSnapshot()
                         )
                     )
-                    audio?.delete()
                 },
                 onFailure = { error ->
                     chatRepository.sendMessage(
@@ -329,15 +397,15 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 })
             }
             json.toString()
-        } catch (e: Exception) {
-            ""
-        }
+        } catch (e: Exception) { "" }
     }
 
     override fun onCleared() {
         super.onCleared()
         aiEngine.release()
-        mediaRecorder?.release()
+        try { audioRecord?.stop() } catch (_: Exception) {}
+        audioRecord?.release()
+        recordingJob?.cancel()
         recordingTimerJob?.cancel()
     }
 }

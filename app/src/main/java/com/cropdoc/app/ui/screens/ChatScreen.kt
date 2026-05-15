@@ -22,6 +22,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -32,6 +37,101 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.foundation.clickable
+
+// ---------------------------------------------------------------------------
+// Zero-dependency inline markdown renderer
+// Handles: **bold**, *italic*, `code`, # headings, numbered lists, bullets
+// ---------------------------------------------------------------------------
+@Composable
+private fun MarkdownText(
+    markdown: String,
+    color: Color,
+    style: TextStyle,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        markdown.lines().forEach { line ->
+            val trimmed = line.trimStart()
+
+            val headingMatch = Regex("^(#{1,3})\\s+(.*)").find(trimmed)
+            if (headingMatch != null) {
+                val level = headingMatch.groupValues[1].length
+                val text  = headingMatch.groupValues[2]
+                val hStyle = when (level) {
+                    1    -> style.copy(fontWeight = FontWeight.Bold, fontSize = style.fontSize * 1.3f)
+                    2    -> style.copy(fontWeight = FontWeight.Bold, fontSize = style.fontSize * 1.15f)
+                    else -> style.copy(fontWeight = FontWeight.Bold)
+                }
+                Text(text = buildInlineMarkdown(text, color), style = hStyle, color = color)
+                return@forEach
+            }
+
+            val numberedMatch = Regex("^(\\d+)\\.\\s+(.*)").find(trimmed)
+            if (numberedMatch != null) {
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text("${numberedMatch.groupValues[1]}.", style = style,
+                        color = color, fontWeight = FontWeight.SemiBold)
+                    Text(text = buildInlineMarkdown(numberedMatch.groupValues[2], color),
+                        style = style, color = color)
+                }
+                return@forEach
+            }
+
+            val bulletMatch = Regex("^[-*]\\s+(.*)").find(trimmed)
+            if (bulletMatch != null) {
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text("•", style = style, color = color)
+                    Text(text = buildInlineMarkdown(bulletMatch.groupValues[1], color),
+                        style = style, color = color)
+                }
+                return@forEach
+            }
+
+            if (trimmed.isEmpty()) { Spacer(Modifier.height(4.dp)); return@forEach }
+
+            Text(text = buildInlineMarkdown(trimmed, color), style = style, color = color)
+        }
+    }
+}
+
+private fun buildInlineMarkdown(text: String, baseColor: Color) = buildAnnotatedString {
+    data class Span(val start: Int, val end: Int, val inner: String, val type: String)
+
+    val spans = mutableListOf<Span>()
+    Regex("\\*\\*\\*(.+?)\\*\\*\\*").findAll(text).forEach {
+        spans += Span(it.range.first, it.range.last + 1, it.groupValues[1], "bolditalic")
+    }
+    Regex("\\*\\*(.+?)\\*\\*").findAll(text).forEach {
+        spans += Span(it.range.first, it.range.last + 1, it.groupValues[1], "bold")
+    }
+    Regex("\\*(.+?)\\*").findAll(text).forEach {
+        spans += Span(it.range.first, it.range.last + 1, it.groupValues[1], "italic")
+    }
+    Regex("`(.+?)`").findAll(text).forEach {
+        spans += Span(it.range.first, it.range.last + 1, it.groupValues[1], "code")
+    }
+
+    val filtered = mutableListOf<Span>()
+    var cursor = 0
+    for (span in spans.sortedWith(compareBy({ it.start }, { -(it.end - it.start) }))) {
+        if (span.start >= cursor) { filtered += span; cursor = span.end }
+    }
+
+    var pos = 0
+    for (span in filtered) {
+        if (pos < span.start) append(text.substring(pos, span.start))
+        when (span.type) {
+            "bolditalic" -> { pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontStyle = FontStyle.Italic)); append(span.inner); pop() }
+            "bold"       -> { pushStyle(SpanStyle(fontWeight = FontWeight.Bold)); append(span.inner); pop() }
+            "italic"     -> { pushStyle(SpanStyle(fontStyle = FontStyle.Italic)); append(span.inner); pop() }
+            "code"       -> { pushStyle(SpanStyle(fontFamily = FontFamily.Monospace, background = baseColor.copy(alpha = 0.15f))); append(span.inner); pop() }
+        }
+        pos = span.end
+    }
+    if (pos < text.length) append(text.substring(pos))
+}
+
+// ---------------------------------------------------------------------------
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,14 +153,10 @@ fun ChatScreen(
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
-    // Camera launcher
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
-    ) { bitmap ->
-        // Convert bitmap to URI if needed — for now use gallery
-    }
+    ) { _ -> }
 
-    // Gallery launcher
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
@@ -79,6 +175,7 @@ fun ChatScreen(
     }
 
     Scaffold(
+        modifier = Modifier.imePadding(),
         topBar = {
             TopAppBar(
                 title = {
@@ -98,11 +195,9 @@ fun ChatScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack,
                             stringResource(R.string.cd_back),
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                            tint = MaterialTheme.colorScheme.onPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -110,11 +205,8 @@ fun ChatScreen(
                 ),
                 actions = {
                     IconButton(onClick = { viewModel.clearChat() }) {
-                        Icon(
-                            Icons.Default.DeleteOutline,
-                            stringResource(R.string.chat_clear),
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        Icon(Icons.Default.DeleteOutline, stringResource(R.string.chat_clear),
+                            tint = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
             )
@@ -141,31 +233,20 @@ fun ChatScreen(
             )
         }
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
+        Column(modifier = Modifier.fillMaxSize().padding(padding)) {
             if (messages.isEmpty() && !isTyping) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         modifier = Modifier.padding(32.dp)
                     ) {
-                        Icon(
-                            Icons.Default.Agriculture,
-                            null,
+                        Icon(Icons.Default.Agriculture, null,
                             modifier = Modifier.size(64.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                            tint = MaterialTheme.colorScheme.primary)
                         Text(
-                            currentZone?.let {
-                                stringResource(R.string.chat_zone_title, it.name)
-                            } ?: stringResource(R.string.chat_empty_title),
+                            currentZone?.let { stringResource(R.string.chat_zone_title, it.name) }
+                                ?: stringResource(R.string.chat_empty_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -199,22 +280,15 @@ fun ChatScreen(
             } else {
                 LazyColumn(
                     state = listState,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(vertical = 16.dp)
                 ) {
-                    items(messages) { message ->
-                        ChatBubble(message = message)
-                    }
+                    items(messages) { message -> ChatBubble(message = message) }
                     if (isTyping) {
                         item {
-                            if (streamingText.isNotEmpty()) {
-                                StreamingBubble(text = streamingText)
-                            } else {
-                                TypingIndicator()
-                            }
+                            if (streamingText.isNotEmpty()) StreamingBubble(text = streamingText)
+                            else TypingIndicator()
                         }
                     }
                 }
@@ -222,94 +296,53 @@ fun ChatScreen(
         }
     }
 
-    // Attach menu bottom sheet
     if (showAttachMenu) {
-        ModalBottomSheet(
-            onDismissRequest = { showAttachMenu = false }
-        ) {
+        ModalBottomSheet(onDismissRequest = { showAttachMenu = false }) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 32.dp),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 16.dp).padding(bottom = 32.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    "Attach",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                // Record audio
+                Text("Attach", style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
                 ListItem(
                     headlineContent = { Text("Record Audio") },
                     supportingContent = { Text("Speak to Gemma — up to 30 seconds") },
                     leadingContent = {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(Color(0xFFE3F2FD)),
-                            contentAlignment = Alignment.Center
-                        ) {
+                        Box(modifier = Modifier.size(40.dp).clip(CircleShape)
+                            .background(Color(0xFFE3F2FD)), contentAlignment = Alignment.Center) {
                             Icon(Icons.Default.Mic, null, tint = Color(0xFF1976D2))
                         }
                     },
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
+                    modifier = Modifier.clip(RoundedCornerShape(12.dp))
                         .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .clickable {
-                            showAttachMenu = false
-                            viewModel.startRecording()
-                        }
+                        .clickable { showAttachMenu = false; viewModel.startRecording() }
                 )
-
-                // Take photo
                 ListItem(
                     headlineContent = { Text("Take Photo") },
                     supportingContent = { Text("Capture crop or soil for analysis") },
                     leadingContent = {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(Color(0xFFE8F5E9)),
-                            contentAlignment = Alignment.Center
-                        ) {
+                        Box(modifier = Modifier.size(40.dp).clip(CircleShape)
+                            .background(Color(0xFFE8F5E9)), contentAlignment = Alignment.Center) {
                             Icon(Icons.Default.CameraAlt, null, tint = Color(0xFF388E3C))
                         }
                     },
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
+                    modifier = Modifier.clip(RoundedCornerShape(12.dp))
                         .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .clickable {
-                            showAttachMenu = false
-                            cameraLauncher.launch(null)
-                        }
+                        .clickable { showAttachMenu = false; cameraLauncher.launch(null) }
                 )
-
-                // Choose from gallery
                 ListItem(
                     headlineContent = { Text("Choose from Gallery") },
                     supportingContent = { Text("Select an existing photo") },
                     leadingContent = {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(Color(0xFFF3E5F5)),
-                            contentAlignment = Alignment.Center
-                        ) {
+                        Box(modifier = Modifier.size(40.dp).clip(CircleShape)
+                            .background(Color(0xFFF3E5F5)), contentAlignment = Alignment.Center) {
                             Icon(Icons.Default.Image, null, tint = Color(0xFF7B1FA2))
                         }
                     },
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
+                    modifier = Modifier.clip(RoundedCornerShape(12.dp))
                         .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .clickable {
-                            galleryLauncher.launch("image/*")
-                        }
+                        .clickable { galleryLauncher.launch("image/*") }
                 )
             }
         }
@@ -320,14 +353,17 @@ fun ChatScreen(
 private fun ChatBubble(message: ChatMessage) {
     val isUser = message.role == "USER"
     val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    val contentColor = if (isUser) MaterialTheme.colorScheme.onPrimary
+    else MaterialTheme.colorScheme.onSurfaceVariant
 
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = if (isUser) Alignment.End else Alignment.Start
     ) {
-        message.attachedImageUri?.let { uri ->
+        // Image attachment
+        message.attachedImageUri?.let { uriStr ->
             AsyncImage(
-                model = uri,
+                model = uriStr,
                 contentDescription = "Attached image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -336,6 +372,29 @@ private fun ChatBubble(message: ChatMessage) {
                     .padding(bottom = 4.dp)
             )
         }
+
+        // Audio attachment indicator
+        message.audioPath?.let {
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 4.dp)
+                    .background(
+                        color = if (isUser) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                        else Color(0xFFE3F2FD),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Icon(Icons.Default.GraphicEq, null,
+                    tint = Color(0xFF1976D2), modifier = Modifier.size(18.dp))
+                Text("Voice message",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color(0xFF1565C0))
+            }
+        }
+
         Box(
             modifier = Modifier
                 .widthIn(max = 300.dp)
@@ -345,18 +404,20 @@ private fun ChatBubble(message: ChatMessage) {
                     shape = RoundedCornerShape(
                         topStart = 16.dp, topEnd = 16.dp,
                         bottomStart = if (isUser) 16.dp else 4.dp,
-                        bottomEnd = if (isUser) 4.dp else 16.dp
+                        bottomEnd   = if (isUser) 4.dp  else 16.dp
                     )
                 )
                 .padding(12.dp)
         ) {
-            Text(
-                text = message.content,
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (isUser) MaterialTheme.colorScheme.onPrimary
-                else MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            if (isUser) {
+                Text(text = message.content,
+                    style = MaterialTheme.typography.bodyMedium, color = contentColor)
+            } else {
+                MarkdownText(markdown = message.content, color = contentColor,
+                    style = MaterialTheme.typography.bodyMedium)
+            }
         }
+
         Text(
             text = dateFormat.format(Date(message.timestamp)),
             style = MaterialTheme.typography.labelSmall,
@@ -372,14 +433,15 @@ private fun StreamingBubble(text: String) {
         Box(
             modifier = Modifier
                 .widthIn(max = 300.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 16.dp)
-                )
+                .background(color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp,
+                        bottomStart = 4.dp, bottomEnd = 16.dp))
                 .padding(12.dp)
         ) {
             Column {
-                Text(text = text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                MarkdownText(markdown = text,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium)
                 Spacer(Modifier.height(4.dp))
                 LinearProgressIndicator(
                     modifier = Modifier.fillMaxWidth(),
@@ -395,16 +457,19 @@ private fun StreamingBubble(text: String) {
 private fun TypingIndicator() {
     Box(
         modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 16.dp)
-            )
+            .background(color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp,
+                    bottomStart = 4.dp, bottomEnd = 16.dp))
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
-            CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.primary)
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically) {
+            CircularProgressIndicator(modifier = Modifier.size(16.dp),
+                strokeWidth = 2.dp, color = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.width(4.dp))
-            Text(stringResource(R.string.chat_thinking), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.chat_thinking),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -425,57 +490,36 @@ private fun ChatInputBar(
     onStopRecording: () -> Unit
 ) {
     Surface(shadowElevation = 8.dp, color = MaterialTheme.colorScheme.surface) {
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.navigationBarsPadding().padding(8.dp)) {
 
-            // Image attachment preview
             if (attachedImageUri != null) {
                 Box(modifier = Modifier.padding(bottom = 8.dp).size(80.dp)) {
-                    AsyncImage(
-                        model = attachedImageUri,
-                        contentDescription = "Attachment",
+                    AsyncImage(model = attachedImageUri, contentDescription = "Attachment",
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(8.dp))
-                    )
-                    IconButton(
-                        onClick = onRemoveAttachment,
-                        modifier = Modifier.align(Alignment.TopEnd).size(24.dp).background(Color.Black.copy(alpha = 0.5f), CircleShape)
-                    ) {
-                        Icon(Icons.Default.Close, "Remove", tint = Color.White, modifier = Modifier.size(14.dp))
+                        modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(8.dp)))
+                    IconButton(onClick = onRemoveAttachment,
+                        modifier = Modifier.align(Alignment.TopEnd).size(24.dp)
+                            .background(Color.Black.copy(alpha = 0.5f), CircleShape)) {
+                        Icon(Icons.Default.Close, "Remove", tint = Color.White,
+                            modifier = Modifier.size(14.dp))
                     }
                 }
             }
 
-            // Audio recording indicator
             if (isRecording) {
-                Card(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                Card(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))) {
+                    Row(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        // Pulsing red dot
-                        Box(
-                            modifier = Modifier
-                                .size(10.dp)
-                                .clip(CircleShape)
-                                .background(Color.Red)
-                        )
-                        Text(
-                            "Recording… ${recordingSeconds}s / 30s",
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Box(modifier = Modifier.size(10.dp).clip(CircleShape).background(Color.Red))
+                        Text("Recording… ${recordingSeconds}s / 30s",
                             style = MaterialTheme.typography.labelMedium,
-                            color = Color(0xFFD32F2F),
-                            modifier = Modifier.weight(1f)
-                        )
-                        LinearProgressIndicator(
-                            progress = { recordingSeconds / 30f },
+                            color = Color(0xFFD32F2F), modifier = Modifier.weight(1f))
+                        LinearProgressIndicator(progress = { recordingSeconds / 30f },
                             modifier = Modifier.width(80.dp),
-                            color = Color(0xFFD32F2F),
-                            trackColor = Color(0xFFFFCDD2)
-                        )
+                            color = Color(0xFFD32F2F), trackColor = Color(0xFFFFCDD2))
                         TextButton(onClick = onStopRecording) {
                             Text("Stop", color = Color(0xFFD32F2F))
                         }
@@ -483,87 +527,57 @@ private fun ChatInputBar(
                 }
             }
 
-            // Audio file preview (after recording stopped)
             if (audioFile != null && !isRecording) {
-                Card(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                Card(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))) {
+                    Row(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(Icons.Default.GraphicEq, null, tint = Color(0xFF1976D2), modifier = Modifier.size(20.dp))
-                        Text(
-                            "🎤 Voice message ready",
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Icon(Icons.Default.GraphicEq, null, tint = Color(0xFF1976D2),
+                            modifier = Modifier.size(20.dp))
+                        Text("🎤 Voice message ready",
                             style = MaterialTheme.typography.labelMedium,
-                            color = Color(0xFF1565C0),
-                            modifier = Modifier.weight(1f)
-                        )
-                        IconButton(
-                            onClick = onRemoveAudio,
-                            modifier = Modifier.size(24.dp)
-                        ) {
-                            Icon(Icons.Default.Close, "Remove audio", tint = Color(0xFF1976D2), modifier = Modifier.size(16.dp))
+                            color = Color(0xFF1565C0), modifier = Modifier.weight(1f))
+                        IconButton(onClick = onRemoveAudio, modifier = Modifier.size(24.dp)) {
+                            Icon(Icons.Default.Close, "Remove audio",
+                                tint = Color(0xFF1976D2), modifier = Modifier.size(16.dp))
                         }
                     }
                 }
             }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                // + button
-                IconButton(
-                    onClick = onPlusClick,
-                    enabled = !isTyping && !isRecording
-                ) {
-                    Icon(
-                        Icons.Default.Add,
-                        "Attach",
+            Row(verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                IconButton(onClick = onPlusClick, enabled = !isTyping && !isRecording) {
+                    Icon(Icons.Default.Add, "Attach",
                         tint = if (isTyping || isRecording)
                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
-                        else MaterialTheme.colorScheme.primary
-                    )
+                        else MaterialTheme.colorScheme.primary)
                 }
-
-                // Text input
                 OutlinedTextField(
-                    value = inputText,
-                    onValueChange = onInputChange,
+                    value = inputText, onValueChange = onInputChange,
                     placeholder = { Text(stringResource(R.string.chat_input_hint)) },
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(24.dp),
-                    maxLines = 4,
-                    enabled = !isTyping,
+                    maxLines = 4, enabled = !isTyping,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
                     )
                 )
-
-                // Send button
-                val canSend = (inputText.isNotBlank() || attachedImageUri != null || audioFile != null) && !isTyping && !isRecording
+                val canSend = (inputText.isNotBlank() || attachedImageUri != null
+                        || audioFile != null) && !isTyping && !isRecording
                 IconButton(
-                    onClick = onSend,
-                    enabled = canSend,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(
-                            color = if (canSend) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-                            shape = CircleShape
-                        )
+                    onClick = onSend, enabled = canSend,
+                    modifier = Modifier.size(48.dp).background(
+                        color = if (canSend) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                        shape = CircleShape)
                 ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.Send,
-                        "Send",
+                    Icon(Icons.AutoMirrored.Filled.Send, "Send",
                         tint = if (canSend) MaterialTheme.colorScheme.onPrimary
-                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
-                    )
+                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
                 }
             }
         }

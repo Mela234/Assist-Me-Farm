@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.cropdoc.app-mergeDebugResources-82:/values-h720dp-v13/values-h720dp-v13.xml",
+            "outputFile": "com.cropdoc.app-mergeDebugResources-84:/values-h720dp-v13/values-h720dp-v13.xml",
             "map": [
                 {
-                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/8c1d0e8075bcaa5abd12a4c12ac7e7d5/transformed/appcompat-1.6.1/res/values-h720dp-v13/values-h720dp-v13.xml",
+                    "source": "/Users/broglie/.gradle/caches/9.0.0/transforms/84b302f00b5d979903f8836c08a0af1e/transformed/appcompat-1.7.0/res/values-h720dp-v13/values-h720dp-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

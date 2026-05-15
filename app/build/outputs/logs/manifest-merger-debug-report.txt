@@ -1,23 +1,25 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:2:1-95:12
-INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:2:1-95:12
-INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:2:1-95:12
-INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:2:1-95:12
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:2:1-98:12
+INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:2:1-98:12
+INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:2:1-98:12
+INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:2:1-98:12
+MERGED from [com.github.jeziellago:compose-markdown:0.5.4] /Users/broglie/.gradle/caches/9.0.0/transforms/f3cfe48a801f2192aa7684494d345fb1/transformed/compose-markdown-0.5.4/AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.12.0] /Users/broglie/.gradle/caches/9.0.0/transforms/cb1f2f64be93fbb8f83c68bd1338a581/transformed/material-1.12.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.camera:camera-video:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/3aebf323fd1cc417bff15ec8b41b5c11/transformed/camera-video-1.4.1/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.camera:camera-view:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/c58413458812fcd6c55cedaed4dbd35a/transformed/camera-view-1.4.1/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.camera:camera-lifecycle:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/9edc04cefb68ebd1aad16e499858e653/transformed/camera-lifecycle-1.4.1/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/e274e5fb540ec684f56e7afd73f5700d/transformed/camera-camera2-1.4.1/AndroidManifest.xml:17:1-36:12
 MERGED from [androidx.camera:camera-core:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/5ebc3d3c8eddb000d9009c3c795c4b5c/transformed/camera-core-1.4.1/AndroidManifest.xml:17:1-36:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /Users/broglie/.gradle/caches/9.0.0/transforms/58c16fb0752cc10d44defaf5ff5cb3f0/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/broglie/.gradle/caches/9.0.0/transforms/017cb3946ff6eaa4af4b0461b8cf2135/transformed/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
 MERGED from [io.coil-kt:coil-compose:2.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/f454cc37abf5a6c8649a5abfa5009a3c/transformed/coil-compose-2.7.0/AndroidManifest.xml:2:1-7:12
 MERGED from [io.coil-kt:coil-compose-base:2.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/933681736591984c28e2e9582971604e/transformed/coil-compose-base-2.7.0/AndroidManifest.xml:2:1-7:12
 MERGED from [io.coil-kt:coil:2.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/b010a92018b4e0b568bacee1895d19e0/transformed/coil-2.7.0/AndroidManifest.xml:2:1-7:12
+MERGED from [com.github.jeziellago:Markwon:58aa5aba6a] /Users/broglie/.gradle/caches/9.0.0/transforms/79c6aa75eee4e2ebd9c8f0e3ecdca214/transformed/Markwon-58aa5aba6a/AndroidManifest.xml:2:1-9:12
 MERGED from [io.coil-kt:coil-base:2.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/1e8ad55401663936c6153013593d1d06/transformed/coil-base-2.7.0/AndroidManifest.xml:2:1-7:12
-MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/broglie/.gradle/caches/9.0.0/transforms/5b2f79d618150605bb5d75cc8bbf834d/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.appcompat:appcompat:1.6.1] /Users/broglie/.gradle/caches/9.0.0/transforms/8c1d0e8075bcaa5abd12a4c12ac7e7d5/transformed/appcompat-1.6.1/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /Users/broglie/.gradle/caches/9.0.0/transforms/58c16fb0752cc10d44defaf5ff5cb3f0/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat-resources:1.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/507057a5a2874f7b2d9cc578265a1a71/transformed/appcompat-resources-1.7.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.appcompat:appcompat:1.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/84b302f00b5d979903f8836c08a0af1e/transformed/appcompat-1.7.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] /Users/broglie/.gradle/caches/9.0.0/transforms/80d4968fa3978fd994a173ce390cb440/transformed/drawerlayout-1.1.1/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.transition:transition:1.5.0] /Users/broglie/.gradle/caches/9.0.0/transforms/43fe6a67f067fb0936d4b844acfa0fbe/transformed/transition-1.5.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/e64631e65e549f32f2d88fa52bb0c1f4/transformed/dynamicanimation-1.0.0/AndroidManifest.xml:17:1-22:12
@@ -32,13 +34,18 @@ MERGED from [androidx.navigation:navigation-common-ktx:2.8.5] /Users/broglie/.gr
 MERGED from [androidx.navigation:navigation-runtime-ktx:2.8.5] /Users/broglie/.gradle/caches/9.0.0/transforms/6a064886067156716f8b20195e866208/transformed/navigation-runtime-ktx-2.8.5/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.navigation:navigation-compose:2.8.5] /Users/broglie/.gradle/caches/9.0.0/transforms/835ea45ec7c4fb43e9ea2c228fabaf38/transformed/navigation-compose-2.8.5/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.material3:material3-android:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/158d2924f761ddd395c98855e24e7918/transformed/material3-release/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.fragment:fragment:1.3.6] /Users/broglie/.gradle/caches/9.0.0/transforms/0b94fbaf462914b989bf63861e40309b/transformed/fragment-1.3.6/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.fragment:fragment:1.5.4] /Users/broglie/.gradle/caches/9.0.0/transforms/36388ce4d3915a14ec36f936a9dd58cf/transformed/fragment-1.5.4/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/2255b1f14f0a06e1ca516ef317128dad/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.material:material-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/11d3194188eb6b69d7a0a306ad5353a7/transformed/material-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/7332a9e9a4470b7c049929a5110a9c51/transformed/savedstate-1.2.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/29b0de06b819df3c70de58250ffdca80/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/3cec89d032fc31ecd45b74f7e49e1536/transformed/loader-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.animation:animation-core-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/bb2002692e0dd79d31b86923ebd916cc/transformed/animation-core-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.material:material-ripple-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/856c49dfa33fa8ea23cc0694de3273d6/transformed/material-ripple-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.animation:animation-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/62d0a99649d5044390212a736def8461/transformed/animation-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/f790eabb1ffe7b601cb7b48581cee147/transformed/foundation-layout-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.foundation:foundation-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/b16d766d506976db3b43bafcae25852a/transformed/foundation-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8763ae74a04e196354ce206b9f52918b/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.ui:ui-tooling-data-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/c9d65969d450175245233696ff96bfe1/transformed/ui-tooling-data-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.ui:ui-unit-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/10bf216aa29fb603737e6d7e46966931/transformed/ui-unit-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.ui:ui-geometry-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/c08759e054f569ac5777c709cca39275/transformed/ui-geometry-release/AndroidManifest.xml:2:1-7:12
@@ -46,20 +53,15 @@ MERGED from [androidx.compose.ui:ui-util-android:1.7.6] /Users/broglie/.gradle/c
 MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/f6ca265a2d8dbcdaf22a1ad1b9d2fc9f/transformed/ui-tooling-preview-release/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.ui:ui-graphics-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/8545444091e73fc620ba7e69603d5fb2/transformed/ui-graphics-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.ui:ui-text-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/b594ad6592d776085790ba7ba9c00467/transformed/ui-text-release/AndroidManifest.xml:2:1-7:12
-MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8763ae74a04e196354ce206b9f52918b/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/b60292c4a1ddbfbaa8352bfcdfc64e8f/transformed/emoji2-1.3.0/AndroidManifest.xml:17:1-35:12
-MERGED from [androidx.lifecycle:lifecycle-process:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/934ea69686ff9c30836d1d13bb9b113f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:17:1-35:12
 MERGED from [androidx.lifecycle:lifecycle-runtime-compose-android:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/a636e434190175c9d3198607177c27ea/transformed/lifecycle-runtime-compose-release/AndroidManifest.xml:2:1-7:12
-MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/29b0de06b819df3c70de58250ffdca80/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.loader:loader:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/3cec89d032fc31ecd45b74f7e49e1536/transformed/loader-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/934ea69686ff9c30836d1d13bb9b113f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:17:1-35:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/9065ca061dabdab5347fa88f9535aa1b/transformed/lifecycle-viewmodel-2.8.7/AndroidManifest.xml:2:1-5:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/d2d6067c582abb1a2f9d314fe9cf4065/transformed/lifecycle-viewmodel-release/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/4b36c5bced9eda3e387d7a09f9508e1e/transformed/lifecycle-livedata-core-ktx-2.8.7/AndroidManifest.xml:2:1-7:12
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/5e7a8ea8e9fb454f66f1886b9a08340d/transformed/lifecycle-livedata-core-2.8.7/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/2255b1f14f0a06e1ca516ef317128dad/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/7332a9e9a4470b7c049929a5110a9c51/transformed/savedstate-1.2.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/382fd72bebc89947e7a37a9a97675ba1/transformed/lifecycle-runtime-release/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-service:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/5c587754208f61196eba5b1d715e4b07/transformed/lifecycle-service-2.8.7/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/5e7a8ea8e9fb454f66f1886b9a08340d/transformed/lifecycle-livedata-core-2.8.7/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/fdb0589b397e82898ee11a2de1dbfe6f/transformed/lifecycle-viewmodel-ktx-2.8.7/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/f30f524ff9d092c8f3eb7af82f60ee9a/transformed/lifecycle-viewmodel-savedstate-2.8.7/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/8106d8f0988ff1345f8c219aa590ba9e/transformed/lifecycle-livedata-2.8.7/AndroidManifest.xml:17:1-22:12
@@ -81,7 +83,7 @@ MERGED from [androidx.graphics:graphics-path:1.0.1] /Users/broglie/.gradle/cache
 MERGED from [androidx.core:core:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/0213672c2caef439cf1634297c1cad8f/transformed/core-1.15.0/AndroidManifest.xml:17:1-30:12
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/1281ac70f8e1a8546c59f0986fdd69d8/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.core:core-ktx:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/21437aaa5a89642b378f10b3bf0ef541/transformed/core-ktx-1.15.0/AndroidManifest.xml:2:1-7:12
-MERGED from [com.google.ai.edge.litertlm:litertlm-android:0.11.0-rc1] /Users/broglie/.gradle/caches/9.0.0/transforms/8cb8d330ddade59aedbd2342cb0758c9/transformed/litertlm-android-0.11.0-rc1/AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.ai.edge.litertlm:litertlm-android:0.11.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8975f410c783029af5795920a6bb2e6b/transformed/litertlm-android-0.11.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.room:room-runtime-android:2.7.1] /Users/broglie/.gradle/caches/9.0.0/transforms/9f5f47aed1cd5cc42bd0838faa2038cf/transformed/room-runtime-release/AndroidManifest.xml:17:1-31:12
 MERGED from [androidx.room:room-ktx:2.7.1] /Users/broglie/.gradle/caches/9.0.0/transforms/5c97b60664a2b6f94a14b083a8c84e1a/transformed/room-ktx-2.7.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.datastore:datastore-core-android:1.1.1] /Users/broglie/.gradle/caches/9.0.0/transforms/de69ef0ac03529e6c83368faec0878df/transformed/datastore-core-release/AndroidManifest.xml:2:1-7:12
@@ -98,6 +100,12 @@ MERGED from [androidx.sqlite:sqlite-framework-android:2.5.0] /Users/broglie/.gra
 MERGED from [androidx.sqlite:sqlite-android:2.5.0] /Users/broglie/.gradle/caches/9.0.0/transforms/5a0015072878f6387dfcfc99c8f09a68/transformed/sqlite-release/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/broglie/.gradle/caches/9.0.0/transforms/ffa6229bd3a3a141d7f0f29b3f386372/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.cardview:cardview:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/b39ce57f7526b3246526f9767cc2ee9b/transformed/cardview-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [io.noties.markwon:ext-strikethrough:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/13eeee11c2644fbab269518b1d25e4e3/transformed/ext-strikethrough-4.6.2/AndroidManifest.xml:2:1-11:12
+MERGED from [io.noties.markwon:ext-tables:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/1d301177d7e69eb05d1601c0ba8fd01f/transformed/ext-tables-4.6.2/AndroidManifest.xml:2:1-11:12
+MERGED from [io.noties.markwon:html:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/b5c7790e952941666d811cbd0cee36f7/transformed/html-4.6.2/AndroidManifest.xml:2:1-11:12
+MERGED from [io.noties.markwon:linkify:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/c1dcd436e05cdca7ca4a65c4a1ad5577/transformed/linkify-4.6.2/AndroidManifest.xml:2:1-11:12
+MERGED from [io.noties.markwon:ext-tasklist:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/034e1ede2cf4fea693f965255667dbc2/transformed/ext-tasklist-4.6.2/AndroidManifest.xml:2:1-11:12
+MERGED from [io.noties.markwon:core:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/d929a2599f195712707b61034f1d1932/transformed/core-4.6.2/AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/402064910571665cd47ddcb4f08682a1/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/5f6c71b60fe46ad7946d3c264705e9b1/transformed/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/broglie/.gradle/caches/9.0.0/transforms/813a323ae64a8b33d354385c37a71018/transformed/core-runtime-2.2.0/AndroidManifest.xml:17:1-22:12
@@ -230,8 +238,8 @@ ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/Andr
 	android:name
 		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:48:19-60
 application
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:50:5-93:19
-INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:50:5-93:19
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:50:5-96:19
+INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:50:5-96:19
 MERGED from [com.google.android.material:material:1.12.0] /Users/broglie/.gradle/caches/9.0.0/transforms/cb1f2f64be93fbb8f83c68bd1338a581/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] /Users/broglie/.gradle/caches/9.0.0/transforms/cb1f2f64be93fbb8f83c68bd1338a581/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/e274e5fb540ec684f56e7afd73f5700d/transformed/camera-camera2-1.4.1/AndroidManifest.xml:23:5-34:19
@@ -250,8 +258,8 @@ MERGED from [androidx.compose.ui:ui-tooling-android:1.7.6] /Users/broglie/.gradl
 MERGED from [androidx.compose.ui:ui-tooling-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/dc007acee855b9c8a0cf40c8219ca1d0/transformed/ui-tooling-release/AndroidManifest.xml:22:5-26:19
 MERGED from [androidx.core:core:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/0213672c2caef439cf1634297c1cad8f/transformed/core-1.15.0/AndroidManifest.xml:28:5-89
 MERGED from [androidx.core:core:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/0213672c2caef439cf1634297c1cad8f/transformed/core-1.15.0/AndroidManifest.xml:28:5-89
-MERGED from [com.google.ai.edge.litertlm:litertlm-android:0.11.0-rc1] /Users/broglie/.gradle/caches/9.0.0/transforms/8cb8d330ddade59aedbd2342cb0758c9/transformed/litertlm-android-0.11.0-rc1/AndroidManifest.xml:5:5-6:19
-MERGED from [com.google.ai.edge.litertlm:litertlm-android:0.11.0-rc1] /Users/broglie/.gradle/caches/9.0.0/transforms/8cb8d330ddade59aedbd2342cb0758c9/transformed/litertlm-android-0.11.0-rc1/AndroidManifest.xml:5:5-6:19
+MERGED from [com.google.ai.edge.litertlm:litertlm-android:0.11.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8975f410c783029af5795920a6bb2e6b/transformed/litertlm-android-0.11.0/AndroidManifest.xml:5:5-6:19
+MERGED from [com.google.ai.edge.litertlm:litertlm-android:0.11.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8975f410c783029af5795920a6bb2e6b/transformed/litertlm-android-0.11.0/AndroidManifest.xml:5:5-6:19
 MERGED from [androidx.room:room-runtime-android:2.7.1] /Users/broglie/.gradle/caches/9.0.0/transforms/9f5f47aed1cd5cc42bd0838faa2038cf/transformed/room-runtime-release/AndroidManifest.xml:23:5-29:19
 MERGED from [androidx.room:room-runtime-android:2.7.1] /Users/broglie/.gradle/caches/9.0.0/transforms/9f5f47aed1cd5cc42bd0838faa2038cf/transformed/room-runtime-release/AndroidManifest.xml:23:5-29:19
 MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/68fb6ded244c227e533ae64da75c43c7/transformed/profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
@@ -281,7 +289,9 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/brog
 	android:name
 		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:51:9-43
 activity#com.cropdoc.app.MainActivity
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:60:9-68:20
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:60:9-69:20
+	android:windowSoftInputMode
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:64:13-55
 	android:exported
 		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:62:13-36
 	android:theme
@@ -289,51 +299,59 @@ ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/Andr
 	android:name
 		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:61:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:64:13-67:29
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:65:13-68:29
 action#android.intent.action.MAIN
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:65:17-69
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:66:17-69
 	android:name
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:65:25-66
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:66:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:66:17-77
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:67:17-77
 	android:name
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:66:27-74
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:67:27-74
 receiver#com.cropdoc.app.data.sms.WeatherSmsReceiver
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:71:9-77:20
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:72:9-78:20
 	android:exported
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:73:13-36
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:74:13-36
 	android:name
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:72:13-56
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:73:13-56
 intent-filter#action:name:android.provider.Telephony.SMS_RECEIVED
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:74:13-76:29
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:75:13-77:29
 	android:priority
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:74:28-50
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:75:28-50
 action#android.provider.Telephony.SMS_RECEIVED
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:75:17-82
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:76:17-82
 	android:name
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:75:25-79
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:76:25-79
 receiver#com.cropdoc.app.data.agent.ReminderReceiver
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:80:9-82:40
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:81:9-83:40
 	android:exported
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:82:13-37
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:83:13-37
 	android:name
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:81:13-56
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:82:13-56
 receiver#com.cropdoc.app.data.agent.BootReceiver
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:85:9-91:20
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:86:9-92:20
 	android:exported
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:87:13-36
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:88:13-36
 	android:name
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:86:13-52
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:87:13-52
 intent-filter#action:name:android.intent.action.BOOT_COMPLETED
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:88:13-90:29
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:89:13-91:29
 action#android.intent.action.BOOT_COMPLETED
-ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:89:17-79
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:90:17-79
 	android:name
-		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:89:25-76
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:90:25-76
+uses-native-library
+ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:93:9-89
+	android:required
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:93:63-87
+	android:name
+		ADDED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml:93:30-62
 uses-sdk
 INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml
 INJECTED from /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/AndroidManifest.xml
+MERGED from [com.github.jeziellago:compose-markdown:0.5.4] /Users/broglie/.gradle/caches/9.0.0/transforms/f3cfe48a801f2192aa7684494d345fb1/transformed/compose-markdown-0.5.4/AndroidManifest.xml:5:5-44
+MERGED from [com.github.jeziellago:compose-markdown:0.5.4] /Users/broglie/.gradle/caches/9.0.0/transforms/f3cfe48a801f2192aa7684494d345fb1/transformed/compose-markdown-0.5.4/AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.material:material:1.12.0] /Users/broglie/.gradle/caches/9.0.0/transforms/cb1f2f64be93fbb8f83c68bd1338a581/transformed/material-1.12.0/AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.material:material:1.12.0] /Users/broglie/.gradle/caches/9.0.0/transforms/cb1f2f64be93fbb8f83c68bd1338a581/transformed/material-1.12.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.camera:camera-video:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/3aebf323fd1cc417bff15ec8b41b5c11/transformed/camera-video-1.4.1/AndroidManifest.xml:5:5-44
@@ -346,6 +364,8 @@ MERGED from [androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches
 MERGED from [androidx.camera:camera-camera2:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/e274e5fb540ec684f56e7afd73f5700d/transformed/camera-camera2-1.4.1/AndroidManifest.xml:21:5-44
 MERGED from [androidx.camera:camera-core:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/5ebc3d3c8eddb000d9009c3c795c4b5c/transformed/camera-core-1.4.1/AndroidManifest.xml:21:5-44
 MERGED from [androidx.camera:camera-core:1.4.1] /Users/broglie/.gradle/caches/9.0.0/transforms/5ebc3d3c8eddb000d9009c3c795c4b5c/transformed/camera-core-1.4.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /Users/broglie/.gradle/caches/9.0.0/transforms/58c16fb0752cc10d44defaf5ff5cb3f0/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /Users/broglie/.gradle/caches/9.0.0/transforms/58c16fb0752cc10d44defaf5ff5cb3f0/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/broglie/.gradle/caches/9.0.0/transforms/017cb3946ff6eaa4af4b0461b8cf2135/transformed/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/broglie/.gradle/caches/9.0.0/transforms/017cb3946ff6eaa4af4b0461b8cf2135/transformed/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
 MERGED from [io.coil-kt:coil-compose:2.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/f454cc37abf5a6c8649a5abfa5009a3c/transformed/coil-compose-2.7.0/AndroidManifest.xml:5:5-44
@@ -354,14 +374,14 @@ MERGED from [io.coil-kt:coil-compose-base:2.7.0] /Users/broglie/.gradle/caches/9
 MERGED from [io.coil-kt:coil-compose-base:2.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/933681736591984c28e2e9582971604e/transformed/coil-compose-base-2.7.0/AndroidManifest.xml:5:5-44
 MERGED from [io.coil-kt:coil:2.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/b010a92018b4e0b568bacee1895d19e0/transformed/coil-2.7.0/AndroidManifest.xml:5:5-44
 MERGED from [io.coil-kt:coil:2.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/b010a92018b4e0b568bacee1895d19e0/transformed/coil-2.7.0/AndroidManifest.xml:5:5-44
+MERGED from [com.github.jeziellago:Markwon:58aa5aba6a] /Users/broglie/.gradle/caches/9.0.0/transforms/79c6aa75eee4e2ebd9c8f0e3ecdca214/transformed/Markwon-58aa5aba6a/AndroidManifest.xml:5:5-7:41
+MERGED from [com.github.jeziellago:Markwon:58aa5aba6a] /Users/broglie/.gradle/caches/9.0.0/transforms/79c6aa75eee4e2ebd9c8f0e3ecdca214/transformed/Markwon-58aa5aba6a/AndroidManifest.xml:5:5-7:41
 MERGED from [io.coil-kt:coil-base:2.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/1e8ad55401663936c6153013593d1d06/transformed/coil-base-2.7.0/AndroidManifest.xml:5:5-44
 MERGED from [io.coil-kt:coil-base:2.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/1e8ad55401663936c6153013593d1d06/transformed/coil-base-2.7.0/AndroidManifest.xml:5:5-44
-MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/broglie/.gradle/caches/9.0.0/transforms/5b2f79d618150605bb5d75cc8bbf834d/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/broglie/.gradle/caches/9.0.0/transforms/5b2f79d618150605bb5d75cc8bbf834d/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat:1.6.1] /Users/broglie/.gradle/caches/9.0.0/transforms/8c1d0e8075bcaa5abd12a4c12ac7e7d5/transformed/appcompat-1.6.1/AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat:1.6.1] /Users/broglie/.gradle/caches/9.0.0/transforms/8c1d0e8075bcaa5abd12a4c12ac7e7d5/transformed/appcompat-1.6.1/AndroidManifest.xml:20:5-44
-MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /Users/broglie/.gradle/caches/9.0.0/transforms/58c16fb0752cc10d44defaf5ff5cb3f0/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /Users/broglie/.gradle/caches/9.0.0/transforms/58c16fb0752cc10d44defaf5ff5cb3f0/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/507057a5a2874f7b2d9cc578265a1a71/transformed/appcompat-resources-1.7.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/507057a5a2874f7b2d9cc578265a1a71/transformed/appcompat-resources-1.7.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat:1.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/84b302f00b5d979903f8836c08a0af1e/transformed/appcompat-1.7.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat:1.7.0] /Users/broglie/.gradle/caches/9.0.0/transforms/84b302f00b5d979903f8836c08a0af1e/transformed/appcompat-1.7.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] /Users/broglie/.gradle/caches/9.0.0/transforms/80d4968fa3978fd994a173ce390cb440/transformed/drawerlayout-1.1.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] /Users/broglie/.gradle/caches/9.0.0/transforms/80d4968fa3978fd994a173ce390cb440/transformed/drawerlayout-1.1.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.transition:transition:1.5.0] /Users/broglie/.gradle/caches/9.0.0/transforms/43fe6a67f067fb0936d4b844acfa0fbe/transformed/transition-1.5.0/AndroidManifest.xml:5:5-44
@@ -390,10 +410,18 @@ MERGED from [androidx.navigation:navigation-compose:2.8.5] /Users/broglie/.gradl
 MERGED from [androidx.navigation:navigation-compose:2.8.5] /Users/broglie/.gradle/caches/9.0.0/transforms/835ea45ec7c4fb43e9ea2c228fabaf38/transformed/navigation-compose-2.8.5/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material3:material3-android:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/158d2924f761ddd395c98855e24e7918/transformed/material3-release/AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.material3:material3-android:1.3.1] /Users/broglie/.gradle/caches/9.0.0/transforms/158d2924f761ddd395c98855e24e7918/transformed/material3-release/AndroidManifest.xml:20:5-44
-MERGED from [androidx.fragment:fragment:1.3.6] /Users/broglie/.gradle/caches/9.0.0/transforms/0b94fbaf462914b989bf63861e40309b/transformed/fragment-1.3.6/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.fragment:fragment:1.3.6] /Users/broglie/.gradle/caches/9.0.0/transforms/0b94fbaf462914b989bf63861e40309b/transformed/fragment-1.3.6/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.5.4] /Users/broglie/.gradle/caches/9.0.0/transforms/36388ce4d3915a14ec36f936a9dd58cf/transformed/fragment-1.5.4/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.5.4] /Users/broglie/.gradle/caches/9.0.0/transforms/36388ce4d3915a14ec36f936a9dd58cf/transformed/fragment-1.5.4/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/2255b1f14f0a06e1ca516ef317128dad/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/2255b1f14f0a06e1ca516ef317128dad/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.material:material-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/11d3194188eb6b69d7a0a306ad5353a7/transformed/material-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material:material-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/11d3194188eb6b69d7a0a306ad5353a7/transformed/material-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/7332a9e9a4470b7c049929a5110a9c51/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/7332a9e9a4470b7c049929a5110a9c51/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/29b0de06b819df3c70de58250ffdca80/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/29b0de06b819df3c70de58250ffdca80/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/3cec89d032fc31ecd45b74f7e49e1536/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/3cec89d032fc31ecd45b74f7e49e1536/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.animation:animation-core-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/bb2002692e0dd79d31b86923ebd916cc/transformed/animation-core-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.animation:animation-core-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/bb2002692e0dd79d31b86923ebd916cc/transformed/animation-core-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material:material-ripple-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/856c49dfa33fa8ea23cc0694de3273d6/transformed/material-ripple-release/AndroidManifest.xml:5:5-44
@@ -404,6 +432,8 @@ MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.6] /Users
 MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/f790eabb1ffe7b601cb7b48581cee147/transformed/foundation-layout-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.foundation:foundation-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/b16d766d506976db3b43bafcae25852a/transformed/foundation-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.foundation:foundation-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/b16d766d506976db3b43bafcae25852a/transformed/foundation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8763ae74a04e196354ce206b9f52918b/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8763ae74a04e196354ce206b9f52918b/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-tooling-data-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/c9d65969d450175245233696ff96bfe1/transformed/ui-tooling-data-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-tooling-data-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/c9d65969d450175245233696ff96bfe1/transformed/ui-tooling-data-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-unit-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/10bf216aa29fb603737e6d7e46966931/transformed/ui-unit-release/AndroidManifest.xml:5:5-44
@@ -418,34 +448,24 @@ MERGED from [androidx.compose.ui:ui-graphics-android:1.7.6] /Users/broglie/.grad
 MERGED from [androidx.compose.ui:ui-graphics-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/8545444091e73fc620ba7e69603d5fb2/transformed/ui-graphics-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-text-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/b594ad6592d776085790ba7ba9c00467/transformed/ui-text-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-text-android:1.7.6] /Users/broglie/.gradle/caches/9.0.0/transforms/b594ad6592d776085790ba7ba9c00467/transformed/ui-text-release/AndroidManifest.xml:5:5-44
-MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8763ae74a04e196354ce206b9f52918b/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:5:5-44
-MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8763ae74a04e196354ce206b9f52918b/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/b60292c4a1ddbfbaa8352bfcdfc64e8f/transformed/emoji2-1.3.0/AndroidManifest.xml:21:5-44
 MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/broglie/.gradle/caches/9.0.0/transforms/b60292c4a1ddbfbaa8352bfcdfc64e8f/transformed/emoji2-1.3.0/AndroidManifest.xml:21:5-44
-MERGED from [androidx.lifecycle:lifecycle-process:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/934ea69686ff9c30836d1d13bb9b113f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:21:5-44
-MERGED from [androidx.lifecycle:lifecycle-process:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/934ea69686ff9c30836d1d13bb9b113f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:21:5-44
 MERGED from [androidx.lifecycle:lifecycle-runtime-compose-android:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/a636e434190175c9d3198607177c27ea/transformed/lifecycle-runtime-compose-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.lifecycle:lifecycle-runtime-compose-android:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/a636e434190175c9d3198607177c27ea/transformed/lifecycle-runtime-compose-release/AndroidManifest.xml:5:5-44
-MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/29b0de06b819df3c70de58250ffdca80/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/29b0de06b819df3c70de58250ffdca80/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/3cec89d032fc31ecd45b74f7e49e1536/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/3cec89d032fc31ecd45b74f7e49e1536/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/934ea69686ff9c30836d1d13bb9b113f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/934ea69686ff9c30836d1d13bb9b113f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:21:5-44
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/9065ca061dabdab5347fa88f9535aa1b/transformed/lifecycle-viewmodel-2.8.7/AndroidManifest.xml:4:5-43
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/9065ca061dabdab5347fa88f9535aa1b/transformed/lifecycle-viewmodel-2.8.7/AndroidManifest.xml:4:5-43
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/d2d6067c582abb1a2f9d314fe9cf4065/transformed/lifecycle-viewmodel-release/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/d2d6067c582abb1a2f9d314fe9cf4065/transformed/lifecycle-viewmodel-release/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/4b36c5bced9eda3e387d7a09f9508e1e/transformed/lifecycle-livedata-core-ktx-2.8.7/AndroidManifest.xml:5:5-44
 MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/4b36c5bced9eda3e387d7a09f9508e1e/transformed/lifecycle-livedata-core-ktx-2.8.7/AndroidManifest.xml:5:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/5e7a8ea8e9fb454f66f1886b9a08340d/transformed/lifecycle-livedata-core-2.8.7/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/5e7a8ea8e9fb454f66f1886b9a08340d/transformed/lifecycle-livedata-core-2.8.7/AndroidManifest.xml:20:5-44
-MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/2255b1f14f0a06e1ca516ef317128dad/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:20:5-44
-MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/2255b1f14f0a06e1ca516ef317128dad/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:20:5-44
-MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/7332a9e9a4470b7c049929a5110a9c51/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
-MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/broglie/.gradle/caches/9.0.0/transforms/7332a9e9a4470b7c049929a5110a9c51/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/382fd72bebc89947e7a37a9a97675ba1/transformed/lifecycle-runtime-release/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/382fd72bebc89947e7a37a9a97675ba1/transformed/lifecycle-runtime-release/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-service:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/5c587754208f61196eba5b1d715e4b07/transformed/lifecycle-service-2.8.7/AndroidManifest.xml:5:5-44
 MERGED from [androidx.lifecycle:lifecycle-service:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/5c587754208f61196eba5b1d715e4b07/transformed/lifecycle-service-2.8.7/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/5e7a8ea8e9fb454f66f1886b9a08340d/transformed/lifecycle-livedata-core-2.8.7/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/5e7a8ea8e9fb454f66f1886b9a08340d/transformed/lifecycle-livedata-core-2.8.7/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/fdb0589b397e82898ee11a2de1dbfe6f/transformed/lifecycle-viewmodel-ktx-2.8.7/AndroidManifest.xml:5:5-44
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/fdb0589b397e82898ee11a2de1dbfe6f/transformed/lifecycle-viewmodel-ktx-2.8.7/AndroidManifest.xml:5:5-44
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.7] /Users/broglie/.gradle/caches/9.0.0/transforms/f30f524ff9d092c8f3eb7af82f60ee9a/transformed/lifecycle-viewmodel-savedstate-2.8.7/AndroidManifest.xml:20:5-44
@@ -488,8 +508,8 @@ MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/brogl
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/1281ac70f8e1a8546c59f0986fdd69d8/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:20:5-21:38
 MERGED from [androidx.core:core-ktx:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/21437aaa5a89642b378f10b3bf0ef541/transformed/core-ktx-1.15.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.core:core-ktx:1.15.0] /Users/broglie/.gradle/caches/9.0.0/transforms/21437aaa5a89642b378f10b3bf0ef541/transformed/core-ktx-1.15.0/AndroidManifest.xml:5:5-44
-MERGED from [com.google.ai.edge.litertlm:litertlm-android:0.11.0-rc1] /Users/broglie/.gradle/caches/9.0.0/transforms/8cb8d330ddade59aedbd2342cb0758c9/transformed/litertlm-android-0.11.0-rc1/AndroidManifest.xml:4:5-44
-MERGED from [com.google.ai.edge.litertlm:litertlm-android:0.11.0-rc1] /Users/broglie/.gradle/caches/9.0.0/transforms/8cb8d330ddade59aedbd2342cb0758c9/transformed/litertlm-android-0.11.0-rc1/AndroidManifest.xml:4:5-44
+MERGED from [com.google.ai.edge.litertlm:litertlm-android:0.11.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8975f410c783029af5795920a6bb2e6b/transformed/litertlm-android-0.11.0/AndroidManifest.xml:4:5-44
+MERGED from [com.google.ai.edge.litertlm:litertlm-android:0.11.0] /Users/broglie/.gradle/caches/9.0.0/transforms/8975f410c783029af5795920a6bb2e6b/transformed/litertlm-android-0.11.0/AndroidManifest.xml:4:5-44
 MERGED from [androidx.room:room-runtime-android:2.7.1] /Users/broglie/.gradle/caches/9.0.0/transforms/9f5f47aed1cd5cc42bd0838faa2038cf/transformed/room-runtime-release/AndroidManifest.xml:21:5-44
 MERGED from [androidx.room:room-runtime-android:2.7.1] /Users/broglie/.gradle/caches/9.0.0/transforms/9f5f47aed1cd5cc42bd0838faa2038cf/transformed/room-runtime-release/AndroidManifest.xml:21:5-44
 MERGED from [androidx.room:room-ktx:2.7.1] /Users/broglie/.gradle/caches/9.0.0/transforms/5c97b60664a2b6f94a14b083a8c84e1a/transformed/room-ktx-2.7.1/AndroidManifest.xml:20:5-44
@@ -522,6 +542,18 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/brog
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/broglie/.gradle/caches/9.0.0/transforms/ffa6229bd3a3a141d7f0f29b3f386372/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.cardview:cardview:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/b39ce57f7526b3246526f9767cc2ee9b/transformed/cardview-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.cardview:cardview:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/b39ce57f7526b3246526f9767cc2ee9b/transformed/cardview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [io.noties.markwon:ext-strikethrough:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/13eeee11c2644fbab269518b1d25e4e3/transformed/ext-strikethrough-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:ext-strikethrough:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/13eeee11c2644fbab269518b1d25e4e3/transformed/ext-strikethrough-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:ext-tables:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/1d301177d7e69eb05d1601c0ba8fd01f/transformed/ext-tables-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:ext-tables:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/1d301177d7e69eb05d1601c0ba8fd01f/transformed/ext-tables-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:html:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/b5c7790e952941666d811cbd0cee36f7/transformed/html-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:html:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/b5c7790e952941666d811cbd0cee36f7/transformed/html-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:linkify:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/c1dcd436e05cdca7ca4a65c4a1ad5577/transformed/linkify-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:linkify:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/c1dcd436e05cdca7ca4a65c4a1ad5577/transformed/linkify-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:ext-tasklist:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/034e1ede2cf4fea693f965255667dbc2/transformed/ext-tasklist-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:ext-tasklist:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/034e1ede2cf4fea693f965255667dbc2/transformed/ext-tasklist-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:core:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/d929a2599f195712707b61034f1d1932/transformed/core-4.6.2/AndroidManifest.xml:7:5-9:41
+MERGED from [io.noties.markwon:core:4.6.2] /Users/broglie/.gradle/caches/9.0.0/transforms/d929a2599f195712707b61034f1d1932/transformed/core-4.6.2/AndroidManifest.xml:7:5-9:41
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/402064910571665cd47ddcb4f08682a1/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/402064910571665cd47ddcb4f08682a1/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/broglie/.gradle/caches/9.0.0/transforms/5f6c71b60fe46ad7946d3c264705e9b1/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44

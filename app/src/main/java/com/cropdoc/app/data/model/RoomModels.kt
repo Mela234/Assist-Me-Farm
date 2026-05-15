@@ -10,11 +10,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "weather_data")
 data class WeatherData(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val temperature: Float,         // °C
-    val humidity: Float,            // %
-    val rainfall: Float,            // mm expected
-    val windSpeed: Float,           // km/h
-    val forecast: String,           // plain text summary
+    val temperature: Float,
+    val humidity: Float,
+    val rainfall: Float,
+    val windSpeed: Float,
+    val forecast: String,
     val location: String,
     val timestamp: Long = System.currentTimeMillis()
 )
@@ -25,11 +25,11 @@ data class WeatherData(
 data class FarmZone(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
-    val x: Float,                   // position on canvas
+    val x: Float,
     val y: Float,
     val width: Float,
     val height: Float,
-    val color: Long,                // ARGB color stored as Long
+    val color: Long,
     val isActiveForSensor: Boolean = false,
     val createdAt: Long = System.currentTimeMillis()
 )
@@ -49,9 +49,9 @@ data class FarmZone(
 data class Crop(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val zoneId: Long,
-    val name: String,               // e.g. "Maize"
-    val plantedDate: Long,          // timestamp
-    val expectedHarvestDays: Int,   // e.g. 90 days
+    val name: String,
+    val plantedDate: Long,
+    val expectedHarvestDays: Int,
     val notes: String = ""
 )
 
@@ -86,9 +86,10 @@ data class ChatMessage(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val role: String,               // "USER" or "ASSISTANT"
     val content: String,
-    val attachedImageUri: String? = null,
-    val zoneId: Long? = null,       // null = general chat, non-null = zone chat
-    val contextSnapshot: String = "", // JSON snapshot of soil+weather+farm at time
+    val attachedImageUri: String? = null,   // file:// path copied to internal storage
+    val audioPath: String? = null,          // ← NEW: absolute path to .m4a in filesDir
+    val zoneId: Long? = null,
+    val contextSnapshot: String = "",
     val timestamp: Long = System.currentTimeMillis()
 )
 
@@ -96,7 +97,7 @@ data class ChatMessage(
 
 @Entity(tableName = "weather_profile")
 data class WeatherProfile(
-    @PrimaryKey val id: Int = 1,    // single row
+    @PrimaryKey val id: Int = 1,
     val phoneNumber: String,
     val location: String,
     val isOptedIn: Boolean = true,

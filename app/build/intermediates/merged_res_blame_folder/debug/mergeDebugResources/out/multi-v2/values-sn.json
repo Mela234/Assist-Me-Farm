@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.cropdoc.app-mergeDebugResources-82:/values-sn/values-sn.xml",
+            "outputFile": "com.cropdoc.app-mergeDebugResources-84:/values-sn/values-sn.xml",
             "map": [
                 {
                     "source": "/Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/src/main/res/values-sn/strings.xml",

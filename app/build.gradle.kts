@@ -77,7 +77,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.coil.compose)
     implementation(libs.androidx.datastore.preferences)
-    implementation("com.google.ai.edge.litertlm:litertlm-android:latest.release")
+    implementation("com.google.ai.edge.litertlm:litertlm-android:0.11.0")
+    implementation("com.github.jeziellago:compose-markdown:0.5.4") // ← markdown rendering
     debugImplementation(libs.androidx.ui.tooling)
     implementation("androidx.room:room-runtime:2.7.1")
     implementation("androidx.room:room-ktx:2.7.1")

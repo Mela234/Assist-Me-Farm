@@ -96,7 +96,8 @@
         <activity
             android:name="com.cropdoc.app.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.CropDoc" >
+            android:theme="@style/Theme.CropDoc"
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -126,6 +127,13 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <uses-native-library
+            android:name="libvndksupport.so"
+            android:required="false" />
+        <uses-native-library
+            android:name="libOpenCL.so"
+            android:required="false" />
 
         <service
             android:name="androidx.camera.core.impl.MetadataHolderService"

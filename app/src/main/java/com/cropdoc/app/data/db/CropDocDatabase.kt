@@ -15,7 +15,7 @@ import com.cropdoc.app.data.model.*
         SoilReadingHistory::class,
         ChatMessage::class
     ],
-    version = 1,
+    version = 2,  // ← bumped from 1 to 2 (adds audioPath column to chat_messages)
     exportSchema = false
 )
 abstract class CropDocDatabase : RoomDatabase() {

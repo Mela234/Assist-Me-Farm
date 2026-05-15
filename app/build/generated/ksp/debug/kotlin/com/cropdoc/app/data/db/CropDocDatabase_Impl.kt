@@ -40,8 +40,8 @@ public class CropDocDatabase_Impl : CropDocDatabase() {
   }
 
   protected override fun createOpenDelegate(): RoomOpenDelegate {
-    val _openDelegate: RoomOpenDelegate = object : RoomOpenDelegate(1,
-        "0b0541bd5a333955a5fbadaef21837e8", "401fb2521557a4adf7c3fe08108d40c1") {
+    val _openDelegate: RoomOpenDelegate = object : RoomOpenDelegate(2,
+        "73f26ae80bcefbf538138a786b19cc98", "f24fe06f1927ad9b8bdef22ad92e14b1") {
       public override fun createAllTables(connection: SQLiteConnection) {
         connection.execSQL("CREATE TABLE IF NOT EXISTS `weather_data` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `temperature` REAL NOT NULL, `humidity` REAL NOT NULL, `rainfall` REAL NOT NULL, `windSpeed` REAL NOT NULL, `forecast` TEXT NOT NULL, `location` TEXT NOT NULL, `timestamp` INTEGER NOT NULL)")
         connection.execSQL("CREATE TABLE IF NOT EXISTS `weather_profile` (`id` INTEGER NOT NULL, `phoneNumber` TEXT NOT NULL, `location` TEXT NOT NULL, `isOptedIn` INTEGER NOT NULL, `registeredAt` INTEGER NOT NULL, PRIMARY KEY(`id`))")
@@ -50,9 +50,9 @@ public class CropDocDatabase_Impl : CropDocDatabase() {
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_crops_zoneId` ON `crops` (`zoneId`)")
         connection.execSQL("CREATE TABLE IF NOT EXISTS `soil_reading_history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `zoneId` INTEGER NOT NULL, `moisture` REAL NOT NULL, `ph` REAL NOT NULL, `nitrogen` REAL NOT NULL, `phosphorus` REAL NOT NULL, `potassium` REAL NOT NULL, `temperature` REAL NOT NULL, `timestamp` INTEGER NOT NULL, FOREIGN KEY(`zoneId`) REFERENCES `farm_zones`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_soil_reading_history_zoneId` ON `soil_reading_history` (`zoneId`)")
-        connection.execSQL("CREATE TABLE IF NOT EXISTS `chat_messages` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `role` TEXT NOT NULL, `content` TEXT NOT NULL, `attachedImageUri` TEXT, `zoneId` INTEGER, `contextSnapshot` TEXT NOT NULL, `timestamp` INTEGER NOT NULL)")
+        connection.execSQL("CREATE TABLE IF NOT EXISTS `chat_messages` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `role` TEXT NOT NULL, `content` TEXT NOT NULL, `attachedImageUri` TEXT, `audioPath` TEXT, `zoneId` INTEGER, `contextSnapshot` TEXT NOT NULL, `timestamp` INTEGER NOT NULL)")
         connection.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)")
-        connection.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0b0541bd5a333955a5fbadaef21837e8')")
+        connection.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '73f26ae80bcefbf538138a786b19cc98')")
       }
 
       public override fun dropAllTables(connection: SQLiteConnection) {
@@ -247,6 +247,8 @@ public class CropDocDatabase_Impl : CropDocDatabase() {
             TableInfo.CREATED_FROM_ENTITY))
         _columnsChatMessages.put("attachedImageUri", TableInfo.Column("attachedImageUri", "TEXT",
             false, 0, null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsChatMessages.put("audioPath", TableInfo.Column("audioPath", "TEXT", false, 0, null,
+            TableInfo.CREATED_FROM_ENTITY))
         _columnsChatMessages.put("zoneId", TableInfo.Column("zoneId", "INTEGER", false, 0, null,
             TableInfo.CREATED_FROM_ENTITY))
         _columnsChatMessages.put("contextSnapshot", TableInfo.Column("contextSnapshot", "TEXT",

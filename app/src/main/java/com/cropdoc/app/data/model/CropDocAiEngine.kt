@@ -54,7 +54,11 @@ class CropDocAiEngine(private val context: Context) {
 
             val engineConfig = EngineConfig(
                 modelPath = modelFile.absolutePath,
-                backend = Backend.CPU()
+                backend = Backend.GPU(),
+                visionBackend = Backend.CPU(),
+                audioBackend = Backend.CPU(),
+                maxNumTokens = 4096,
+                cacheDir = context.cacheDir.absolutePath
             )
             engine = Engine(engineConfig).also { it.initialize() }
             _modelState.value = ModelState.Ready
