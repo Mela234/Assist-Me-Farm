@@ -374,7 +374,7 @@ private fun ChatBubble(message: ChatMessage) {
         }
 
         // Audio attachment indicator
-        message.audioPath?.let {
+        if(message.audioPath !== null && message.content == "🎤 Voice message" ){
             Row(
                 modifier = Modifier
                     .padding(bottom = 4.dp)

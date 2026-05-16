@@ -11,6 +11,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.cropdoc.app.CropDocApplication
 import com.cropdoc.app.data.model.ChatMessage
+import com.cropdoc.app.data.model.Crop
 import com.cropdoc.app.data.model.FarmZone
 import com.cropdoc.app.data.model.SoilReading
 import com.cropdoc.app.data.model.WeatherData
@@ -21,6 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -57,6 +59,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private val _attachedImageUri = MutableStateFlow<Uri?>(null)
     val attachedImageUri: StateFlow<Uri?> = _attachedImageUri.asStateFlow()
 
+    // Tracks the active message flow collector so we can cancel it on session switch
+    private var messageLoadJob: Job? = null
+
     // ── Audio recording state ─────────────────────────────────────────────────
 
     private val _isRecording = MutableStateFlow(false)
@@ -68,7 +73,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private val _audioFile = MutableStateFlow<File?>(null)
     val audioFile: StateFlow<File?> = _audioFile.asStateFlow()
 
-    // WAV recording constants
     private val SAMPLE_RATE    = 16000
     private val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
     private val AUDIO_FORMAT   = AudioFormat.ENCODING_PCM_16BIT
@@ -107,7 +111,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun loadMessages(zoneId: Long?) {
-        viewModelScope.launch {
+        messageLoadJob?.cancel()
+        _messages.value = emptyList()
+        messageLoadJob = viewModelScope.launch {
             if (zoneId == null) {
                 chatRepository.getGeneralChat().collect { msgs -> _messages.value = msgs }
             } else {
@@ -144,7 +150,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         val context = getApplication<Application>()
 
-        // Explicit permission check — satisfies lint and guards against revoked permission
         if (context.checkSelfPermission(Manifest.permission.RECORD_AUDIO)
             != PackageManager.PERMISSION_GRANTED) {
             _isRecording.value = false
@@ -169,13 +174,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             _isRecording.value = true
             _recordingSeconds.value = 0
 
-            // Capture PCM on IO thread and stream to file
             recordingJob = viewModelScope.launch(Dispatchers.IO) {
                 val fos = FileOutputStream(wavFile)
-
-                // Placeholder 44-byte WAV header — filled in correctly after recording stops
                 fos.write(ByteArray(44))
-
                 val buffer = ByteArray(bufferSize)
                 var totalPcmBytes = 0L
 
@@ -189,12 +190,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
                 fos.flush()
                 fos.close()
-
-                // Rewrite correct header now that we know total data size
                 writeWavHeader(wavFile, totalPcmBytes)
             }
 
-            // Auto-stop timer at 30 s
             recordingTimerJob = viewModelScope.launch {
                 while (_recordingSeconds.value < 30) {
                     delay(1000)
@@ -213,14 +211,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     fun stopRecording() {
         if (!_isRecording.value) return
 
-        _isRecording.value = false   // signals the recordingJob loop to exit
+        _isRecording.value = false
         recordingTimerJob?.cancel()
 
         try { audioRecord?.stop() } catch (_: Exception) {}
         audioRecord?.release()
         audioRecord = null
 
-        // Wait for IO job to finish writing before exposing the file
         viewModelScope.launch {
             recordingJob?.join()
             val file = currentWavFile
@@ -238,10 +235,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         currentWavFile = null
     }
 
-    /**
-     * Writes a standard 16-bit mono PCM WAV header at the beginning of [file].
-     * [pcmDataBytes] is the number of raw PCM bytes that follow the 44-byte header.
-     */
     private fun writeWavHeader(file: File, pcmDataBytes: Long) {
         val channels      = 1
         val bitsPerSample = 16
@@ -250,18 +243,18 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         val header = ByteBuffer.allocate(44).order(ByteOrder.LITTLE_ENDIAN).apply {
             put("RIFF".toByteArray())
-            putInt((36 + pcmDataBytes).toInt())   // RIFF chunk size
+            putInt((36 + pcmDataBytes).toInt())
             put("WAVE".toByteArray())
             put("fmt ".toByteArray())
-            putInt(16)                             // fmt chunk size
-            putShort(1)                            // PCM format
+            putInt(16)
+            putShort(1)
             putShort(channels.toShort())
             putInt(SAMPLE_RATE)
             putInt(byteRate)
             putShort(blockAlign.toShort())
             putShort(bitsPerSample.toShort())
             put("data".toByteArray())
-            putInt(pcmDataBytes.toInt())           // data chunk size
+            putInt(pcmDataBytes.toInt())
         }.array()
 
         RandomAccessFile(file, "rw").use { raf ->
@@ -295,9 +288,25 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         _audioFile.value = null
 
         viewModelScope.launch {
+            // Label the message correctly based on what was actually sent
+            val messageContent = when {
+                text.isNotBlank() -> text
+                audio != null     -> "🎤 Voice message"
+                imageUri != null  -> "📷 Image"
+                else              -> ""
+            }
+
+            // What we send to the engine as the user message
+            val engineText = when {
+                text.isNotBlank() -> text
+                audio != null     -> "Please respond to my voice message"
+                imageUri != null  -> "Please analyse this image"
+                else              -> ""
+            }
+
             val userMessage = ChatMessage(
                 role = "USER",
-                content = text.ifBlank { "🎤 Voice message" },
+                content = messageContent,
                 attachedImageUri = imageUri?.toString(),
                 audioPath = audio?.absolutePath,
                 zoneId = _currentZoneId.value,
@@ -308,17 +317,32 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             _isTyping.value = true
             _streamingText.value = ""
 
-            val recentHistory = chatRepository.getRecentMessages(_currentZoneId.value, 10)
-            val crop = _currentZone.value?.let { farmRepository.getLatestCropForZone(it.id) }
+            val recentHistory = chatRepository.getRecentMessages(_currentZoneId.value, 6)
+            val zone = _currentZone.value
+
+            val crop: Crop?
+            val allZonesWithCrops: List<Pair<FarmZone, Crop?>>
+
+            if (zone != null) {
+                crop = farmRepository.getLatestCropForZone(zone.id)
+                allZonesWithCrops = emptyList()
+            } else {
+                crop = null
+                val zones = farmRepository.allZones.first()
+                allZonesWithCrops = zones.map { z ->
+                    z to farmRepository.getLatestCropForZone(z.id)
+                }
+            }
 
             val result = aiEngine.chat(
-                userMessage = text.ifBlank { "Please respond to my voice message" },
+                userMessage = engineText,
                 imageUri = imageUri,
                 audioFile = audio,
                 soilReading = currentSoilReading,
                 weatherData = currentWeather,
-                zone = _currentZone.value,
+                zone = zone,
                 crop = crop,
+                allZonesWithCrops = allZonesWithCrops,
                 history = recentHistory,
                 context = getApplication(),
                 onToken = { token -> _streamingText.value += token }
@@ -402,6 +426,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     override fun onCleared() {
         super.onCleared()
+        messageLoadJob?.cancel()
         aiEngine.release()
         try { audioRecord?.stop() } catch (_: Exception) {}
         audioRecord?.release()
