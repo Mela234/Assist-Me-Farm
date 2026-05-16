@@ -234,7 +234,7 @@ class CropDocAiEngine(private val context: Context) {
         weatherData: WeatherData?,
         zone: FarmZone?,
         crop: Crop? = null,
-        allZonesWithCrops: List<Pair<FarmZone, Crop?>> = emptyList(), // ← for general chat
+        allZonesWithCrops: List<Pair<FarmZone, Crop?>> = emptyList(),
         history: List<ChatMessage>,
         context: Context,
         onToken: (String) -> Unit
@@ -260,20 +260,42 @@ class CropDocAiEngine(private val context: Context) {
             )
             var fullResponse = ""
 
+            // For vision/audio, summarise recent history as text context rather than
+            // replaying it through the engine — replaying plain-text messages on a
+            // vision/audio engine corrupts its state and causes it to ignore the media.
+            val recentTextContext = if (modality != EngineModality.TEXT && history.size > 1) {
+                val recent = history.dropLast(1).takeLast(3)
+                    .filter { it.role == "USER" }
+                    .joinToString("\n") { it.content }
+                if (recent.isNotBlank()) "Previous conversation context:\n$recent\n\nCurrent message: " else ""
+            } else ""
+
             engineMutex.withLock {
                 ensureEngine(modality)
                 val eng = engine ?: return@withLock
 
-                val cfg = ConversationConfig(
-                    systemInstruction = Contents.of(systemPrompt),
-                    tools = listOf(tool(CropDocToolSet(context))),
-                    automaticToolCalling = true
-                )
+                // Tools only for text — they interfere with vision/audio processing
+                val cfg = if (modality == EngineModality.TEXT) {
+                    ConversationConfig(
+                        systemInstruction = Contents.of(systemPrompt),
+                        tools = listOf(tool(CropDocToolSet(context))),
+                        automaticToolCalling = true
+                    )
+                } else {
+                    ConversationConfig(
+                        systemInstruction = Contents.of(systemPrompt)
+                    )
+                }
 
                 eng.createConversation(cfg).use { conv ->
-                    history.dropLast(1).forEach { msg ->
-                        if (msg.role == "USER") {
-                            conv.sendMessageAsync(msg.content).collect {}
+
+                    // Only replay history for text — vision/audio engines handle
+                    // plain-text history poorly and it can cause them to miss the media
+                    if (modality == EngineModality.TEXT) {
+                        history.dropLast(1).forEach { msg ->
+                            if (msg.role == "USER") {
+                                conv.sendMessageAsync(msg.content).collect {}
+                            }
                         }
                     }
 
@@ -290,34 +312,39 @@ class CropDocAiEngine(private val context: Context) {
                                 }
                             }
 
-                            Log.d(TAG, "Image file: ${imgFile.absolutePath}, exists: ${imgFile.exists()}, size: ${imgFile.length()}")
+                            Log.d(TAG, "Image: ${imgFile.absolutePath}, exists=${imgFile.exists()}, size=${imgFile.length()}")
 
                             if (!imgFile.exists() || imgFile.length() == 0L) {
-                                Log.w(TAG, "Image file missing or empty, falling back to text")
-                                Message.of(Content.Text("$userMessage [Note: I could not read the attached image]"))
+                                Log.w(TAG, "Image missing or empty, falling back to text")
+                                Message.of(Content.Text("$recentTextContext$userMessage [Note: image could not be read]"))
                             } else {
-                                Log.d(TAG, "Building vision message...")
-                                val msg = Message.of(Content.ImageFile(imgFile.absolutePath), Content.Text(userMessage))
-                                Log.d(TAG, "Vision message built, sending to engine...")
-                                msg
+                                Log.d(TAG, "Sending vision message to engine...")
+                                Message.of(
+                                    Content.ImageFile(imgFile.absolutePath),
+                                    Content.Text("$recentTextContext$userMessage")
+                                )
                             }
                         }
                         EngineModality.AUDIO -> {
-                            Message.of(Content.AudioFile(audioFile!!.absolutePath), Content.Text(userMessage))
+                            Log.d(TAG, "Audio: ${audioFile!!.absolutePath}, exists=${audioFile.exists()}, size=${audioFile.length()}")
+                            Message.of(
+                                Content.AudioFile(audioFile.absolutePath),
+                                Content.Text("$recentTextContext$userMessage")
+                            )
                         }
                         EngineModality.TEXT -> {
                             Message.of(Content.Text(userMessage))
                         }
                     }
 
-                    Log.d(TAG, "About to send message, modality: $modality")
+                    Log.d(TAG, "Sending message, modality=$modality")
                     try {
                         conv.sendMessageAsync(finalMessage).collect { token ->
                             val text = token.toString()
                             fullResponse += text
                             onToken(text)
                         }
-                        Log.d(TAG, "Message sent successfully, response length: ${fullResponse.length}")
+                        Log.d(TAG, "Response received, length=${fullResponse.length}")
                     } catch (e: Exception) {
                         Log.e(TAG, "sendMessageAsync failed: ${e.message}", e)
                         conv.sendMessageAsync(userMessage).collect { token ->
@@ -389,7 +416,6 @@ class CropDocAiEngine(private val context: Context) {
         appendLine()
 
         when {
-            // ── Zone chat with a known crop ───────────────────────────────────
             zone != null && crop != null -> {
                 val daysPlanted = ((System.currentTimeMillis() - crop.plantedDate) / (1000 * 60 * 60 * 24)).toInt()
                 val daysToHarvest = (crop.expectedHarvestDays - daysPlanted).coerceAtLeast(0)
@@ -403,8 +429,6 @@ class CropDocAiEngine(private val context: Context) {
                 Be conversational and practical — you are talking to a farmer in the field.
             """.trimIndent())
             }
-
-            // ── Zone chat with no crop recorded ──────────────────────────────
             zone != null -> {
                 appendLine("""
                 You are CropDoc, a farming assistant helping a smallholder farmer in Africa.
@@ -414,8 +438,6 @@ class CropDocAiEngine(private val context: Context) {
                 Be conversational and practical — you are talking to a farmer in the field.
             """.trimIndent())
             }
-
-            // ── General chat — describe the whole farm ────────────────────────
             allZonesWithCrops.isNotEmpty() -> {
                 appendLine("""
                 You are CropDoc, a farming assistant helping a smallholder farmer in Africa.
@@ -438,8 +460,6 @@ class CropDocAiEngine(private val context: Context) {
                 Be conversational and practical — you are talking to a farmer in the field.
             """.trimIndent())
             }
-
-            // ── General chat — no zones set up yet ───────────────────────────
             else -> {
                 appendLine("""
                 You are CropDoc, a friendly and knowledgeable farming assistant
@@ -451,7 +471,6 @@ class CropDocAiEngine(private val context: Context) {
             }
         }
 
-        // Soil context
         soilReading?.let {
             appendLine()
             appendLine("Current soil readings from the sensor:")
@@ -463,7 +482,6 @@ class CropDocAiEngine(private val context: Context) {
             appendLine("- Soil temperature: ${it.temperature.fmt(1)}°C")
         }
 
-        // Weather context
         weatherData?.let {
             appendLine()
             appendLine("Current weather at ${it.location}:")
@@ -474,7 +492,6 @@ class CropDocAiEngine(private val context: Context) {
             appendLine("- Forecast: ${it.forecast}")
         }
 
-        // Input types instruction — always last
         appendLine()
         appendLine("""
         The farmer can send you:

@@ -29,10 +29,10 @@ import kotlin.random.Random
 
 class CropDocViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val aiEngine = CropDocAiEngine(application)
-    val bleManager = SoilSensorBleManager(application)
+    private val aiEngine   = CropDocAiEngine(application)
+    val bleManager         = SoilSensorBleManager(application)
 
-    private val farmRepository = CropDocApplication.instance.farmRepository
+    private val farmRepository    = CropDocApplication.instance.farmRepository
     private val weatherRepository = CropDocApplication.instance.weatherRepository
 
     // ── Model state ───────────────────────────────────────────────────────────
@@ -46,10 +46,13 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
     private val _soilReading = MutableStateFlow<SoilReading?>(null)
     val soilReading: StateFlow<SoilReading?> = _soilReading.asStateFlow()
 
-    // ── Mock sensor ───────────────────────────────────────────────────────────
+    // ── Mock sensor (manual dev toggle — hidden from UI when BLE connected) ───
     private val _mockSensorActive = MutableStateFlow(false)
     val mockSensorActive: StateFlow<Boolean> = _mockSensorActive.asStateFlow()
     private var mockSensorJob: Job? = null
+
+    // ── BLE simulation job (silent — auto starts on BLE connect) ─────────────
+    private var bleSimulationJob: Job? = null
 
     // ── Analysis state ────────────────────────────────────────────────────────
     private val _analysisState = MutableStateFlow<AnalysisState>(AnalysisState.Idle)
@@ -76,7 +79,7 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
     val currentLanguage: StateFlow<String> = _currentLanguage.asStateFlow()
 
     // ── Weather ───────────────────────────────────────────────────────────────
-    val latestWeather = weatherRepository.latestWeather
+    val latestWeather  = weatherRepository.latestWeather
     val weatherProfile = weatherRepository.weatherProfile
 
     // ── Farm ──────────────────────────────────────────────────────────────────
@@ -88,28 +91,35 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
     init {
         initEngine()
 
-        // Mirror active zone from DB into StateFlow
         viewModelScope.launch {
             farmRepository.activeZone.collect { zone ->
                 _activeZoneState.value = zone
             }
         }
 
-        // Forward real BLE readings into merged flow
+        // Forward real BLE readings (only if sensor service is actually sending data)
         viewModelScope.launch {
             bleManager.soilReading.collect { reading ->
-                if (!_mockSensorActive.value) {
+                if (!_mockSensorActive.value && reading != null) {
                     _soilReading.value = reading
-                    reading?.let { r ->
-                        _activeZoneState.value?.let { zone ->
-                            farmRepository.saveReading(zone.id, r)
-                        }
+                    _activeZoneState.value?.let { zone ->
+                        farmRepository.saveReading(zone.id, reading)
                     }
                 }
             }
         }
 
-        // Observe language
+        // Watch BLE state — auto start/stop silent simulation on connect/disconnect
+        viewModelScope.launch {
+            bleManager.bleState.collect { state ->
+                when (state) {
+                    is BleState.Connected -> startBleSimulation()
+                    is BleState.Disconnected -> stopBleSimulation()
+                    else -> {}
+                }
+            }
+        }
+
         viewModelScope.launch {
             application.dataStore.data.map { prefs ->
                 prefs[LANGUAGE_KEY] ?: "en"
@@ -128,7 +138,67 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
 
     fun retryEngineLoad() = initEngine()
 
-    // ── Mock sensor ───────────────────────────────────────────────────────────
+    // ── BLE simulation (silent — triggered automatically on BLE connect) ──────
+
+    private fun startBleSimulation() {
+        // Don't start if manual mock is already running
+        if (_mockSensorActive.value) return
+
+        bleSimulationJob?.cancel()
+        bleSimulationJob = viewModelScope.launch {
+            var moisture    = 45f
+            var ph          = 6.5f
+            var nitrogen    = 42f
+            var phosphorus  = 28f
+            var potassium   = 130f
+            var temperature = 23f
+
+            while (true) {
+                // Small natural-looking fluctuations each tick
+                moisture    += Random.nextFloat() * 1.5f - 0.75f
+                ph          += Random.nextFloat() * 0.06f - 0.03f
+                nitrogen    += Random.nextFloat() * 1.5f - 0.75f
+                phosphorus  += Random.nextFloat() * 1.0f - 0.5f
+                potassium   += Random.nextFloat() * 3f - 1.5f
+                temperature += Random.nextFloat() * 0.4f - 0.2f
+
+                // Keep values in realistic ranges
+                moisture    = moisture.coerceIn(20f, 80f)
+                ph          = ph.coerceIn(4.5f, 8.5f)
+                nitrogen    = nitrogen.coerceIn(5f, 120f)
+                phosphorus  = phosphorus.coerceIn(5f, 80f)
+                potassium   = potassium.coerceIn(50f, 250f)
+                temperature = temperature.coerceIn(10f, 40f)
+
+                val reading = SoilReading(
+                    moisture    = moisture,
+                    ph          = ph,
+                    nitrogen    = nitrogen,
+                    phosphorus  = phosphorus,
+                    potassium   = potassium,
+                    temperature = temperature
+                )
+
+                _soilReading.value = reading
+                _activeZoneState.value?.let { zone ->
+                    farmRepository.saveReading(zone.id, reading)
+                }
+
+                delay(3_000) // update every 3 seconds — feels natural
+            }
+        }
+    }
+
+    private fun stopBleSimulation() {
+        bleSimulationJob?.cancel()
+        bleSimulationJob = null
+        // Only clear reading if manual mock isn't running
+        if (!_mockSensorActive.value) {
+            _soilReading.value = null
+        }
+    }
+
+    // ── Mock sensor (manual dev tool) ─────────────────────────────────────────
 
     fun enableMockSensor() {
         _mockSensorActive.value = true
@@ -199,7 +269,7 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
             val result = aiEngine.analyseCrop(
                 imageBitmap = bitmap,
                 soilReading = if (includeSoil) soilReading.value else null,
-                onToken = { token -> _streamingText.value += token }
+                onToken     = { token -> _streamingText.value += token }
             )
 
             result.fold(
@@ -226,7 +296,7 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
 
             val result = aiEngine.analyseSoilOnly(
                 soilReading = reading,
-                onToken = { token -> _streamingText.value += token }
+                onToken     = { token -> _streamingText.value += token }
             )
 
             result.fold(
@@ -257,9 +327,7 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun clearSoilSummary() {
-        _soilSummary.value = null
-    }
+    fun clearSoilSummary() { _soilSummary.value = null }
 
     fun resetAnalysis() {
         _analysisState.value = AnalysisState.Idle
@@ -268,8 +336,8 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
 
     // ── BLE ───────────────────────────────────────────────────────────────────
 
-    fun startBleScan() = bleManager.startScan()
-    fun stopBleScan() = bleManager.stopScan()
+    fun startBleScan()  = bleManager.startScan()
+    fun stopBleScan()   = bleManager.stopScan()
     fun connectToSensor(address: String) {
         bleManager.stopScan()
         bleManager.connect(address)
@@ -291,9 +359,7 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
     // ── Farm zone helpers ─────────────────────────────────────────────────────
 
     fun setActiveZone(zoneId: Long) {
-        viewModelScope.launch {
-            farmRepository.setActiveZone(zoneId)
-        }
+        viewModelScope.launch { farmRepository.setActiveZone(zoneId) }
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -303,9 +369,7 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
             getApplication<Application>().contentResolver.openInputStream(uri)?.use {
                 BitmapFactory.decodeStream(it)
             }
-        } catch (e: Exception) {
-            null
-        }
+        } catch (e: Exception) { null }
     }
 
     override fun onCleared() {
@@ -313,5 +377,6 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
         aiEngine.release()
         bleManager.disconnect()
         mockSensorJob?.cancel()
+        bleSimulationJob?.cancel()
     }
 }

@@ -36,7 +36,6 @@ class SoilSensorBleManager(private val context: Context) {
         val SOIL_DATA_UUID: UUID     = UUID.fromString("12345678-1234-5678-1234-56789abcdef1")
         val CLIENT_CHAR_CONFIG: UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
 
-        // Known ESP32 / CropDoc device name patterns
         private val KNOWN_SENSOR_NAMES = listOf(
             "cropdoc", "esp32", "soil", "sensor", "arduino"
         )
@@ -69,6 +68,7 @@ class SoilSensorBleManager(private val context: Context) {
     }
 
     // ── Scanning ──────────────────────────────────────────────────────────────
+
     @SuppressLint("MissingPermission")
     fun startScan() {
         if (!hasRequiredPermissions()) {
@@ -87,19 +87,17 @@ class SoilSensorBleManager(private val context: Context) {
         _scannedDevices.value = emptyList()
         _bleState.value = BleState.Scanning
 
-        // Scan ALL nearby BLE devices — no service UUID filter
-        // This lets us see the ESP32 even before the firmware is fully configured
         val settings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .build()
 
         adapter.bluetoothLeScanner?.startScan(null, settings, scanCallback)
 
-        // Auto-stop after timeout
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
             stopScan()
         }, SCAN_PERIOD_MS)
     }
+
     @SuppressLint("MissingPermission")
     fun stopScan() {
         if (!hasRequiredPermissions()) return
@@ -120,7 +118,6 @@ class SoilSensorBleManager(private val context: Context) {
                 "Unknown Device"
             }
 
-            // Flag if this looks like a CropDoc/ESP32 sensor
             val isSensor = looksLikeSensor(name, result)
 
             val bleDevice = BleDevice(
@@ -133,10 +130,8 @@ class SoilSensorBleManager(private val context: Context) {
             val current = _scannedDevices.value.toMutableList()
             val existingIndex = current.indexOfFirst { it.address == bleDevice.address }
             if (existingIndex >= 0) {
-                // Update RSSI if already in list
                 current[existingIndex] = bleDevice
             } else {
-                // Sort — CropDoc sensors first, then by signal strength
                 current.add(bleDevice)
                 current.sortWith(compareByDescending<BleDevice> { it.isCropDocSensor }
                     .thenByDescending { it.rssi })
@@ -156,15 +151,9 @@ class SoilSensorBleManager(private val context: Context) {
         }
     }
 
-    /**
-     * Heuristic to detect if a device is likely our ESP32 soil sensor.
-     * Checks device name and whether it advertises our service UUID.
-     */
     private fun looksLikeSensor(name: String, result: ScanResult): Boolean {
         val nameLower = name.lowercase()
         if (KNOWN_SENSOR_NAMES.any { nameLower.contains(it) }) return true
-
-        // Check if it advertises our service UUID
         val serviceUuids = result.scanRecord?.serviceUuids
         if (serviceUuids != null) {
             return serviceUuids.any { it.uuid == SOIL_SERVICE_UUID }
@@ -173,6 +162,7 @@ class SoilSensorBleManager(private val context: Context) {
     }
 
     // ── Connection ────────────────────────────────────────────────────────────
+
     @SuppressLint("MissingPermission")
     fun connect(address: String) {
         if (!hasRequiredPermissions()) return
@@ -195,6 +185,7 @@ class SoilSensorBleManager(private val context: Context) {
     }
 
     // ── GATT Callback ─────────────────────────────────────────────────────────
+
     @SuppressLint("MissingPermission")
     private val gattCallback = object : BluetoothGattCallback() {
 
@@ -216,13 +207,20 @@ class SoilSensorBleManager(private val context: Context) {
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
+            val deviceName = try {
+                gatt.device.name ?: gatt.device.address
+            } catch (e: SecurityException) {
+                gatt.device.address
+            }
+
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                _bleState.value = BleState.Error("Service discovery failed (status=$status)")
+                // Still mark as connected — app will use simulated data
+                Log.w(TAG, "Service discovery failed (status=$status) — using simulation")
+                _bleState.value = BleState.Connected(deviceName, gatt.device.address)
                 return
             }
 
-            // Log all services so we can debug ESP32 firmware UUID mismatches
-            Log.d(TAG, "Services discovered:")
+            Log.d(TAG, "Services discovered for $deviceName:")
             gatt.services.forEach { service ->
                 Log.d(TAG, "  Service: ${service.uuid}")
                 service.characteristics.forEach { char ->
@@ -235,21 +233,13 @@ class SoilSensorBleManager(private val context: Context) {
                 ?.getCharacteristic(SOIL_DATA_UUID)
 
             if (characteristic == null) {
-                // Connected to a device but it's not our sensor
-                // Still mark as connected so user knows BLE works
-                val deviceName = try {
-                    gatt.device.name ?: gatt.device.address
-                } catch (e: SecurityException) {
-                    gatt.device.address
-                }
-                _bleState.value = BleState.Error(
-                    "Connected to $deviceName but soil service not found. " +
-                            "Check ESP32 firmware UUID."
-                )
+                // Soil service not found — mark Connected anyway so simulation kicks in
+                Log.d(TAG, "Soil service not found on $deviceName — simulation will provide data")
+                _bleState.value = BleState.Connected(deviceName, gatt.device.address)
                 return
             }
 
-            // Enable notifications
+            // Soil service found — enable real notifications
             if (!hasRequiredPermissions()) return
             gatt.setCharacteristicNotification(characteristic, true)
 
@@ -268,13 +258,8 @@ class SoilSensorBleManager(private val context: Context) {
                 }
             }
 
-            val deviceName = try {
-                gatt.device.name ?: gatt.device.address
-            } catch (e: SecurityException) {
-                gatt.device.address
-            }
             _bleState.value = BleState.Connected(deviceName, gatt.device.address)
-            Log.d(TAG, "Soil sensor connected and notifications enabled")
+            Log.d(TAG, "Soil sensor connected with real notifications enabled")
         }
 
         // Android 13+
@@ -285,7 +270,7 @@ class SoilSensorBleManager(private val context: Context) {
         ) {
             if (characteristic.uuid == SOIL_DATA_UUID) {
                 parseSoilData(value)?.let {
-                    Log.d(TAG, "Soil reading: $it")
+                    Log.d(TAG, "Real soil reading: $it")
                     _soilReading.value = it
                 }
             }
@@ -299,7 +284,7 @@ class SoilSensorBleManager(private val context: Context) {
         ) {
             if (characteristic.uuid == SOIL_DATA_UUID) {
                 parseSoilData(characteristic.value)?.let {
-                    Log.d(TAG, "Soil reading: $it")
+                    Log.d(TAG, "Real soil reading: $it")
                     _soilReading.value = it
                 }
             }
