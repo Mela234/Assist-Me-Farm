@@ -9,6 +9,15 @@ android {
     namespace = "com.cropdoc.app"
     compileSdk = 35
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/broglie/keystores/cropdoc.jks")
+            storePassword = "YOUR_KEYSTORE_PASSWORD"
+            keyAlias = "cropdoc"
+            keyPassword = "YOUR_KEY_PASSWORD"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.cropdoc.app"
         minSdk = 26
@@ -17,13 +26,14 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64")
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
         }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -78,7 +88,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.androidx.datastore.preferences)
     implementation("com.google.ai.edge.litertlm:litertlm-android:0.11.0")
-    implementation("com.github.jeziellago:compose-markdown:0.5.4") // ← markdown rendering
+    implementation("com.github.jeziellago:compose-markdown:0.5.4")
     debugImplementation(libs.androidx.ui.tooling)
     implementation("androidx.room:room-runtime:2.7.1")
     implementation("androidx.room:room-ktx:2.7.1")

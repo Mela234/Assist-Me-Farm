@@ -4,12 +4,12 @@ import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.CalendarContract
-import android.provider.Telephony
 import android.util.Log
 import com.google.ai.edge.litertlm.Tool
 import com.google.ai.edge.litertlm.ToolParam
@@ -35,7 +35,6 @@ class CropDocToolSet(private val context: Context) : ToolSet {
         content: String
     ): Map<String, Any> {
         return try {
-            // Try Google Keep first, fall back to generic ACTION_INSERT
             val intent = Intent(Intent.ACTION_INSERT).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_SUBJECT, title)
@@ -44,7 +43,7 @@ class CropDocToolSet(private val context: Context) : ToolSet {
             }
             context.startActivity(intent)
             Log.d(TAG, "Note opened: $title")
-            mapOf("status" to "success", "message" to "Note opened in your notes app")
+            mapOf("status" to "success", "message" to "Note opened in your notes app — please tap Save")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to open notes app", e)
             mapOf("status" to "error", "message" to "Could not open notes app: ${e.message}")
@@ -83,7 +82,6 @@ class CropDocToolSet(private val context: Context) : ToolSet {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
-                // Fall back to inexact alarm
                 alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
             } else {
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
@@ -99,7 +97,7 @@ class CropDocToolSet(private val context: Context) : ToolSet {
 
     // ── Create Calendar Event ─────────────────────────────────────────────────
 
-    @Tool(description = "Create a calendar event in the farmer's native calendar app. Use this for planting dates, harvest days, market days, field inspections, etc.")
+    @Tool(description = "Create a calendar event and save it directly to the farmer's calendar. Use this for planting dates, harvest days, market days, field inspections, etc.")
     fun createCalendarEvent(
         @ToolParam(description = "Title of the event e.g. 'Harvest Zone A Maize'")
         title: String,
@@ -111,21 +109,78 @@ class CropDocToolSet(private val context: Context) : ToolSet {
         notes: String? = null
     ): Map<String, Any> {
         return try {
-            val startMillis = parseDateTime("${date}T${time}:00")
+            val startMillis  = parseDateTime("${date}T${time}:00")
+            val endMillis    = startMillis + 60 * 60 * 1000L // 1 hour duration
 
+            // Try to auto-save directly via Calendar Provider (no UI required)
+            val calendarId = getDefaultCalendarId()
+
+            if (calendarId != null) {
+                // ── Direct insert — saves without opening the calendar app ──────
+                val values = ContentValues().apply {
+                    put(CalendarContract.Events.CALENDAR_ID,    calendarId)
+                    put(CalendarContract.Events.TITLE,          title)
+                    put(CalendarContract.Events.DTSTART,        startMillis)
+                    put(CalendarContract.Events.DTEND,          endMillis)
+                    put(CalendarContract.Events.EVENT_TIMEZONE, java.util.TimeZone.getDefault().id)
+                    if (!notes.isNullOrBlank()) {
+                        put(CalendarContract.Events.DESCRIPTION, notes)
+                    }
+                }
+
+                val uri = context.contentResolver.insert(
+                    CalendarContract.Events.CONTENT_URI, values
+                )
+
+                if (uri != null) {
+                    Log.d(TAG, "Calendar event saved directly: $title on $date (id=${uri.lastPathSegment})")
+                    return mapOf(
+                        "status"  to "success",
+                        "message" to "Calendar event '$title' saved for $date at $time"
+                    )
+                }
+                // If insert returned null fall through to Intent fallback below
+                Log.w(TAG, "Direct calendar insert returned null — falling back to Intent")
+            }
+
+            // ── Fallback — open calendar app pre-filled ───────────────────────
             val intent = Intent(Intent.ACTION_INSERT).apply {
                 data = CalendarContract.Events.CONTENT_URI
-                putExtra(CalendarContract.Events.TITLE, title)
-                putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
-                putExtra(CalendarContract.EXTRA_EVENT_END_TIME, startMillis + 60 * 60 * 1000) // 1 hour
+                putExtra(CalendarContract.Events.TITLE,               title)
+                putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,      startMillis)
+                putExtra(CalendarContract.EXTRA_EVENT_END_TIME,        endMillis)
                 if (!notes.isNullOrBlank()) {
                     putExtra(CalendarContract.Events.DESCRIPTION, notes)
                 }
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(intent)
-            Log.d(TAG, "Calendar event opened: $title on $date")
-            mapOf("status" to "success", "message" to "Calendar event opened for $title on $date")
+            Log.d(TAG, "Calendar event opened via Intent: $title on $date")
+            mapOf(
+                "status"  to "success",
+                "message" to "Calendar app opened for '$title' on $date — please tap Save"
+            )
+
+        } catch (e: SecurityException) {
+            // WRITE_CALENDAR permission not granted — open Intent as fallback
+            Log.w(TAG, "Calendar permission denied — falling back to Intent", e)
+            try {
+                val startMillis = parseDateTime("${date}T${time}:00")
+                val intent = Intent(Intent.ACTION_INSERT).apply {
+                    data = CalendarContract.Events.CONTENT_URI
+                    putExtra(CalendarContract.Events.TITLE,          title)
+                    putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
+                    putExtra(CalendarContract.EXTRA_EVENT_END_TIME,   startMillis + 60 * 60 * 1000L)
+                    if (!notes.isNullOrBlank()) {
+                        putExtra(CalendarContract.Events.DESCRIPTION, notes)
+                    }
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+                mapOf("status" to "success", "message" to "Calendar app opened — please tap Save")
+            } catch (ex: Exception) {
+                mapOf("status" to "error", "message" to "Could not create calendar event: ${ex.message}")
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to create calendar event", e)
             mapOf("status" to "error", "message" to "Could not create calendar event: ${e.message}")
@@ -149,7 +204,7 @@ class CropDocToolSet(private val context: Context) : ToolSet {
             }
             context.startActivity(intent)
             Log.d(TAG, "SMS app opened for $phoneNumber")
-            mapOf("status" to "success", "message" to "SMS app opened — please review and send")
+            mapOf("status" to "success", "message" to "SMS app opened — please review and tap Send")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to open SMS app", e)
             mapOf("status" to "error", "message" to "Could not open SMS app: ${e.message}")
@@ -158,13 +213,46 @@ class CropDocToolSet(private val context: Context) : ToolSet {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
+    /**
+     * Returns the ID of the first writable calendar on the device, or null
+     * if no calendar is available or permission is denied.
+     */
+    private fun getDefaultCalendarId(): Long? {
+        return try {
+            val projection = arrayOf(
+                CalendarContract.Calendars._ID,
+                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+                CalendarContract.Calendars.VISIBLE,
+                CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL
+            )
+            val selection = "${CalendarContract.Calendars.VISIBLE} = 1 AND " +
+                    "${CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL} >= ${CalendarContract.Calendars.CAL_ACCESS_CONTRIBUTOR}"
+
+            val cursor = context.contentResolver.query(
+                CalendarContract.Calendars.CONTENT_URI,
+                projection,
+                selection,
+                null,
+                "${CalendarContract.Calendars._ID} ASC"
+            )
+
+            cursor?.use {
+                if (it.moveToFirst()) {
+                    it.getLong(it.getColumnIndexOrThrow(CalendarContract.Calendars._ID))
+                } else null
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not query calendars: ${e.message}")
+            null
+        }
+    }
+
     private fun parseDateTime(isoString: String): Long {
         return try {
             val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
             val dateTime = LocalDateTime.parse(isoString, formatter)
             dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         } catch (e: Exception) {
-            // fallback: 1 hour from now
             System.currentTimeMillis() + 3600 * 1000
         }
     }
