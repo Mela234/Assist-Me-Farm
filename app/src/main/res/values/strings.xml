@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CropDoc</string>
+    <string name="app_name">Farm Assistant</string>
     <string name="app_description">On-device crop disease diagnosis powered by Gemma 4</string>
 
     <!-- Permissions -->
@@ -112,7 +112,7 @@
     <string name="cd_back">Back</string>
     <string name="cd_history">History</string>
     <string name="cd_crop_image">Captured crop photo</string>
-    <string name="cd_app_logo">CropDoc logo</string>
+    <string name="cd_app_logo">Farm Assistant logo</string>
 
     <!-- Weather -->
     <string name="weather_title">Weather Updates</string>
@@ -131,7 +131,7 @@
     <string name="weather_how_it_works">How it works</string>
     <string name="weather_step_1">Enter your phone number and nearest town</string>
     <string name="weather_step_2">We send weather updates to your number periodically</string>
-    <string name="weather_step_3">CropDoc reads the SMS and updates your weather data</string>
+    <string name="weather_step_3">Farm Assistant reads the SMS and updates your weather data</string>
     <string name="weather_step_4">Gemma uses weather data to give better farming advice</string>
     <string name="weather_step_5">Works offline — weather is cached after each update</string>
     <string name="weather_stat_temp">Temp</string>
@@ -146,7 +146,7 @@
     <string name="chat_empty_title">Ask me anything about\nyour farm</string>
     <string name="chat_zone_title">Ask me anything about\n%1$s</string>
     <string name="chat_empty_subtitle">I know your soil readings, weather\nand crop history</string>
-    <string name="chat_thinking">Gemma is thinking…</string>
+    <string name="chat_thinking">Farm Assistant is thinking…</string>
     <string name="chat_clear">Clear chat</string>
     <string name="chat_suggestion_1">How is my soil health?</string>
     <string name="chat_suggestion_2">When should I irrigate?</string>

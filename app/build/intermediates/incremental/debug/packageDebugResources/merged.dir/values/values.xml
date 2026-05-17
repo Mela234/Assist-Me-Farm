@@ -18,7 +18,7 @@
     <string name="affected">Affected: %1$s</string>
     <string name="analysis_complete">Analysis Complete</string>
     <string name="app_description">On-device crop disease diagnosis powered by Gemma 4</string>
-    <string name="app_name">CropDoc</string>
+    <string name="app_name">Farm Assistant</string>
     <string name="ble_connecting">Connecting…</string>
     <string name="ble_no_sensor">No sensor connected</string>
     <string name="ble_scanning">Scanning for sensors…</string>
@@ -32,7 +32,7 @@
     <string name="camera_retake">Retake</string>
     <string name="camera_title">Crop Scanner</string>
     <string name="camera_use_gallery">Use the gallery button below to pick an image</string>
-    <string name="cd_app_logo">CropDoc logo</string>
+    <string name="cd_app_logo">Farm Assistant logo</string>
     <string name="cd_back">Back</string>
     <string name="cd_crop_image">Captured crop photo</string>
     <string name="cd_history">History</string>
@@ -47,7 +47,7 @@
     <string name="chat_suggestion_2">When should I irrigate?</string>
     <string name="chat_suggestion_3">What should I plant next?</string>
     <string name="chat_suggestion_4">How do I improve my yield?</string>
-    <string name="chat_thinking">Gemma is thinking…</string>
+    <string name="chat_thinking">Farm Assistant is thinking…</string>
     <string name="chat_title">Farm Assistant</string>
     <string name="chat_zone_suggestion_1">How is my crop doing?</string>
     <string name="chat_zone_suggestion_2">When should I water?</string>
@@ -162,7 +162,7 @@
     <string name="weather_stat_wind">Wind</string>
     <string name="weather_step_1">Enter your phone number and nearest town</string>
     <string name="weather_step_2">We send weather updates to your number periodically</string>
-    <string name="weather_step_3">CropDoc reads the SMS and updates your weather data</string>
+    <string name="weather_step_3">Farm Assistant reads the SMS and updates your weather data</string>
     <string name="weather_step_4">Gemma uses weather data to give better farming advice</string>
     <string name="weather_step_5">Works offline — weather is cached after each update</string>
     <string name="weather_stop">Stop Weather Updates</string>

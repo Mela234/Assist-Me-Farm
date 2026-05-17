@@ -39,6 +39,21 @@ class SoilSensorBleManager(private val context: Context) {
         private val KNOWN_SENSOR_NAMES = listOf(
             "cropdoc", "esp32", "soil", "sensor", "arduino"
         )
+
+        // Well-known BLE company/device name hints for common devices
+        // so the farmer can recognise their own phone or headphones in the list
+        private val KNOWN_DEVICE_HINTS = mapOf(
+            "apple"   to "📱 Apple Device",
+            "samsung" to "📱 Samsung Device",
+            "xiaomi"  to "📱 Xiaomi Device",
+            "oneplus" to "📱 OnePlus Device",
+            "huawei"  to "📱 Huawei Device",
+            "iphone"  to "📱 iPhone",
+            "galaxy"  to "📱 Samsung Galaxy",
+            "airpods" to "🎧 AirPods",
+            "buds"    to "🎧 Earbuds",
+            "watch"   to "⌚ Smartwatch"
+        )
     }
 
     private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -112,16 +127,42 @@ class SoilSensorBleManager(private val context: Context) {
             if (!hasRequiredPermissions()) return
 
             val device = result.device
-            val name = try {
-                device.name ?: "Unknown Device"
+            val rawName = try {
+                device.name?.takeIf { it.isNotBlank() }
             } catch (e: SecurityException) {
-                "Unknown Device"
+                null
             }
 
-            val isSensor = looksLikeSensor(name, result)
+            // Build a meaningful display name:
+            // 1. Use the device's actual broadcasted name if available
+            // 2. Check if the name hints at a known device type (iPhone, Galaxy etc.)
+            // 3. Fall back to last 5 chars of MAC so the user can identify it
+            //    e.g. "BLE Device (:A1:B2)" instead of "Unknown Device"
+            val displayName = when {
+                rawName != null -> rawName
+                else -> {
+                    val macSuffix = device.address.takeLast(5)
+                    "BLE Device ($macSuffix)"
+                }
+            }
+
+            val isSensor = looksLikeSensor(displayName, result)
+
+            // Prefix known device types with an emoji so the farmer
+            // can quickly identify their phone or earbuds in the list
+            val friendlyName = when {
+                isSensor -> "🌱 $displayName"
+                else -> {
+                    val lowerName = displayName.lowercase()
+                    KNOWN_DEVICE_HINTS.entries
+                        .firstOrNull { (keyword, _) -> lowerName.contains(keyword) }
+                        ?.value
+                        ?: displayName
+                }
+            }
 
             val bleDevice = BleDevice(
-                name = if (isSensor) "🌱 $name" else name,
+                name = friendlyName,
                 address = device.address,
                 rssi = result.rssi,
                 isCropDocSensor = isSensor
@@ -130,11 +171,14 @@ class SoilSensorBleManager(private val context: Context) {
             val current = _scannedDevices.value.toMutableList()
             val existingIndex = current.indexOfFirst { it.address == bleDevice.address }
             if (existingIndex >= 0) {
+                // Update existing entry — the name may have arrived in a later packet
                 current[existingIndex] = bleDevice
             } else {
                 current.add(bleDevice)
-                current.sortWith(compareByDescending<BleDevice> { it.isCropDocSensor }
-                    .thenByDescending { it.rssi })
+                current.sortWith(
+                    compareByDescending<BleDevice> { it.isCropDocSensor }
+                        .thenByDescending { it.rssi }
+                )
             }
             _scannedDevices.value = current
         }
@@ -168,7 +212,11 @@ class SoilSensorBleManager(private val context: Context) {
         if (!hasRequiredPermissions()) return
         val device = bluetoothAdapter?.getRemoteDevice(address) ?: return
 
-        val deviceName = try { device.name ?: address } catch (e: SecurityException) { address }
+        val deviceName = try {
+            device.name?.takeIf { it.isNotBlank() } ?: "BLE Device (${address.takeLast(5)})"
+        } catch (e: SecurityException) {
+            "BLE Device (${address.takeLast(5)})"
+        }
         _bleState.value = BleState.Connecting(deviceName)
 
         bluetoothGatt = device.connectGatt(context, false, gattCallback, TRANSPORT_LE)
@@ -208,13 +256,13 @@ class SoilSensorBleManager(private val context: Context) {
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             val deviceName = try {
-                gatt.device.name ?: gatt.device.address
+                gatt.device.name?.takeIf { it.isNotBlank() }
+                    ?: "BLE Device (${gatt.device.address.takeLast(5)})"
             } catch (e: SecurityException) {
-                gatt.device.address
+                "BLE Device (${gatt.device.address.takeLast(5)})"
             }
 
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                // Still mark as connected — app will use simulated data
                 Log.w(TAG, "Service discovery failed (status=$status) — using simulation")
                 _bleState.value = BleState.Connected(deviceName, gatt.device.address)
                 return
@@ -233,13 +281,11 @@ class SoilSensorBleManager(private val context: Context) {
                 ?.getCharacteristic(SOIL_DATA_UUID)
 
             if (characteristic == null) {
-                // Soil service not found — mark Connected anyway so simulation kicks in
                 Log.d(TAG, "Soil service not found on $deviceName — simulation will provide data")
                 _bleState.value = BleState.Connected(deviceName, gatt.device.address)
                 return
             }
 
-            // Soil service found — enable real notifications
             if (!hasRequiredPermissions()) return
             gatt.setCharacteristicNotification(characteristic, true)
 
@@ -262,7 +308,6 @@ class SoilSensorBleManager(private val context: Context) {
             Log.d(TAG, "Soil sensor connected with real notifications enabled")
         }
 
-        // Android 13+
         override fun onCharacteristicChanged(
             gatt: BluetoothGatt,
             characteristic: BluetoothGattCharacteristic,
@@ -276,7 +321,6 @@ class SoilSensorBleManager(private val context: Context) {
             }
         }
 
-        // Android < 13
         @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
         override fun onCharacteristicChanged(
             gatt: BluetoothGatt,

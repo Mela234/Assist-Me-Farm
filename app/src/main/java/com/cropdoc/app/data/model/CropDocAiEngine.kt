@@ -534,7 +534,7 @@ class CropDocAiEngine(private val context: Context) {
         appendLine()
         appendLine(
             """
-            You are CropDoc, a friendly and knowledgeable farming assistant helping smallholder farmers in Africa.
+            You are Farm Assistant, a friendly and knowledgeable farming assistant helping smallholder farmers in Africa.
             You have deep expertise in agronomy, crop diseases, soil health, weather-aware farming, and sustainable farming practices.
             Give practical, actionable advice using simple language. Be conversational and warm — you are talking to a farmer in the field.
 
@@ -632,7 +632,7 @@ class CropDocAiEngine(private val context: Context) {
             .joinToString("\n") { message ->
                 val role = when (message.role.uppercase()) {
                     "USER" -> "Farmer"
-                    "ASSISTANT", "AI", "MODEL" -> "CropDoc"
+                    "ASSISTANT", "AI", "MODEL" -> "Farm Assistant"
                     else -> message.role
                 }
 
@@ -706,7 +706,7 @@ class CropDocAiEngine(private val context: Context) {
     }
 
     private val SYSTEM_PROMPT = """
-        You are CropDoc, an expert agronomist AI assistant helping smallholder farmers.
+        You are Farm Assistant, an expert agronomist AI assistant helping smallholder farmers.
         You MUST respond ONLY with valid JSON. No explanation, no markdown, no extra text.
         Just the raw JSON object.
     """.trimIndent()
@@ -827,7 +827,7 @@ class CropDocAiEngine(private val context: Context) {
         onToken: (String) -> Unit
     ): AnalysisResult {
         val fullResponse = buildString {
-            append("CROPDOC ANALYSIS REPORT\n========================\n\n")
+            append("FARM ASSISTANT ANALYSIS REPORT\n================================\n\n")
 
             if (withImage) {
                 append("VISUAL DIAGNOSIS:\n")
