@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CropDoc</string>
+    <string name="app_name">Farm Assistant</string>
     <string name="app_description">በGemma 4 የሚሰራ በመሳሪያ ላይ የሰብል በሽታ ምርመራ</string>
 
     <!-- Permissions -->

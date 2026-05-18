@@ -7,10 +7,17 @@ import android.net.Uri
 import android.util.Log
 import com.cropdoc.app.data.agent.CropDocToolSet
 import com.google.ai.edge.litertlm.*
+import androidx.datastore.preferences.core.edit
+import com.cropdoc.app.LANGUAGE_KEY
+import com.cropdoc.app.dataStore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -47,6 +54,13 @@ class CropDocAiEngine(private val context: Context) {
     suspend fun initialize() = withContext(Dispatchers.IO) {
         try {
             _modelState.value = ModelState.Loading
+
+            // Restore saved language — survives activity recreation
+            val savedLanguage = context.dataStore.data
+                .map { prefs -> prefs[LANGUAGE_KEY] ?: "en" }
+                .first()
+            currentLanguage = savedLanguage
+            Log.d(TAG, "Language restored: $currentLanguage")
 
             if (USE_DEMO_MODE) {
                 kotlinx.coroutines.delay(2_000)
@@ -387,16 +401,8 @@ class CropDocAiEngine(private val context: Context) {
                     }
                 } else {
                     // VISION/AUDIO — fresh conversation each time.
-                    //
-                    // THE FIX: close the persistent TEXT conversation BEFORE calling
-                    // eng.createConversation(). LiteRT only allows one active session per
-                    // engine at a time. Previously we closed it AFTER — the engine already
-                    // saw two open sessions and threw FAILED_PRECONDITION: A session already exists.
-                    //
-                    // Context is NOT lost — buildRecentConversationContext injects the last
-                    // 8 messages as labeled text into every VISION/AUDIO turn's payload, so
-                    // the model knows the full conversation history including previous image
-                    // and voice turns (labeled as [sent a crop image] / [sent a voice message]).
+                    // Close persistent TEXT conversation BEFORE creating fresh one —
+                    // LiteRT only allows one active session per engine at a time.
                     Log.d(TAG, "Closing persistent conversation before $modality turn")
                     closePersistentConversation()
 
@@ -413,8 +419,6 @@ class CropDocAiEngine(private val context: Context) {
                         }
                     }
 
-                    // Already null after closePersistentConversation() above, but explicit here
-                    // so it's clear the next TEXT turn will rebuild with full labeled history.
                     closePersistentConversation()
                 }
             }
@@ -442,8 +446,15 @@ class CropDocAiEngine(private val context: Context) {
             appendLine()
         }
 
+        // Language instruction placed immediately before the farmer message so it
+        // is the last thing the model reads before generating — maximises compliance
+        // on small models that struggle with distant system prompt instructions.
+        appendLine(languageInstruction())
+        appendLine()
         appendLine("Farmer message:")
         append(userMessage)
+    }.also { payload ->
+        Log.d(TAG, "=== CHAT PAYLOAD ===\n$payload\n=== END PAYLOAD ===")
     }
 
     private fun validateImageFile(file: File) {
@@ -620,8 +631,6 @@ class CropDocAiEngine(private val context: Context) {
 
     // Image and audio turns are represented as labeled text in history so the model has
     // full conversational awareness without storing image embeddings in the KV cache.
-    // This is what answers the question "will the model still know what the chat is about?"
-    // — yes, because every VISION/AUDIO turn's payload includes this labeled history.
     private fun buildRecentConversationContext(
         history: List<ChatMessage>,
         maxMessages: Int = MAX_HISTORY_MESSAGES
@@ -921,10 +930,15 @@ class CropDocAiEngine(private val context: Context) {
 
     fun setLanguage(code: String) {
         currentLanguage = code
-        // closePersistentConversation is safe to call outside the mutex here —
-        // setLanguage is a user-driven action and the next chat() call will
-        // recreate the conversation cleanly with the new language key.
         closePersistentConversation()
+        // Persist to DataStore so initialize() reads the correct language on restart.
+        // recreate() is handled by MainActivity after applyLocale() runs synchronously,
+        // ensuring both the UI locale and engine language are updated correctly.
+        @Suppress("OPT_IN_USAGE")
+        GlobalScope.launch {
+            context.dataStore.edit { prefs -> prefs[LANGUAGE_KEY] = code }
+        }
+        Log.d(TAG, "Language set to: $code")
     }
 
     private fun languageInstruction(): String = when (currentLanguage) {

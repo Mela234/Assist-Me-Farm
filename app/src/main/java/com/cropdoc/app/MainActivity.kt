@@ -276,13 +276,21 @@ fun CropDocApp(
     }
 
     if (showLanguagePicker) {
+        var languageSelected by remember { mutableStateOf(false) }
         LanguagePickerDialog(
             currentCode = currentLanguageCode,
             onDismiss = { showLanguagePicker = false },
             onLanguageSelected = { code ->
-                cropDocViewModel.setLanguage(code)
-                showLanguagePicker = false
-                (context as? MainActivity)?.recreate()
+                if (!languageSelected) {
+                    languageSelected = true
+                    cropDocViewModel.setLanguage(code)
+                    showLanguagePicker = false
+                    // Apply locale synchronously first so the UI language updates correctly,
+                    // then recreate. By the time recreate() completes and initialize() runs,
+                    // the DataStore write from setLanguage() has had time to finish.
+                    applyLocale(context, code)
+                    (context as? MainActivity)?.recreate()
+                }
             }
         )
     }

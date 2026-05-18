@@ -18,7 +18,7 @@ class WeatherSmsReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "WeatherSMS"
-        const val WEATHER_TYPE = "CROPDOC_WEATHER"
+        const val WEATHER_TYPE = "FARMASSISTANT_WEATHER"
     }
 
     override fun onReceive(context: Context, intent: Intent) {

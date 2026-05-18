@@ -14,7 +14,6 @@ import com.cropdoc.app.data.ble.SoilSensorBleManager
 import com.cropdoc.app.data.model.AnalysisResult
 import com.cropdoc.app.data.model.AnalysisState
 import com.cropdoc.app.data.model.BleState
-import com.cropdoc.app.data.model.CropDocAiEngine
 import com.cropdoc.app.data.model.FarmZone
 import com.cropdoc.app.data.model.ModelState
 import com.cropdoc.app.data.model.SoilReading
@@ -29,8 +28,12 @@ import kotlin.random.Random
 
 class CropDocViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val aiEngine   = CropDocAiEngine(application)
-    val bleManager         = SoilSensorBleManager(application)
+    // Fix: use the singleton engine from CropDocApplication so both CropDocViewModel
+    // and ChatViewModel share the same instance. Previously CropDocViewModel created
+    // its own private engine, meaning setLanguage() updated the wrong instance and
+    // ChatViewModel's engine never received the language change.
+    private val aiEngine = CropDocApplication.instance.aiEngine
+    val bleManager       = SoilSensorBleManager(application)
 
     private val farmRepository    = CropDocApplication.instance.farmRepository
     private val weatherRepository = CropDocApplication.instance.weatherRepository
@@ -89,8 +92,6 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
     val activeZone: StateFlow<FarmZone?> = _activeZoneState.asStateFlow()
 
     init {
-        initEngine()
-
         viewModelScope.launch {
             farmRepository.activeZone.collect { zone ->
                 _activeZoneState.value = zone
@@ -132,16 +133,13 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
 
     // ── Engine ────────────────────────────────────────────────────────────────
 
-    private fun initEngine() {
+    fun retryEngineLoad() {
         viewModelScope.launch { aiEngine.initialize() }
     }
-
-    fun retryEngineLoad() = initEngine()
 
     // ── BLE simulation (silent — triggered automatically on BLE connect) ──────
 
     private fun startBleSimulation() {
-        // Don't start if manual mock is already running
         if (_mockSensorActive.value) return
 
         bleSimulationJob?.cancel()
@@ -154,7 +152,6 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
             var temperature = 23f
 
             while (true) {
-                // Small natural-looking fluctuations each tick
                 moisture    += Random.nextFloat() * 1.5f - 0.75f
                 ph          += Random.nextFloat() * 0.06f - 0.03f
                 nitrogen    += Random.nextFloat() * 1.5f - 0.75f
@@ -162,7 +159,6 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
                 potassium   += Random.nextFloat() * 3f - 1.5f
                 temperature += Random.nextFloat() * 0.4f - 0.2f
 
-                // Keep values in realistic ranges
                 moisture    = moisture.coerceIn(20f, 80f)
                 ph          = ph.coerceIn(4.5f, 8.5f)
                 nitrogen    = nitrogen.coerceIn(5f, 120f)
@@ -184,7 +180,7 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
                     farmRepository.saveReading(zone.id, reading)
                 }
 
-                delay(3_000) // update every 3 seconds — feels natural
+                delay(3_000)
             }
         }
     }
@@ -192,7 +188,6 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
     private fun stopBleSimulation() {
         bleSimulationJob?.cancel()
         bleSimulationJob = null
-        // Only clear reading if manual mock isn't running
         if (!_mockSensorActive.value) {
             _soilReading.value = null
         }
@@ -374,7 +369,6 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
 
     override fun onCleared() {
         super.onCleared()
-        aiEngine.release()
         bleManager.disconnect()
         mockSensorJob?.cancel()
         bleSimulationJob?.cancel()

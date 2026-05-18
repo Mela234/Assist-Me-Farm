@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CropDoc</string>
+    <string name="app_name">Farm Assistant</string>
     <string name="app_description">Kuongorora chirwere chemhodzi nesimbi yeGemma 4</string>
 
     <!-- Permissions -->
