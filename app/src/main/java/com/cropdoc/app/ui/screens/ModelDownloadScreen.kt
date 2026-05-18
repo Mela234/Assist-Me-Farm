@@ -63,7 +63,7 @@ fun ModelDownloadScreen(
             )
 
             Text(
-                "",
+                "Farm Assistant",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
