@@ -1,24 +1,42 @@
-# Android
-*.iml
-.gradle
-/local.properties
-/.idea
+# macOS
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+
+# Android / IntelliJ / Gradle
+*.iml
+.gradle/
+.idea/
+local.properties
+
+# Build outputs
+/build/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# APK / Bundles
 *.apk
 *.aab
 
-# Model files — too large for git (use Play Asset Delivery or HuggingFace)
+# Kotlin / Java compiled files
+*.class
+
+# Logs
+*.log
+
+# Keystores
+*.jks
+*.keystore
+
+# Large AI model files
 app/src/main/assets/*.litertlm
 app/src/main/assets/*.tflite
 app/src/main/assets/*.bin
 
-# Local keystore
-*.jks
-*.keystore
+# Native / temporary
+*.so
+*.tmp
+*.temp
 
-# Kotlin
-*.class
+# OS generated
+Thumbs.db
