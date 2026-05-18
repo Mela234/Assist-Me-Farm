@@ -11,7 +11,6 @@ import androidx.work.WorkerParameters
 import com.cropdoc.app.CropDocApplication
 import com.cropdoc.app.MainActivity
 import com.cropdoc.app.R
-import com.cropdoc.app.data.model.CropDocAiEngine
 import kotlinx.coroutines.flow.first
 
 class AgentWorker(
@@ -48,15 +47,14 @@ class AgentWorker(
                 latestReading = latestReading
             )
 
-            // Run Gemma
-            val engine = CropDocAiEngine(appContext)
-            engine.initialize()
+            // Use the singleton engine — same instance used by chat and analysis
+            // so it shares the same state and doesn't reinitialize the model
+            val engine = app.aiEngine
 
             val alerts = mutableListOf<String>()
             engine.runAgentCheck(contextPrompt) { alert ->
                 alerts.add(alert)
             }
-            engine.release()
 
             // Show notification for each alert
             alerts.forEach { alert ->
@@ -79,7 +77,7 @@ class AgentWorker(
         latestReading: com.cropdoc.app.data.model.SoilReadingHistory?
     ): String {
         return buildString {
-            appendLine("You are CropDoc's autonomous farm monitoring agent.")
+            appendLine("You are Farm Assistant's autonomous farm monitoring agent.")
             appendLine("Analyse the current farm conditions and identify critical actions.")
             appendLine("Be concise and practical. Focus on what the farmer needs to do TODAY.")
             appendLine()
@@ -137,7 +135,7 @@ class AgentWorker(
 
         val notification = NotificationCompat.Builder(appContext, AGENT_NOTIFICATION_CHANNEL)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("🌱 CropDoc Farm Alert")
+            .setContentTitle("🌱 Farm Assistant Alert")
             .setContentText(message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -153,10 +151,10 @@ class AgentWorker(
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val channel = android.app.NotificationChannel(
                 AGENT_NOTIFICATION_CHANNEL,
-                "CropDoc Farm Alerts",
+                "Farm Assistant Alerts",
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Proactive farm alerts from CropDoc agent"
+                description = "Proactive farm alerts from Farm Assistant agent"
             }
             val nm = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nm.createNotificationChannel(channel)
