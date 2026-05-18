@@ -341,14 +341,9 @@ class CropDocViewModel(application: Application) : AndroidViewModel(application)
 
     // ── Language ──────────────────────────────────────────────────────────────
 
-    fun setLanguage(code: String) {
-        viewModelScope.launch {
-            getApplication<Application>().dataStore.edit { prefs ->
-                prefs[LANGUAGE_KEY] = code
-            }
-            _currentLanguage.value = code
-            aiEngine.setLanguage(code)
-        }
+    suspend fun setLanguage(code: String) {
+        _currentLanguage.value = code
+        aiEngine.setLanguage(code)  // suspend — waits for DataStore write to complete
     }
 
     // ── Farm zone helpers ─────────────────────────────────────────────────────

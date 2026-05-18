@@ -928,16 +928,13 @@ class CropDocAiEngine(private val context: Context) {
 
     private fun Float.fmt(decimals: Int): String = "%.${decimals}f".format(this)
 
-    fun setLanguage(code: String) {
+    suspend fun setLanguage(code: String) {
         currentLanguage = code
         closePersistentConversation()
-        // Persist to DataStore so initialize() reads the correct language on restart.
-        // recreate() is handled by MainActivity after applyLocale() runs synchronously,
-        // ensuring both the UI locale and engine language are updated correctly.
-        @Suppress("OPT_IN_USAGE")
-        GlobalScope.launch {
-            context.dataStore.edit { prefs -> prefs[LANGUAGE_KEY] = code }
-        }
+        // Suspend until DataStore write completes before returning.
+        // recreate() in MainActivity waits for this to finish so the
+        // activity always restarts with the correct language already saved.
+        context.dataStore.edit { prefs -> prefs[LANGUAGE_KEY] = code }
         Log.d(TAG, "Language set to: $code")
     }
 

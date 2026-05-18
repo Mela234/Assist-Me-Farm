@@ -46,6 +46,7 @@ import com.cropdoc.app.viewmodel.ModelDownloadViewModel
 import com.cropdoc.app.viewmodel.WeatherViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.util.Locale
@@ -163,6 +164,7 @@ fun CropDocApp(
 ) {
     val navController = rememberNavController()
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var showLanguagePicker by remember { mutableStateOf(false) }
 
     // Check if model exists to determine start destination
@@ -283,13 +285,15 @@ fun CropDocApp(
             onLanguageSelected = { code ->
                 if (!languageSelected) {
                     languageSelected = true
-                    cropDocViewModel.setLanguage(code)
-                    showLanguagePicker = false
-                    // Apply locale synchronously first so the UI language updates correctly,
-                    // then recreate. By the time recreate() completes and initialize() runs,
-                    // the DataStore write from setLanguage() has had time to finish.
-                    applyLocale(context, code)
-                    (context as? MainActivity)?.recreate()
+                    scope.launch {
+                        // setLanguage is now suspend — DataStore write completes before
+                        // we proceed, so recreate() always reads the correct language.
+                        cropDocViewModel.setLanguage(code)
+                        chatViewModel.setLanguage(code)
+                        applyLocale(context, code)
+                        showLanguagePicker = false
+                        (context as? MainActivity)?.recreate()
+                    }
                 }
             }
         )

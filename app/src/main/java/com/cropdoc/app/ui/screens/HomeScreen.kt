@@ -232,8 +232,6 @@ fun HomeScreen(
                         Text(stringResource(R.string.action_analyse_soil))
                     }
                 }
-
-                TipsCard()
             }
         }
     }
@@ -549,37 +547,6 @@ private fun ActionCard(
 
 // ── Tips Card ─────────────────────────────────────────────────────────────────
 
-@Composable
-private fun TipsCard() {
-    val tips = listOf(
-        stringResource(R.string.tip_1),
-        stringResource(R.string.tip_2),
-        stringResource(R.string.tip_3),
-        stringResource(R.string.tip_4)
-    )
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                stringResource(R.string.tips_title),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(Modifier.height(8.dp))
-            tips.forEach { tip ->
-                Text(
-                    text = tip,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(vertical = 2.dp)
-                )
-            }
-        }
-    }
-}
 
 // ── Agent Card ─────────────────────────────────────────────────────────────────
 @Composable

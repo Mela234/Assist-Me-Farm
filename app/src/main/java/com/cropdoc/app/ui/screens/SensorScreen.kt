@@ -276,8 +276,6 @@ fun SensorScreen(
                 }
             }
 
-            item { SensorSetupGuide() }
-
             item { Spacer(Modifier.height(24.dp)) }
         }
     }
@@ -383,61 +381,6 @@ private fun MockSensorCard(
                             style = MaterialTheme.typography.bodySmall,
                             color = Color(0xFF555555))
                     }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SensorSetupGuide() {
-    Card(
-        shape  = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(Icons.Default.Info, null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(18.dp))
-                Text(stringResource(R.string.sensor_setup_title),
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold)
-            }
-            Spacer(Modifier.height(10.dp))
-            val steps = listOf(
-                stringResource(R.string.sensor_setup_1),
-                stringResource(R.string.sensor_setup_2),
-                stringResource(R.string.sensor_setup_3),
-                stringResource(R.string.sensor_setup_4),
-                stringResource(R.string.sensor_setup_5)
-            )
-            steps.forEachIndexed { i, step ->
-                Row(
-                    modifier = Modifier.padding(vertical = 3.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Surface(
-                        shape    = androidx.compose.foundation.shape.CircleShape,
-                        color    = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text("${i + 1}",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                fontWeight = FontWeight.Bold)
-                        }
-                    }
-                    Text(step,
-                        style    = MaterialTheme.typography.bodySmall,
-                        color    = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.weight(1f))
                 }
             }
         }

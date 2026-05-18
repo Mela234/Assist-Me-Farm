@@ -665,6 +665,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         return true
     }
 
+    suspend fun setLanguage(code: String) {
+        aiEngine.setLanguage(code)
+    }
+
     fun clearChat() {
         viewModelScope.launch {
             val zoneId = _currentZoneId.value

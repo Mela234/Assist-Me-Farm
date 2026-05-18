@@ -1,35 +1,39 @@
 [
     {
-        "merged": "com.cropdoc.app-debug-86:/drawable-v24_ic_launcher.xml.flat",
-        "source": "com.cropdoc.app-main-88:/drawable-v24/ic_launcher.xml"
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-xxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-86:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.cropdoc.app-main-88:/mipmap-anydpi-v26/ic_launcher.xml"
-    },
-    {
-        "merged": "com.cropdoc.app-debug-86:/mipmap-hdpi_ic_launcher.webp.flat",
-        "source": "com.cropdoc.app-main-88:/mipmap-hdpi/ic_launcher.webp"
-    },
-    {
-        "merged": "com.cropdoc.app-debug-86:/mipmap-xhdpi_ic_launcher.webp.flat",
-        "source": "com.cropdoc.app-main-88:/mipmap-xhdpi/ic_launcher.webp"
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/drawable-v24_ic_launcher.xml.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/drawable-v24/ic_launcher.xml"
     },
     {
         "merged": "com.cropdoc.app-debug-86:/mipmap-xxhdpi_ic_launcher.webp.flat",
         "source": "com.cropdoc.app-main-88:/mipmap-xxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-86:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.cropdoc.app-main-88:/mipmap-xxhdpi/ic_launcher_round.webp"
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/drawable_ic_splash_leaf.xml.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/drawable/ic_splash_leaf.xml"
     },
     {
         "merged": "com.cropdoc.app-debug-86:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
         "source": "com.cropdoc.app-main-88:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
         "merged": "com.cropdoc.app-debug-86:/mipmap-mdpi_ic_launcher_round.webp.flat",
         "source": "com.cropdoc.app-main-88:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-mdpi/ic_launcher.webp"
     },
     {
         "merged": "com.cropdoc.app-debug-86:/mipmap-mdpi_ic_launcher.webp.flat",
@@ -44,23 +48,71 @@
         "source": "com.cropdoc.app-main-88:/mipmap-xxxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-86:/drawable_ic_splash_leaf.xml.flat",
-        "source": "com.cropdoc.app-main-88:/drawable/ic_splash_leaf.xml"
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/drawable/ic_launcher_foreground.xml"
     },
     {
         "merged": "com.cropdoc.app-debug-86:/mipmap-xhdpi_ic_launcher_round.webp.flat",
         "source": "com.cropdoc.app-main-88:/mipmap-xhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.cropdoc.app-debug-86:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.cropdoc.app-main-88:/drawable/ic_launcher_background.xml"
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/drawable_ic_launcher_background.xml.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/drawable/ic_launcher_background.xml"
     },
     {
         "merged": "com.cropdoc.app-debug-86:/mipmap-hdpi_ic_launcher_round.webp.flat",
         "source": "com.cropdoc.app-main-88:/mipmap-hdpi/ic_launcher_round.webp"
     },
     {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.cropdoc.app-debug-86:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.cropdoc.app-main-88:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.cropdoc.app-debug-86:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.cropdoc.app-main-88:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.cropdoc.app-debug-86:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.cropdoc.app-main-88:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.cropdoc.app-debug-86:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.cropdoc.app-main-88:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
         "merged": "com.cropdoc.app-debug-86:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
         "source": "com.cropdoc.app-main-88:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-debug-86:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "/Users/broglie/.gradle/daemon/9.0.0/com.cropdoc.app-main-88:/mipmap-hdpi/ic_launcher_round.webp"
     }
 ]
