@@ -93,7 +93,7 @@
 
     <!-- Model -->
     <string name="model_loading">Loading Gemma 4 AI model…</string>
-    <string name="model_ready">AI model ready • Gemma 4 E4B</string>
+    <string name="model_ready">AI model ready • Gemma 4 E2B</string>
     <string name="model_error">Model failed to load</string>
     <string name="model_retry">Retry</string>
 
