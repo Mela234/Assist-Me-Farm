@@ -3,19 +3,14 @@ package com.cropdoc.app.viewmodel
 import android.Manifest
 import android.app.Application
 import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.AudioManager
+import android.media.AudioFormat
+import android.media.AudioRecord
+import android.media.MediaRecorder
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
 import android.provider.MediaStore
-import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
-import android.speech.SpeechRecognizer
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -38,11 +33,14 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
+import java.io.RandomAccessFile
 
 class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     companion object {
         private const val TAG = "ChatViewModel"
+        private const val MAX_RECORDING_SECONDS = 30
+        private const val AUDIO_SAMPLE_RATE = 16_000
     }
 
     private val chatRepository = CropDocApplication.instance.chatRepository
@@ -79,23 +77,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private val _recordingSeconds = MutableStateFlow(0)
     val recordingSeconds: StateFlow<Int> = _recordingSeconds.asStateFlow()
 
-    // _audioFile is kept for UI compatibility — ChatScreen checks audioFile != null to show
-    // the "Voice message ready" card and enable the send button. It points to a small sentinel
-    // file written when transcription completes. The actual transcript lives in _pendingTranscript.
     private val _audioFile = MutableStateFlow<File?>(null)
     val audioFile: StateFlow<File?> = _audioFile.asStateFlow()
 
-    // Accumulated transcript across all recognition restarts
-    private val _pendingTranscript = MutableStateFlow<String?>(null)
-
-    private var speechRecognizer: SpeechRecognizer? = null
-    private var recognizerTimerJob: Job? = null
-
-    // Chunks of recognised text accumulated across continuous restarts
-    private val transcriptChunks = mutableListOf<String>()
-
-    // The last recognizer intent — stored so we can restart without rebuilding it
-    private var recognizerIntent: Intent? = null
+    private var audioRecord: AudioRecord? = null
+    private var activeRecordingFile: File? = null
+    private var recordingWriteJob: Job? = null
+    private var recordingTimerJob: Job? = null
 
     private var currentSoilReading: SoilReading? = null
     private var currentWeather: WeatherData? = null
@@ -157,10 +145,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val values = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "camera_${System.currentTimeMillis()}.jpg")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CropDoc")
-            }
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CropDoc")
         }
 
         return context.contentResolver.insert(
@@ -250,6 +235,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             } else {
                 bitmap.copy(Bitmap.Config.ARGB_8888, false)
             }
+
             saveBitmapAsJpeg(
                 bitmap = safeBitmap,
                 fileName = "camera_bitmap_${System.currentTimeMillis()}.jpg"
@@ -299,235 +285,307 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         _attachedImageUri.value = null
     }
 
-    // -----------------------------------------------------------------------------------------
-    // Recording — SpeechRecognizer with two fixes applied:
-    //
-    // Fix 1 — Beep suppression
-    //   Android plays a system sound on every startListening() call. We mute STREAM_MUSIC
-    //   for 300ms before each call, then restore the original volume. This covers the beep
-    //   without affecting the farmer's audio capture since the mic is not on that stream.
-    //
-    // Fix 2 — Continuous recognition (no premature cutoff)
-    //   SpeechRecognizer is designed for short commands and stops on ~3s of silence.
-    //   We work around this by restarting the recognizer automatically whenever it fires
-    //   onResults or a recoverable onError (timeout / no match) while _isRecording is
-    //   still true. Each result chunk is appended to transcriptChunks. When the farmer
-    //   taps Stop, stopListening() is called, the final onResults fires, and all chunks
-    //   are joined into the complete transcript.
-    // -----------------------------------------------------------------------------------------
-
     fun startRecording() {
         if (_isRecording.value || _isMediaProcessing.value) return
 
         val context = getApplication<Application>()
 
-        if (context.checkSelfPermission(Manifest.permission.RECORD_AUDIO)
+        if (
+            context.checkSelfPermission(Manifest.permission.RECORD_AUDIO)
             != PackageManager.PERMISSION_GRANTED
         ) {
             Log.e(TAG, "RECORD_AUDIO permission not granted")
             return
         }
 
-        if (!SpeechRecognizer.isRecognitionAvailable(context)) {
-            Log.e(TAG, "Speech recognition not available on this device")
+        clearAudio()
+
+        val channelConfig = AudioFormat.CHANNEL_IN_MONO
+        val audioFormat = AudioFormat.ENCODING_PCM_16BIT
+
+        val minBufferSize = AudioRecord.getMinBufferSize(
+            AUDIO_SAMPLE_RATE,
+            channelConfig,
+            audioFormat
+        )
+
+        if (minBufferSize <= 0) {
+            Log.e(TAG, "Invalid AudioRecord buffer size: $minBufferSize")
             return
         }
 
-        _isRecording.value = true
-        _recordingSeconds.value = 0
-        _pendingTranscript.value = null
-        _audioFile.value = null
-        transcriptChunks.clear()
+        val bufferSize = minBufferSize * 2
+        val outputFile = File(context.filesDir, "voice_${System.currentTimeMillis()}.wav")
 
-        recognizerIntent = buildRecognizerIntent()
-
-        viewModelScope.launch(Dispatchers.Main) {
-            createAndStartRecognizer(context)
-        }
-
-        // Timer drives the progress bar in ChatScreen — same as before
-        recognizerTimerJob = viewModelScope.launch {
-            while (_recordingSeconds.value < 30 && _isRecording.value) {
-                delay(1000)
-                _recordingSeconds.value++
-            }
-            if (_isRecording.value) stopRecording()
-        }
-    }
-
-    private fun buildRecognizerIntent(): Intent =
-        Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        try {
+            val recorder = AudioRecord(
+                MediaRecorder.AudioSource.MIC,
+                AUDIO_SAMPLE_RATE,
+                channelConfig,
+                audioFormat,
+                bufferSize
             )
-            putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
-            putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-            // Keep listening for up to 10s of silence before auto-firing onResults
-            putExtra(
-                RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
-                10_000L
-            )
-            putExtra(
-                RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,
-                8_000L
-            )
-            putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 500L)
-        }
 
-    // Must be called on the main thread. Creates a fresh SpeechRecognizer, suppresses
-    // the system beep, then starts listening.
-    private fun createAndStartRecognizer(context: Context) {
-        destroyRecognizer()
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
-        speechRecognizer?.setRecognitionListener(recognitionListener)
-
-        // Fix 1: mute STREAM_MUSIC for 300ms to suppress the start beep
-        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        val prevVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0)
-
-        speechRecognizer?.startListening(recognizerIntent)
-
-        viewModelScope.launch(Dispatchers.Main) {
-            delay(300)
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, prevVolume, 0)
-        }
-    }
-
-    private val recognitionListener = object : RecognitionListener {
-        override fun onReadyForSpeech(params: Bundle?) {
-            Log.d(TAG, "SpeechRecognizer: ready")
-        }
-
-        override fun onBeginningOfSpeech() {
-            Log.d(TAG, "SpeechRecognizer: speech detected")
-        }
-
-        override fun onRmsChanged(rmsdB: Float) {}
-        override fun onBufferReceived(buffer: ByteArray?) {}
-
-        override fun onEndOfSpeech() {
-            Log.d(TAG, "SpeechRecognizer: end of speech, processing…")
-        }
-
-        override fun onPartialResults(partialResults: Bundle?) {
-            // Partial results are just for logging — we accumulate final chunks only
-            val partial = partialResults
-                ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                ?.firstOrNull()
-            if (!partial.isNullOrBlank()) {
-                Log.d(TAG, "Partial: $partial")
-            }
-        }
-
-        override fun onResults(results: Bundle?) {
-            val chunk = results
-                ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                ?.firstOrNull()
-                ?.trim()
-
-            if (!chunk.isNullOrBlank()) {
-                Log.d(TAG, "Chunk recognised: $chunk")
-                transcriptChunks.add(chunk)
+            if (recorder.state != AudioRecord.STATE_INITIALIZED) {
+                Log.e(TAG, "AudioRecord failed to initialize")
+                recorder.release()
+                return
             }
 
-            if (_isRecording.value) {
-                // Fix 2: still recording — restart to keep capturing without cutoff
-                Log.d(TAG, "Restarting recognizer for continuous capture")
-                val context = getApplication<Application>()
-                viewModelScope.launch(Dispatchers.Main) {
-                    createAndStartRecognizer(context)
-                }
-            } else {
-                // Farmer tapped Stop — finalize the transcript
-                finalizeTranscript()
-            }
-        }
+            audioRecord = recorder
+            activeRecordingFile = outputFile
+            _audioFile.value = null
+            _isRecording.value = true
+            _recordingSeconds.value = 0
 
-        override fun onError(error: Int) {
-            Log.w(TAG, "SpeechRecognizer error: $error")
+            recorder.startRecording()
 
-            val isRecoverable = error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT ||
-                    error == SpeechRecognizer.ERROR_NO_MATCH ||
-                    error == SpeechRecognizer.ERROR_RECOGNIZER_BUSY
-
-            if (_isRecording.value && isRecoverable) {
-                // Fix 2: timeout / no match while still recording — restart silently
-                Log.d(TAG, "Recoverable error while recording, restarting recognizer")
-                val context = getApplication<Application>()
-                viewModelScope.launch(Dispatchers.Main) {
-                    createAndStartRecognizer(context)
-                }
-            } else {
-                // Non-recoverable or farmer has already stopped — finalize
-                finalizeTranscript()
-            }
-        }
-
-        override fun onEvent(eventType: Int, params: Bundle?) {}
-    }
-
-    private fun finalizeTranscript() {
-        recognizerTimerJob?.cancel()
-        destroyRecognizer()
-
-        val fullTranscript = transcriptChunks.joinToString(" ").trim()
-
-        if (fullTranscript.isNotBlank()) {
-            Log.d(TAG, "Final transcript: $fullTranscript")
-            _pendingTranscript.value = fullTranscript
-
-            // Write a sentinel file so the ChatScreen UI shows "Voice message ready"
-            val context = getApplication<Application>()
-            try {
-                val sentinelFile = File(
-                    context.filesDir,
-                    "voice_${System.currentTimeMillis()}.txt"
+            recordingWriteJob = viewModelScope.launch(Dispatchers.IO) {
+                writeWavRecording(
+                    recorder = recorder,
+                    outputFile = outputFile,
+                    bufferSize = bufferSize,
+                    sampleRate = AUDIO_SAMPLE_RATE,
+                    channels = 1,
+                    bitsPerSample = 16
                 )
-                sentinelFile.writeText(fullTranscript)
-                _audioFile.value = sentinelFile
-            } catch (e: Exception) {
-                Log.w(TAG, "Sentinel file write failed", e)
-                _audioFile.value = File(context.filesDir, "voice_ready.txt")
             }
-        } else {
-            Log.w(TAG, "No transcript captured")
-        }
 
-        _isRecording.value = false
-        _isMediaProcessing.value = false
-        transcriptChunks.clear()
+            recordingTimerJob = viewModelScope.launch {
+                while (_recordingSeconds.value < MAX_RECORDING_SECONDS && _isRecording.value) {
+                    delay(1000)
+                    _recordingSeconds.value++
+                }
+
+                if (_isRecording.value) {
+                    stopRecording()
+                }
+            }
+
+            Log.d(TAG, "WAV recording started: ${outputFile.absolutePath}")
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Missing RECORD_AUDIO permission", e)
+            _isRecording.value = false
+            releaseAudioRecord()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start WAV recording", e)
+            _isRecording.value = false
+            releaseAudioRecord()
+        }
     }
 
     fun stopRecording() {
         if (!_isRecording.value) return
 
-        recognizerTimerJob?.cancel()
-        _isRecording.value = false       // signals onResults NOT to restart
-        _isMediaProcessing.value = true  // show spinner while final chunk is processed
+        recordingTimerJob?.cancel()
+        _isRecording.value = false
+        _isMediaProcessing.value = true
 
-        // stopListening() causes onResults to fire one last time with whatever was captured,
-        // then finalizeTranscript() is called from inside onResults
-        viewModelScope.launch(Dispatchers.Main) {
-            speechRecognizer?.stopListening()
+        viewModelScope.launch {
+            try {
+                recordingWriteJob?.join()
+            } catch (e: Exception) {
+                Log.e(TAG, "Recording write job failed", e)
+            }
+
+            val finishedFile = activeRecordingFile
+
+            releaseAudioRecord()
+
+            if (finishedFile != null && finishedFile.exists() && finishedFile.length() > 44L) {
+                _audioFile.value = finishedFile
+                Log.d(
+                    TAG,
+                    "WAV audio ready -> ${finishedFile.absolutePath}, size=${finishedFile.length()}"
+                )
+            } else {
+                Log.e(TAG, "WAV audio file invalid or empty")
+                finishedFile?.delete()
+            }
+
+            activeRecordingFile = null
+            _recordingSeconds.value = 0
+            _isMediaProcessing.value = false
         }
     }
 
-    private fun destroyRecognizer() {
+    private fun writeWavRecording(
+        recorder: AudioRecord,
+        outputFile: File,
+        bufferSize: Int,
+        sampleRate: Int,
+        channels: Int,
+        bitsPerSample: Int
+    ) {
+        val buffer = ByteArray(bufferSize)
+
+        RandomAccessFile(outputFile, "rw").use { wav ->
+            writeEmptyWavHeader(
+                wav = wav,
+                sampleRate = sampleRate,
+                channels = channels,
+                bitsPerSample = bitsPerSample
+            )
+
+            var totalAudioBytes = 0L
+
+            while (_isRecording.value) {
+                val read = recorder.read(buffer, 0, buffer.size)
+
+                if (read > 0) {
+                    wav.write(buffer, 0, read)
+                    totalAudioBytes += read
+                }
+            }
+
+            updateWavHeader(
+                wav = wav,
+                totalAudioBytes = totalAudioBytes,
+                sampleRate = sampleRate,
+                channels = channels,
+                bitsPerSample = bitsPerSample
+            )
+
+            Log.d(TAG, "WAV finalized: bytes=$totalAudioBytes")
+        }
+    }
+
+    private fun writeEmptyWavHeader(
+        wav: RandomAccessFile,
+        sampleRate: Int,
+        channels: Int,
+        bitsPerSample: Int
+    ) {
+        wav.setLength(0)
+
+        wav.writeBytes("RIFF")
+        writeIntLE(wav, 0)
+        wav.writeBytes("WAVE")
+
+        wav.writeBytes("fmt ")
+        writeIntLE(wav, 16)
+        writeShortLE(wav, 1)
+        writeShortLE(wav, channels)
+        writeIntLE(wav, sampleRate)
+        writeIntLE(wav, sampleRate * channels * bitsPerSample / 8)
+        writeShortLE(wav, channels * bitsPerSample / 8)
+        writeShortLE(wav, bitsPerSample)
+
+        wav.writeBytes("data")
+        writeIntLE(wav, 0)
+    }
+
+    private fun updateWavHeader(
+        wav: RandomAccessFile,
+        totalAudioBytes: Long,
+        sampleRate: Int,
+        channels: Int,
+        bitsPerSample: Int
+    ) {
+        wav.seek(4)
+        writeIntLE(wav, (36 + totalAudioBytes).toInt())
+
+        wav.seek(24)
+        writeIntLE(wav, sampleRate)
+
+        wav.seek(28)
+        writeIntLE(wav, sampleRate * channels * bitsPerSample / 8)
+
+        wav.seek(32)
+        writeShortLE(wav, channels * bitsPerSample / 8)
+
+        wav.seek(40)
+        writeIntLE(wav, totalAudioBytes.toInt())
+    }
+
+    private fun writeIntLE(file: RandomAccessFile, value: Int) {
+        file.write(value and 0xff)
+        file.write((value shr 8) and 0xff)
+        file.write((value shr 16) and 0xff)
+        file.write((value shr 24) and 0xff)
+    }
+
+    private fun writeShortLE(file: RandomAccessFile, value: Int) {
+        file.write(value and 0xff)
+        file.write((value shr 8) and 0xff)
+    }
+
+    private fun releaseAudioRecord() {
         try {
-            speechRecognizer?.destroy()
+            audioRecord?.stop()
         } catch (_: Exception) {}
-        speechRecognizer = null
+
+        try {
+            audioRecord?.release()
+        } catch (_: Exception) {}
+
+        audioRecord = null
     }
 
     fun clearAudio() {
         if (_isMediaProcessing.value) return
+
+        if (_isRecording.value) {
+            stopRecording()
+            return
+        }
+
         _audioFile.value?.delete()
         _audioFile.value = null
-        _pendingTranscript.value = null
         _recordingSeconds.value = 0
-        transcriptChunks.clear()
+    }
+
+    private fun copyFileForModel(source: File, prefix: String): File {
+        if (!source.exists() || source.length() <= 0L) {
+            throw IllegalStateException("Media file invalid: ${source.absolutePath}")
+        }
+
+        val extension = source.extension.ifBlank {
+            if (prefix.contains("audio")) "wav" else "jpg"
+        }
+
+        val stableFile = File(
+            getApplication<Application>().cacheDir,
+            "${prefix}_${System.currentTimeMillis()}.$extension"
+        )
+
+        source.copyTo(stableFile, overwrite = true)
+
+        if (!stableFile.exists() || stableFile.length() <= 0L) {
+            throw IllegalStateException("Stable media copy failed: ${stableFile.absolutePath}")
+        }
+
+        Log.d(
+            TAG,
+            "Stable media copy -> source=${source.absolutePath}, stable=${stableFile.absolutePath}, size=${stableFile.length()}"
+        )
+
+        return stableFile
+    }
+
+    private fun uriToStableImageUri(uri: Uri): Uri {
+        val context = getApplication<Application>()
+
+        val sourceFile = if (uri.scheme == "file") {
+            File(uri.path ?: "")
+        } else {
+            val temp = File(
+                context.cacheDir,
+                "stable_image_source_${System.currentTimeMillis()}.jpg"
+            )
+
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                FileOutputStream(temp).use { output ->
+                    input.copyTo(output)
+                    output.flush()
+                }
+            } ?: throw IllegalStateException("Could not read image uri: $uri")
+
+            temp
+        }
+
+        val stableFile = copyFileForModel(sourceFile, "model_image")
+        return Uri.fromFile(stableFile)
     }
 
     fun sendMessage(text: String): Boolean {
@@ -555,18 +613,30 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             return false
         }
 
-        val imageUri = _attachedImageUri.value
-        val audio = _audioFile.value
-        val transcript = _pendingTranscript.value
+        val rawImageUri = _attachedImageUri.value
+        val rawAudio = _audioFile.value
+
+        val imageUri = try {
+            rawImageUri?.let { uriToStableImageUri(it) }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to prepare stable image file", e)
+            null
+        }
+
+        val audio = try {
+            rawAudio?.let { copyFileForModel(it, "model_audio") }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to prepare stable audio file", e)
+            null
+        }
 
         Log.d(
             TAG,
-            "FINAL SEND -> text=${text.isNotBlank()}, imageUri=$imageUri, transcript=$transcript"
+            "FINAL SEND -> text=${text.isNotBlank()}, imageUri=$imageUri, audio=${audio?.absolutePath}, audioExists=${audio?.exists()}, audioSize=${audio?.length()}"
         )
 
         _attachedImageUri.value = null
         _audioFile.value = null
-        _pendingTranscript.value = null
 
         viewModelScope.launch {
             val messageContent = when {
@@ -576,17 +646,24 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 else -> ""
             }
 
-            // Audio arrives as a transcript in engineText — audioFile = null is passed to the
-            // engine since Gemma E2B has no audio encoder weights and silently ignores raw files.
             val engineText = buildString {
-                if (imageUri != null) append("Analyze the attached image. ")
-                if (transcript != null) {
-                    append("The farmer said via voice message: \"$transcript\". ")
-                } else if (audio != null) {
-                    append("The farmer sent a voice message (transcription unavailable). ")
+                if (imageUri != null) {
+                    append("Analyze the attached image. ")
                 }
-                if (text.isNotBlank()) append(text)
-                if (isBlank()) append("Please respond to the farmer's message.")
+
+                if (audio != null) {
+                    append(
+                        "The farmer sent a voice message. Listen to the audio directly, understand what language they used, transcribe it if helpful, then respond naturally in the requested app language. "
+                    )
+                }
+
+                if (text.isNotBlank()) {
+                    append(text)
+                }
+
+                if (isBlank()) {
+                    append("Please respond to the farmer's message.")
+                }
             }.trim()
 
             val userMessage = ChatMessage(
@@ -620,10 +697,15 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
 
+            Log.d(
+                TAG,
+                "MODEL MEDIA CHECK -> imageUri=$imageUri, audio=${audio?.absolutePath}, audioExists=${audio?.exists()}, audioSize=${audio?.length()}"
+            )
+
             val result = aiEngine.chat(
                 userMessage = engineText,
                 imageUri = imageUri,
-                audioFile = null,
+                audioFile = audio,
                 soilReading = currentSoilReading,
                 weatherData = currentWeather,
                 zone = zone,
@@ -748,8 +830,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     override fun onCleared() {
         super.onCleared()
         messageLoadJob?.cancel()
-        recognizerTimerJob?.cancel()
-        destroyRecognizer()
+        recordingTimerJob?.cancel()
+        recordingWriteJob?.cancel()
+        releaseAudioRecord()
         aiEngine.release()
     }
 }

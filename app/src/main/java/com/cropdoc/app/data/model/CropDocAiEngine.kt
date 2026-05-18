@@ -329,8 +329,12 @@ class CropDocAiEngine(private val context: Context) {
                             TAG,
                             "AUDIO INPUT -> path=${file.absolutePath}, exists=${file.exists()}, size=${file.length()}, ext=${file.extension}"
                         )
+                        Log.d(
+                            TAG,
+                            "ENGINE AUDIO CONTENT ATTACHED -> path=${file.absolutePath}, exists=${file.exists()}, size=${file.length()}, ext=${file.extension}"
+                        )
                         validateAudioFile(file)
-                        Message.of(Content.AudioFile(file.absolutePath), Content.Text(textPayload))
+                        Message.of(Content.Text(textPayload), Content.AudioFile(file.absolutePath))
                     }
 
                     MessageModality.TEXT -> Message.of(Content.Text(textPayload))
