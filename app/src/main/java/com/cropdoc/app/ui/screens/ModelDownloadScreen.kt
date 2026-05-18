@@ -63,7 +63,7 @@ fun ModelDownloadScreen(
             )
 
             Text(
-                "CropDoc",
+                "",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -118,7 +118,7 @@ fun ModelDownloadScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                "CropDoc needs to download the Gemma 4 AI model (2.5GB) to analyse crops and give farming advice — all offline after download.",
+                                "Farm Assistant needs to download the Gemma 4 AI model (2.5GB) to analyse crops and give farming advice — all offline after download.",
                                 color = Color.White.copy(alpha = 0.85f),
                                 style = MaterialTheme.typography.bodySmall,
                                 textAlign = TextAlign.Center
@@ -240,7 +240,7 @@ fun ModelDownloadScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                "Gemma 4 is installed. CropDoc is ready to use offline.",
+                                "Gemma 4 is installed. Farm Assistant is ready to use offline.",
                                 color = Color.White.copy(alpha = 0.85f),
                                 style = MaterialTheme.typography.bodySmall,
                                 textAlign = TextAlign.Center
@@ -297,6 +297,7 @@ fun ModelDownloadScreen(
                 ) {
                     FeatureRow("🌿", "Diagnose crop diseases from photos")
                     FeatureRow("🌡️", "Analyse soil sensor readings")
+                    FeatureRow("🌦️", "Get weather-aware farming advice")
                     FeatureRow("💬", "Chat with your personal farm assistant")
                     FeatureRow("📡", "Works completely offline")
                 }
