@@ -531,6 +531,7 @@ class CropDocAiEngine(private val context: Context) {
             }
 
             val cleaned = fullResponse.replace("```json", "").replace("```", "").trim()
+            Log.d(TAG, "Agent raw response: $cleaned")
             val jsonArray = JSONArray(cleaned)
             for (i in 0 until jsonArray.length()) {
                 onAlert(jsonArray.getString(i))

@@ -278,6 +278,7 @@ private fun WeatherCard(
 
     if (weather == null) {
         Card(
+            onClick = onSetup,
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
         ) {
@@ -290,8 +291,10 @@ private fun WeatherCard(
                 Text(
                     stringResource(R.string.weather_waiting),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xFF1565C0)
+                    color = Color(0xFF1565C0),
+                    modifier = Modifier.weight(1f)
                 )
+                Icon(Icons.Default.ChevronRight, null, tint = Color(0xFF1976D2))
             }
         }
         return
@@ -551,45 +554,76 @@ private fun ActionCard(
 // ── Agent Card ─────────────────────────────────────────────────────────────────
 @Composable
 private fun AgentModeCard(isActive: Boolean, onToggle: (Boolean) -> Unit) {
+    val context = LocalContext.current
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (isActive) Color(0xFFE8F5E9) else MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
-        Row(
-            modifier = Modifier.padding(14.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Icon(
-                if (isActive) Icons.Default.SmartToy else Icons.Default.SmartToy,
-                null,
-                tint = if (isActive) Color(0xFF2E7D32) else MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(28.dp)
-            )
-            Column(Modifier.weight(1f)) {
-                Text(
-                    "Agentic Mode",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
-                    color = if (isActive) Color(0xFF1B5E20) else MaterialTheme.colorScheme.onSurfaceVariant
+        Column {
+            Row(
+                modifier = Modifier.padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(
+                    Icons.Default.SmartToy,
+                    null,
+                    tint = if (isActive) Color(0xFF2E7D32) else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(28.dp)
                 )
-                Text(
-                    if (isActive) "Active — checking farm conditions twice daily"
-                    else "Off — tap to enable automatic farm monitoring",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (isActive) Color(0xFF388E3C) else MaterialTheme.colorScheme.onSurfaceVariant
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        "Agentic Mode",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (isActive) Color(0xFF1B5E20) else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        if (isActive) "Active — checking farm conditions twice daily"
+                        else "Off — tap to enable automatic farm monitoring",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (isActive) Color(0xFF388E3C) else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Switch(
+                    checked = isActive,
+                    onCheckedChange = onToggle,
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFF2E7D32),
+                        checkedTrackColor = Color(0xFF81C784)
+                    )
                 )
             }
-            Switch(
-                checked = isActive,
-                onCheckedChange = onToggle,
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color(0xFF2E7D32),
-                    checkedTrackColor = Color(0xFF81C784)
+
+            // ── Temporary test button — remove before final submission ────────
+            if (isActive) {
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 14.dp),
+                    color = Color(0xFF43A047).copy(alpha = 0.3f)
                 )
-            )
+                TextButton(
+                    onClick = {
+                        val request = androidx.work.OneTimeWorkRequest.from(
+                            com.cropdoc.app.data.agent.AgentWorker::class.java
+                        )
+                        androidx.work.WorkManager.getInstance(context).enqueue(request)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Icon(
+                        Icons.Default.PlayArrow,
+                        null,
+                        tint = Color(0xFF2E7D32),
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("Test Agent Now", color = Color(0xFF2E7D32))
+                }
+            }
         }
     }
 }

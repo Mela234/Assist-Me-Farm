@@ -1,4 +1,0 @@
-com.cropdoc.app.test.app-androidTest-0 /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/generated/res/resValues/androidTest/debug
-com.cropdoc.app.test.app-mergeDebugAndroidTestResources-1 /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/merged.dir
-com.cropdoc.app.test.app-mergeDebugAndroidTestResources-2 /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/stripped.dir
-com.cropdoc.app.test.app-debugAndroidTest-3 /Users/broglie/AndroidStudioProjects/Assist-Me-Farm/app/build/intermediates/merged_res/debugAndroidTest/mergeDebugAndroidTestResources

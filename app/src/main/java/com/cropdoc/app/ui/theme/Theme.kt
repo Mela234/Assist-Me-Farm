@@ -12,53 +12,50 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary          = Green700,
-    onPrimary        = White,
-    primaryContainer = Green100,
-    onPrimaryContainer = Green900,
-    secondary        = LightGreen400,
-    onSecondary      = Gray900,
-    secondaryContainer = Green50,
+    primary              = Green700,
+    onPrimary            = White,
+    primaryContainer     = Green100,
+    onPrimaryContainer   = Green900,
+    secondary            = LightGreen400,
+    onSecondary          = Gray900,
+    secondaryContainer   = Green50,
     onSecondaryContainer = Green800,
-    tertiary         = SoilBrown,
-    onTertiary       = White,
-    tertiaryContainer = SoilBrownLight,
-    onTertiaryContainer = SoilBrown,
-    background       = OffWhite,
-    onBackground     = Gray900,
-    surface          = White,
-    onSurface        = Gray900,
-    surfaceVariant   = Green50,
-    onSurfaceVariant = Gray600,
-    outline          = Green300,
-    error            = ErrorRed,
-    onError          = White,
+    tertiary             = SoilBrown,
+    onTertiary           = White,
+    tertiaryContainer    = SoilBrownLight,
+    onTertiaryContainer  = SoilBrown,
+    background           = OffWhite,
+    onBackground         = Gray900,
+    surface              = White,
+    onSurface            = Gray900,
+    surfaceVariant       = Green50,
+    onSurfaceVariant     = Gray600,
+    outline              = Green300,
+    error                = ErrorRed,
+    onError              = White,
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary          = Green400,
-    onPrimary        = Green900,
-    primaryContainer = Green800,
-    onPrimaryContainer = Green100,
-    secondary        = LightGreen400,
-    onSecondary      = Gray900,
-    secondaryContainer = Green900,
+    primary              = Green400,
+    onPrimary            = Green900,
+    primaryContainer     = Green800,
+    onPrimaryContainer   = Green100,
+    secondary            = LightGreen400,
+    onSecondary          = Gray900,
+    secondaryContainer   = Green900,
     onSecondaryContainer = Green200,
-    tertiary         = SoilBrownLight,
-    onTertiary       = SoilBrown,
-    background       = Color(0xFF101510),
-    onBackground     = Green100,
-    surface          = Color(0xFF1A211A),
-    onSurface        = Green100,
-    surfaceVariant   = Color(0xFF1F2A1F),
-    onSurfaceVariant = Green200,
-    outline          = Green700,
-    error            = Color(0xFFEF9A9A),
-    onError          = ErrorRed,
+    tertiary             = SoilBrownLight,
+    onTertiary           = SoilBrown,
+    background           = androidx.compose.ui.graphics.Color(0xFF101510.toInt()),
+    onBackground         = Green100,
+    surface              = androidx.compose.ui.graphics.Color(0xFF1A211A.toInt()),
+    onSurface            = Green100,
+    surfaceVariant       = androidx.compose.ui.graphics.Color(0xFF1F2A1F.toInt()),
+    onSurfaceVariant     = Green200,
+    outline              = Green700,
+    error                = androidx.compose.ui.graphics.Color(0xFFEF9A9A.toInt()),
+    onError              = ErrorRed,
 )
-
-// need to reference Color directly in dark scheme
-private fun Color(value: Long) = androidx.compose.ui.graphics.Color(value.toULong())
 
 @Composable
 fun CropDocTheme(
@@ -66,7 +63,6 @@ fun CropDocTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
@@ -75,7 +71,6 @@ fun CropDocTheme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
-
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

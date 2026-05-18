@@ -51,6 +51,8 @@ class AgentWorker(
             // so it shares the same state and doesn't reinitialize the model
             val engine = app.aiEngine
 
+            Log.d(TAG, "Agent prompt:\n$contextPrompt")
+
             val alerts = mutableListOf<String>()
             engine.runAgentCheck(contextPrompt) { alert ->
                 alerts.add(alert)

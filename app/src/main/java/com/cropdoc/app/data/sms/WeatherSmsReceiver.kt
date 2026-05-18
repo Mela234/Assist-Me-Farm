@@ -22,6 +22,7 @@ class WeatherSmsReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
+        Log.d(TAG, "onReceive fired: ${intent.action}")
         if (intent.action != Telephony.Sms.Intents.SMS_RECEIVED_ACTION) return
 
         // ── Concatenate all PDU parts into one full message ───────────────
@@ -46,9 +47,13 @@ class WeatherSmsReceiver : BroadcastReceiver() {
                 val jsonEnd = smsBody.lastIndexOf("}") + 1
                 if (jsonStart == -1 || jsonEnd == 0) return@launch
 
-                val json = JSONObject(smsBody.substring(jsonStart, jsonEnd))
+                // Strip invisible Unicode characters inserted by Google Voice
+                // that corrupt JSON keys even though the body looks normal in logs
+                val cleanJson = smsBody.substring(jsonStart, jsonEnd)
+                    .replace(Regex("[^\\u0020-\\u007E]"), "")
+                    .trim()
 
-                if (json.optString("type") != WEATHER_TYPE) return@launch
+                val json = JSONObject(cleanJson)
 
                 val weather = WeatherData(
                     temperature = json.getDouble("temperature").toFloat(),
