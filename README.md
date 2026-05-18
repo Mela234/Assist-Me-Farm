@@ -1,19 +1,34 @@
-# 🌱 Farm Assistant
+# CropDoc
 
-**A smart sensor with on-device soil health analysis and crop diagnosis through image.**
+**On-device crop disease diagnosis and soil health analysis for African smallholder farmers.**
 
-Powered by **Gemma 4 E4B** via **LiteRT-LM** — everything runs privately on the farmer's Android phone. No internet connection required. No data ever leaves the device.
+Powered by **Gemma 4 E2B** via **LiteRT-LM** — everything runs privately on the farmer's Android phone. No internet connection required for AI analysis. No data ever leaves the device.
+
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Android-green.svg)](https://android.com)
+[![Kaggle](https://img.shields.io/badge/Kaggle-Gemma%204%20Good%20Hackathon-20BEFF.svg?logo=kaggle)](https://www.kaggle.com/competitions/gemma-4-good-hackathon)
+
+---
+
+## The Problem
+
+Rural Zimbabwe has approximately 40% mobile internet penetration, with data costs averaging 3–5% of daily income per session. A cloud-dependent diagnostic tool creates a paywall at exactly the moment a farmer is standing in a field looking at dying crops. CropDoc eliminates that barrier entirely — diagnosis is as fast as the phone's inference speed, not the network.
 
 ---
 
 ## Features
 
-- 📸 **Camera-based crop disease detection** — photograph a crop and get an instant AI diagnosis
-- 🌡️ **Soil sensor integration** — Bluetooth LE connection to an ESP32-based NPK/pH/moisture sensor
-- 🤖 **Combined analysis** — Gemma 4 reasons over both the image AND soil data together
-- 📊 **Health score** — overall crop health 0–100 with colour-coded severity
-- 📋 **Analysis history** — all past diagnoses stored locally on-device
-- 🔒 **100% offline** — no cloud, no API keys, no connectivity required
+- **Crop disease detection** — photograph a crop and get an instant AI diagnosis with treatment plan
+- **Soil sensor integration** — Bluetooth LE connection to a custom ESP32-based NPK/pH/moisture/temperature sensor
+- **Combined multimodal analysis** — Gemma 4 reasons over both image AND live soil data together
+- **Health score** — overall crop health 0–100 with colour-coded severity levels
+- **Farm Map** — free-form pannable canvas to draw and name farm zones; tap a zone to run a zone-specific analysis
+- **Farm Assistant chat** — persistent multi-turn conversation with Gemma 4 about any farming question
+- **SMS weather alerts** — daily 6am/6pm weather updates sent via SMS to registered farmers (requires backend, see below)
+- **Agentic Mode** — toggle on to let the assistant autonomously monitor farm conditions and surface alerts
+- **Analysis history** — all past diagnoses stored locally in Room DB
+- **Multi-language** — English, Shona, and Amharic UI support
+- **100% offline AI** — no cloud, no API keys, no connectivity required for core features
 
 ---
 
@@ -21,12 +36,14 @@ Powered by **Gemma 4 E4B** via **LiteRT-LM** — everything runs privately on th
 
 | Layer | Technology |
 |---|---|
-| On-device AI | Gemma 4 E4B via LiteRT-LM (Kotlin API) |
+| On-device AI | Gemma 4 E2B via LiteRT-LM (Kotlin API) |
 | Vision | LiteRT-LM `visionBackend = Backend.GPU()` |
 | Camera | CameraX |
 | Bluetooth | Android BLE API |
+| Local DB | Room (analysis history) |
 | UI | Jetpack Compose + Material 3 |
 | Architecture | MVVM (ViewModel + StateFlow) |
+| Weather backend | FastAPI + Twilio + OpenWeatherMap |
 | Min SDK | Android 8.0 (API 26) |
 
 ---
@@ -34,24 +51,35 @@ Powered by **Gemma 4 E4B** via **LiteRT-LM** — everything runs privately on th
 ## Project Structure
 
 ```
-app/src/main/java/com/cropdoc/app/
-├── MainActivity.kt                   # Compose nav host + permissions
-├── data/
-│   ├── model/
-│   │   ├── Models.kt                 # SoilReading, AnalysisResult, BleState…
-│   │   └── CropDocAiEngine.kt        # LiteRT-LM engine wrapper
-│   └── ble/
-│       └── SoilSensorBleManager.kt   # BLE scan / connect / parse
-├── viewmodel/
-│   └── CropDocViewModel.kt           # Coordinates AI + BLE + camera
-└── ui/
-    ├── theme/                        # Green & white Material 3 theme
-    ├── components/                   # Shared Compose components
-    └── screens/
-        ├── HomeScreen.kt             # Dashboard
-        ├── CameraScreen.kt           # Camera capture + streaming analysis
-        ├── SensorScreen.kt           # BLE sensor management
-        └── HistoryScreen.kt          # Past analyses
+cropdoc/
+├── app/
+│   └── src/main/java/com/cropdoc/app/
+│       ├── MainActivity.kt                   # Compose nav host + permissions
+│       ├── data/
+│       │   ├── model/
+│       │   │   ├── Models.kt                 # SoilReading, AnalysisResult, BleState…
+│       │   │   └── CropDocAiEngine.kt        # LiteRT-LM engine wrapper
+│       │   └── ble/
+│       │       └── SoilSensorBleManager.kt   # BLE scan / connect / parse
+│       ├── viewmodel/
+│       │   └── CropDocViewModel.kt           # Coordinates AI + BLE + camera
+│       └── ui/
+│           ├── theme/                        # Green & white Material 3 theme
+│           ├── components/                   # Shared Compose components
+│           └── screens/
+│               ├── HomeScreen.kt             # Dashboard
+│               ├── CameraScreen.kt           # Camera capture + streaming analysis
+│               ├── SensorScreen.kt           # BLE sensor management
+│               ├── HistoryScreen.kt          # Past analyses
+│               ├── FarmMapScreen.kt          # Zone map canvas
+│               └── ChatScreen.kt             # Farm assistant chat
+├── backend/                                  # Weather SMS FastAPI server
+│   ├── main.py
+│   ├── requirements.txt
+│   └── .env.example
+├── hardware/                                 # ESP32 soil sensor firmware
+│   └── soil_sensor.ino
+└── README.md
 ```
 
 ---
@@ -61,28 +89,26 @@ app/src/main/java/com/cropdoc/app/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-org/cropdoc.git
+git clone https://github.com/debroglie99/cropdoc.git
 cd cropdoc
 ```
 
-### 2. Download the Gemma 4 E4B model
+### 2. Download the Gemma 4 E2B model
 
 The model file (~2.5 GB) must be downloaded separately and placed in:
 
 ```
-app/src/main/assets/gemma-4-E4B-it.litertlm
+app/src/main/assets/gemma-4-E2B-it.litertlm
 ```
-
-**Download from HuggingFace:**
 
 ```bash
 # Install huggingface-cli
 pip install huggingface_hub
 
-# Download (accept Gemma licence at huggingface.co/google/gemma-4-E4B first)
+# Download (accept Gemma licence at huggingface.co/google/gemma-4-E2B first)
 huggingface-cli download \
-  google/gemma-4-E4B-it-litert-lm \
-  gemma-4-E4B-it-int4.litertlm \
+  google/gemma-4-E2B-it-litert-lm \
+  gemma-4-E2B-it-int4.litertlm \
   --local-dir app/src/main/assets/
 
 # Rename to match the expected filename
@@ -91,10 +117,9 @@ mv app/src/main/assets/gemma-4-E4B-it-int4.litertlm \
 ```
 
 > **Note:** The `assets/` folder is excluded from git via `.gitignore` due to file size.
-> For production, consider using [Play Asset Delivery](https://developer.android.com/guide/playcore/asset-delivery)
-> to deliver the model on first install rather than bundling it in the APK.
+> For production, use [Play Asset Delivery](https://developer.android.com/guide/playcore/asset-delivery) to deliver the model on first install.
 
-### 3. Build & run
+### 3. Build & run the Android app
 
 ```bash
 ./gradlew assembleDebug
@@ -102,6 +127,56 @@ mv app/src/main/assets/gemma-4-E4B-it-int4.litertlm \
 ```
 
 Requires Android Studio Meerkat (2024.3) or later.
+
+---
+
+## Weather SMS Backend
+
+The weather backend is a separate FastAPI service that sends daily SMS weather alerts to registered farmers at 6am and 6pm via Twilio + OpenWeatherMap.
+
+### Run locally
+
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
+
+Open `http://127.0.0.1:8000/docs` to see the full API.
+
+### Key endpoints
+
+| Endpoint | Description |
+|---|---|
+| `POST /register` | Register a farmer (phone number + location) |
+| `DELETE /unregister/{phone}` | Remove a farmer |
+| `POST /send-weather-now` | Manually trigger SMS to all registered farmers |
+| `GET /farmers` | List all registered farmers |
+
+### Environment variables
+
+Copy `.env.example` to `.env` and fill in your keys:
+
+```
+TWILIO_ACCOUNT_SID=your_sid
+TWILIO_AUTH_TOKEN=your_token
+TWILIO_PHONE_NUMBER=+1xxxxxxxxxx
+OPENWEATHER_API_KEY=your_key
+```
+
+### Testing the SMS alerts
+
+> **Note:** Twilio trial accounts and unregistered numbers are subject to A2P 10DLC restrictions — outbound SMS to arbitrary numbers will be blocked without carrier registration.
+
+**To test locally:**
+1. Create a free [Twilio trial account](https://www.twilio.com/try-twilio)
+2. In the Twilio console, add your own phone number as a **Verified Caller ID**
+3. Register yourself as a farmer via the `/register` endpoint using your verified number
+4. Hit `POST /send-weather-now` to trigger an immediate SMS to yourself
+
+This simulates exactly what a registered farmer would receive at 6am/6pm daily.
 
 ---
 
@@ -118,6 +193,8 @@ Requires Android Studio Meerkat (2024.3) or later.
 | Temperature | DS18B20 waterproof probe |
 | RS485 adapter | MAX485 module |
 | Power | 3.7V LiPo + TP4056 charger |
+
+> **No hardware?** Enable **Mock Sensor Mode** in the app settings to simulate live soil readings for demo and testing purposes.
 
 ### BLE Protocol
 
@@ -169,20 +246,17 @@ void setup() {
 }
 
 void loop() {
-  // Read sensors
-  float moisture    = readMoisture();     // 0–100 %
-  float ph          = readPh();           // 0–14
-  float nitrogen    = readNitrogen();     // mg/kg
-  float phosphorus  = readPhosphorus();   // mg/kg
-  float potassium   = readPotassium();    // mg/kg
-  float temperature = readTemperature();  // °C
-
-  // Pack as 24-byte little-endian float array
-  float payload[6] = { moisture, ph, nitrogen, phosphorus, potassium, temperature };
+  float payload[6] = {
+    readMoisture(),     // 0–100 %
+    readPh(),           // 0–14
+    readNitrogen(),     // mg/kg
+    readPhosphorus(),   // mg/kg
+    readPotassium(),    // mg/kg
+    readTemperature()   // °C
+  };
   pCharacteristic->setValue((uint8_t*)payload, 24);
   pCharacteristic->notify();
-
-  delay(2000); // Send reading every 2 seconds
+  delay(2000);
 }
 ```
 
@@ -203,10 +277,11 @@ void loop() {
 ## Production Considerations
 
 - **Model delivery:** Use [Play Asset Delivery](https://developer.android.com/guide/playcore/asset-delivery) (fast-follow pack) to ship the 2.5 GB model file separately from the APK
-- **Fine-tuning:** Use [Unsloth](https://github.com/unslothai/unsloth) to fine-tune Gemma 4 E4B on a crop disease dataset (e.g. PlantVillage) before deployment — this will significantly improve accuracy
-- **Structured output:** For production, prompt Gemma 4 to respond in JSON and parse it for more reliable structured results
-- **Battery:** Consider throttling analysis to avoid draining the battery; BLE sensor notifications at 2-second intervals are already efficient
-- **Localisation:** Add translations via `res/values-<locale>/strings.xml` for local languages
+- **Fine-tuning:** Use [Unsloth](https://github.com/unslothai/unsloth) to fine-tune Gemma 4 E4B on a crop disease dataset (e.g. PlantVillage) for improved accuracy
+- **Structured output:** Prompt Gemma 4 to respond in JSON for more reliable rendering
+- **SMS registration:** Register for A2P 10DLC through Twilio to enable unrestricted outbound SMS at scale
+- **Battery:** Throttle analysis frequency; BLE sensor notifications at 2-second intervals are already efficient
+- **Localisation:** Add translations via `res/values-<locale>/strings.xml` — Shona (`sn`) and Amharic (`am`) are already included
 
 ---
 
@@ -215,3 +290,7 @@ void loop() {
 Apache 2.0 — see `LICENSE`.
 
 Gemma 4 model weights are subject to [Google's Gemma Terms of Use](https://ai.google.dev/gemma/terms).
+
+---
+
+*Built for the [Gemma 4 Good Hackathon](https://www.kaggle.com/competitions/gemma-4-good-hackathon) — Kaggle × Google DeepMind, 2026*
