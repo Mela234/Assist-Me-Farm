@@ -1,6 +1,6 @@
-# 🌱 CropDoc
+# 🌱 Farm Assistant
 
-**On-device crop disease diagnosis and soil health analysis for farmers.**
+**A smart sensor with on-device soil health analysis and crop diagnosis through image.**
 
 Powered by **Gemma 4 E4B** via **LiteRT-LM** — everything runs privately on the farmer's Android phone. No internet connection required. No data ever leaves the device.
 
