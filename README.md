@@ -1,8 +1,8 @@
-# CropDoc
+# Farm Assistant
 
 **On-device crop disease diagnosis and soil health analysis for African smallholder farmers.**
 
-Powered by **Gemma 4 E2B** via **LiteRT-LM** — everything runs privately on the farmer's Android phone. No internet connection required for AI analysis. No data ever leaves the device.
+Powered by **Gemma 4 E4B** via **LiteRT-LM** — everything runs privately on the farmer's Android phone. No internet connection required for AI analysis. No data ever leaves the device.
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android-green.svg)](https://android.com)
@@ -12,7 +12,7 @@ Powered by **Gemma 4 E2B** via **LiteRT-LM** — everything runs privately on th
 
 ## The Problem
 
-Rural Zimbabwe has approximately 40% mobile internet penetration, with data costs averaging 3–5% of daily income per session. A cloud-dependent diagnostic tool creates a paywall at exactly the moment a farmer is standing in a field looking at dying crops. CropDoc eliminates that barrier entirely — diagnosis is as fast as the phone's inference speed, not the network.
+Rural Zimbabwe has approximately 40% mobile internet penetration, with data costs averaging 3–5% of daily income per session. A cloud-dependent diagnostic tool creates a paywall at exactly the moment a farmer is standing in a field looking at dying crops. Farm Assistant eliminates that barrier entirely — diagnosis is as fast as the phone's inference speed, not the network.
 
 ---
 
@@ -36,7 +36,7 @@ Rural Zimbabwe has approximately 40% mobile internet penetration, with data cost
 
 | Layer | Technology |
 |---|---|
-| On-device AI | Gemma 4 E2B via LiteRT-LM (Kotlin API) |
+| On-device AI | Gemma 4 E4B via LiteRT-LM (Kotlin API) |
 | Vision | LiteRT-LM `visionBackend = Backend.GPU()` |
 | Camera | CameraX |
 | Bluetooth | Android BLE API |
@@ -51,18 +51,18 @@ Rural Zimbabwe has approximately 40% mobile internet penetration, with data cost
 ## Project Structure
 
 ```
-cropdoc/
+farm-assistant/
 ├── app/
-│   └── src/main/java/com/cropdoc/app/
+│   └── src/main/java/com/farmassistant/app/
 │       ├── MainActivity.kt                   # Compose nav host + permissions
 │       ├── data/
 │       │   ├── model/
 │       │   │   ├── Models.kt                 # SoilReading, AnalysisResult, BleState…
-│       │   │   └── CropDocAiEngine.kt        # LiteRT-LM engine wrapper
+│       │   │   └── FarmAssistantAiEngine.kt        # LiteRT-LM engine wrapper
 │       │   └── ble/
 │       │       └── SoilSensorBleManager.kt   # BLE scan / connect / parse
 │       ├── viewmodel/
-│       │   └── CropDocViewModel.kt           # Coordinates AI + BLE + camera
+│       │   └── FarmAssistantViewModel.kt           # Coordinates AI + BLE + camera
 │       └── ui/
 │           ├── theme/                        # Green & white Material 3 theme
 │           ├── components/                   # Shared Compose components
@@ -89,26 +89,26 @@ cropdoc/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/debroglie99/cropdoc.git
-cd cropdoc
+git clone https://github.com/debroglie99/farm-assistant.git
+cd farm-assistant
 ```
 
-### 2. Download the Gemma 4 E2B model
+### 2. Download the Gemma 4 E4B model
 
 The model file (~2.5 GB) must be downloaded separately and placed in:
 
 ```
-app/src/main/assets/gemma-4-E2B-it.litertlm
+app/src/main/assets/gemma-4-E4B-it.litertlm
 ```
 
 ```bash
 # Install huggingface-cli
 pip install huggingface_hub
 
-# Download (accept Gemma licence at huggingface.co/google/gemma-4-E2B first)
+# Download (accept Gemma licence at huggingface.co/google/gemma-4-E4B first)
 huggingface-cli download \
-  google/gemma-4-E2B-it-litert-lm \
-  gemma-4-E2B-it-int4.litertlm \
+  google/gemma-4-E4B-it-litert-lm \
+  gemma-4-E4B-it-int4.litertlm \
   --local-dir app/src/main/assets/
 
 # Rename to match the expected filename
@@ -229,7 +229,7 @@ Byte offset  Field         Unit
 BLECharacteristic *pCharacteristic;
 
 void setup() {
-  BLEDevice::init("CropDoc Sensor");
+  BLEDevice::init("Farm Assistant Sensor");
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pService = pServer->createService(SERVICE_UUID);
 
